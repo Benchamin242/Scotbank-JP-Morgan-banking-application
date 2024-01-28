@@ -31,7 +31,7 @@ public class AccountTests {
     }
 
     @Test
-    public void withdrawFunds(){
+    public void withdrawFunds() {
         Account a = new Account();
         a.deposit(40);
         a.withdraw(20);
@@ -39,4 +39,29 @@ public class AccountTests {
         assertTrue(a.getBalance()==20);
     }
 
+    @Test
+    public void withdrawOverdraft() {
+        Account a = new Account();
+        a.deposit(30);
+
+
+        Assertions.assertThrows(ArithmeticException.class,() -> a.withdraw(100));
+    }
+
+    @Test
+    public void test5() {
+        Account a = new Account();
+        a.deposit(20);
+        a.deposit(10);
+        a.deposit(10);
+        a.deposit(10);
+        a.deposit(10);
+        a.deposit(10);
+        a.withdraw(20);
+        a.withdraw(20);
+        a.withdraw(20);
+
+        assertTrue(a.getBalance()==10);
+
+    }
 }

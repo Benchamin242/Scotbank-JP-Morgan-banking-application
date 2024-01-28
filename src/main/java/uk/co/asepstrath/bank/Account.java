@@ -15,8 +15,12 @@ public class Account {
         return balance;
     }
 
-    public void withdraw(int amount){
-        balance -=amount;
-    }
+    public void withdraw(int amount) throws ArithmeticException{
+        if(amount>balance){
+            throw new ArithmeticException("\n"+"Insufficient funds");
+        } else {
+            balance -= amount;
+        }
+        }
 
 }
