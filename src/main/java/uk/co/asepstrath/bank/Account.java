@@ -1,25 +1,29 @@
 package uk.co.asepstrath.bank;
 
+import java.math.BigDecimal;
+
 public class Account {
-    private int balance;
+    private BigDecimal balance; //BigDecimal is more accurate when doing arithmetic
 
     public Account(){
-        balance=0;
+        balance= new BigDecimal("0.00");
     }
-    public void deposit(int amount) {
-        balance += amount;
+    public void deposit(double x) { // takes in double then turns it into a BigDecimal since it uses arbritary arithmetic
+        BigDecimal amount = new BigDecimal(x);
+        balance = balance.add(amount);
     }
 
-    public int getBalance() {
+    public BigDecimal getBalance() {
 
         return balance;
     }
 
-    public void withdraw(int amount) throws ArithmeticException{
-        if(amount>balance){
+    public void withdraw(double x) throws ArithmeticException{
+        BigDecimal amount = new BigDecimal(x);
+        if(amount.compareTo(balance) > 0){ //uses BigDecimal compareTo method ->  amount > balance
             throw new ArithmeticException("\n"+"Insufficient funds");
         } else {
-            balance -= amount;
+            balance = balance.subtract(amount); //you cannot use normal arithmetic with BigDecimal, so we use the subtract method
         }
         }
 

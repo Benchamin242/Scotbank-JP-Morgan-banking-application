@@ -3,6 +3,7 @@ package uk.co.asepstrath.bank;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import java.math.BigDecimal;
 
 public class AccountTests {
 
@@ -11,16 +12,17 @@ public class AccountTests {
     public void createAccount(){
         Account a = new Account();
         Assertions.assertTrue(a != null    );
-        Assertions.assertTrue(a.getBalance()==0    );
+        System.out.println(a.getBalance());
+        Assertions.assertTrue(a.getBalance().equals(new BigDecimal("0.00")));
     }
 
     @Test
     public void addFunds() {
         Account a = new Account();
-        a.deposit(20);
-        a.deposit(50);
+        a.deposit(20.00);
+        a.deposit(50.00);
 
-        Assertions.assertTrue(a.getBalance()==70);
+        Assertions.assertTrue(a.getBalance().equals(new BigDecimal("70.00")));
        /* Assertions.assertEquals(expected,toBe);
         Assertions.assertNull(valueToBeNull);
 // And their counterparts
@@ -36,7 +38,7 @@ public class AccountTests {
         a.deposit(40);
         a.withdraw(20);
 
-        assertTrue(a.getBalance()==20);
+        assertTrue(a.getBalance().equals(new BigDecimal("20.00")));
     }
 
     @Test
@@ -51,17 +53,17 @@ public class AccountTests {
     @Test
     public void test5() {
         Account a = new Account();
-        a.deposit(20);
-        a.deposit(10);
-        a.deposit(10);
-        a.deposit(10);
-        a.deposit(10);
-        a.deposit(10);
-        a.withdraw(20);
-        a.withdraw(20);
-        a.withdraw(20);
+        a.deposit(20.00);
+        a.deposit(10.00);
+        a.deposit(10.00);
+        a.deposit(10.00);
+        a.deposit(10.00);
+        a.deposit(10.00);
+        a.withdraw(20.00);
+        a.withdraw(20.00);
+        a.withdraw(20.00);
 
-        assertTrue(a.getBalance()==10);
+        assertTrue(a.getBalance().equals(new BigDecimal("10.00")));
 
     }
 }
