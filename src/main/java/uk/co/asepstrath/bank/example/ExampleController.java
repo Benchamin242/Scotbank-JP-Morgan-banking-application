@@ -1,5 +1,6 @@
 package uk.co.asepstrath.bank.example;
 
+
 import io.jooby.ModelAndView;
 import io.jooby.StatusCode;
 import io.jooby.annotation.*;
@@ -42,6 +43,7 @@ public class ExampleController {
      */
     @GET
     public String welcome() {
+
         return "Welcome to Jooby!";
     }
 

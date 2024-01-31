@@ -14,8 +14,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 public class App extends Jooby {
-
+    ArrayList<Account> accounts = new ArrayList<Account>();
     {
+
         /*
         This section is used for setting up the Jooby Framework modules
          */
@@ -57,7 +58,6 @@ public class App extends Jooby {
     public void onStart() {
         Logger log = getLog();
         log.info("Starting Up...");
-        ArrayList<Account> accounts = new ArrayList<Account>(6);
         populateAccount(accounts);
 
 
