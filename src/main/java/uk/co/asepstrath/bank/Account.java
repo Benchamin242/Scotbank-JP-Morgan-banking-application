@@ -4,8 +4,10 @@ import java.math.BigDecimal;
 
 public class Account {
     private BigDecimal balance; //BigDecimal is more accurate when doing arithmetic
+    private final String name;
 
-    public Account(){
+    public Account(String n){
+        name = n;
         balance= new BigDecimal("0.00");
     }
     public void deposit(double x) { // takes in double then turns it into a BigDecimal since it uses arbritary arithmetic
@@ -16,6 +18,9 @@ public class Account {
     public BigDecimal getBalance() {
 
         return balance;
+    }
+    public String getName(){
+        return name;
     }
 
     public void withdraw(double x) throws ArithmeticException{
