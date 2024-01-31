@@ -75,4 +75,12 @@ public class AccountTests {
       app.populateAccount(accounts);
     }
 
+    @Test
+    public void pennies(){
+        Account a = new Account("");
+        a.deposit(5.45);
+        a.deposit(17.56);
+
+        assertTrue(a.getBalance().equals(new BigDecimal("23.01")));
+    }
 }

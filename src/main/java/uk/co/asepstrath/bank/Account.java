@@ -1,6 +1,7 @@
 package uk.co.asepstrath.bank;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class Account {
     private BigDecimal balance; //BigDecimal is more accurate when doing arithmetic
@@ -11,7 +12,7 @@ public class Account {
         balance= new BigDecimal("0.00");
     }
     public void deposit(double x) { // takes in double then turns it into a BigDecimal since it uses arbritary arithmetic
-        BigDecimal amount = new BigDecimal(x);
+        BigDecimal amount = new BigDecimal(x).setScale(2, RoundingMode.HALF_DOWN);
         balance = balance.add(amount);
     }
 
