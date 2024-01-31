@@ -5,10 +5,10 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class AccountTests {
-
 
     @Test
     public void createAccount(){
@@ -67,6 +67,12 @@ public class AccountTests {
 
         assertTrue(a.getBalance().equals(new BigDecimal("10.00")));
 
+    }
+    @Test
+    public void test6(){
+      App app = new App();
+      ArrayList<Account> accounts = new ArrayList<Account>(6);
+      app.populateAccount(accounts);
     }
 
 }
