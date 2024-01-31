@@ -53,11 +53,13 @@ public class App extends Jooby {
     This function will be called when the application starts up,
     it should be used to ensure that the DB is properly setup
      */
+
     public void onStart() {
         Logger log = getLog();
         log.info("Starting Up...");
+        ArrayList<Account> accounts = new ArrayList<Account>(6);
+        populateAccount(accounts);
 
-        ArrayList<Account> accounts = new ArrayList<Account>();
 
         // Fetch DB Source
         DataSource ds = require(DataSource.class);
@@ -70,6 +72,21 @@ public class App extends Jooby {
         } catch (SQLException e) {
             log.error("Database Creation Error",e);
         }
+    }
+
+    public void populateAccount(ArrayList<Account> temp) {
+        temp.add(new Account("Rachel"));
+        temp.add(new Account("Monica"));
+        temp.add(new Account("Phoebe"));
+        temp.add(new Account("Joey"));
+        temp.add(new Account("Chandler"));
+        temp.add(new Account("Ross"));
+        temp.get(0).deposit(50.00);
+        temp.get(1).deposit(100.00);
+        temp.get(2).deposit(76.00);
+        temp.get(3).deposit(23.90);
+        temp.get(4).deposit(3.00);
+        temp.get(5).deposit(54.12);
     }
 
     /*
