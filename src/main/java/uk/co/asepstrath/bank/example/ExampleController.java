@@ -7,6 +7,7 @@ import io.jooby.annotation.*;
 import io.jooby.exception.StatusCodeException;
 import kong.unirest.core.Unirest;
 import org.slf4j.Logger;
+import uk.co.asepstrath.bank.Account;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -14,6 +15,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
+import java.util.*;
 import java.util.Map;
 import java.util.Random;
 
@@ -85,17 +87,23 @@ public class ExampleController {
 
     @GET("/table")
 
-    public String firstName(){
-
+    public ArrayList<Account> firstName(){
 
         String nameKey = "Rachel";
         //creates a connection (idk what with but fuck it)
         try(Connection connection = dataSource.getConnection()){
             Statement statement = connection.createStatement();
-            ResultSet set = statement.executeQuery("SELECT * FROM `accountsTable` Where `name` = '"+nameKey+"'");
-            set.next();
-            String nameMessage = set.getString("Name");
-            return nameMessage;
+            ResultSet set = statement.executeQuery("SELECT * FROM `accountsTable`");
+            ArrayList<Account> arraylist = new ArrayList<Account>();
+            while(set.next()){
+                String name = set.getString("Name");
+                double deposit = set.getDouble("Balance");
+                Account account = new Account(name);
+                account.deposit(deposit);
+                arraylist.add(account);
+            }
+            set.close();
+            return arraylist;
 
 
         } catch (SQLException e) {

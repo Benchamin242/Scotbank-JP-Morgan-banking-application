@@ -81,11 +81,11 @@ public class App extends Jooby {
             Statement stmt = connection.createStatement();
             stmt.executeUpdate("CREATE TABLE `accountsTable` (`id` int, `Name` varchar(255),`Balance` double)");
             stmt.executeUpdate("INSERT INTO accountsTable " + "VALUES (1,'Rachel', 50.00 )");
-            stmt.executeUpdate("INSERT INTO accountsTable " + "VALUES (2,'Monica', 50.00 )");
-            stmt.executeUpdate("INSERT INTO accountsTable " + "VALUES (3,'Phoebe', 50.00 )");
-            stmt.executeUpdate("INSERT INTO accountsTable " + "VALUES (4,'Joey', 50.00 )");
-            stmt.executeUpdate("INSERT INTO accountsTable " + "VALUES (5,'Chandler', 50.00 )");
-            stmt.executeUpdate("INSERT INTO accountsTable " + "VALUES (6,'Ross', 50.00 )");
+            stmt.executeUpdate("INSERT INTO accountsTable " + "VALUES (2,'Monica', 100.00 )");
+            stmt.executeUpdate("INSERT INTO accountsTable " + "VALUES (3,'Phoebe', 76.00 )");
+            stmt.executeUpdate("INSERT INTO accountsTable " + "VALUES (4,'Joey', 23.90 )");
+            stmt.executeUpdate("INSERT INTO accountsTable " + "VALUES (5,'Chandler', 3.00 )");
+            stmt.executeUpdate("INSERT INTO accountsTable " + "VALUES (6,'Ross', 54.32 )");
 
         } catch (SQLException e) {
             log.error("Database Creation Error",e);

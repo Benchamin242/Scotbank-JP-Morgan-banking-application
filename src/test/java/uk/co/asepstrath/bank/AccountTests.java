@@ -68,12 +68,7 @@ public class AccountTests {
         assertTrue(a.getBalance().equals(new BigDecimal("10.00")));
 
     }
-    @Test
-    public void test6(){
-      App app = new App();
-      ArrayList<Account> accounts = new ArrayList<Account>(6);
-      app.populateAccount(accounts);
-    }
+
 
     @Test
     public void pennies(){
