@@ -1,0 +1,26 @@
+As a Manager, I want to list all accounts within the bank.
+Subtasks:
+Fetch account data from the Accounts API.
+Store account data in the central application repository.
+Create a new application view to show a list of accounts from the repository.
+
+As a User, I want to view simple details of my account.
+Subtasks:
+Fetch account data from the Accounts API.
+Store data relevant to user in the central application repository.
+Display this relevant information to the user. Maybe account details and balance
+
+As a user I want to view all transactions related to my account.
+Subtasks:
+Fetch transaction data from that users account
+Store the relevant data
+Display the relevant data in a way useful to user
+
+As a User, I want to view all transactions related to my account.
+Subtasks: Classify spending by business type by analysing transaction data.
+Display an abridged perspective of spending patterns and classifications to the user
+
+As a User, I want to see all details of a specific transaction.
+Subtasks:
+Fetch detailed information for a specific transaction from the Transactions API.
+Display transaction details in a useful way to user
