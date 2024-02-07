@@ -82,6 +82,33 @@ public class ExampleController {
         }
     }
 
+
+    @GET("/table")
+
+    public String firstName(){
+
+
+        String nameKey = "Rachel";
+        //creates a connection (idk what with but fuck it)
+        try(Connection connection = dataSource.getConnection()){
+            Statement statement = connection.createStatement();
+            ResultSet set = statement.executeQuery("SELECT * FROM `accountsTable` Where `name` = '"+nameKey+"'");
+            set.next();
+            String nameMessage = set.getString("Name");
+            return nameMessage;
+
+
+        } catch (SQLException e) {
+            // If something does go wrong this will log the stack trace
+            logger.error("Database Error Occurred",e);
+            // And return a HTTP 500 error to the requester
+            throw new StatusCodeException(StatusCode.SERVER_ERROR, "Database Error Occurred");
+        }
+    }
+
+
+
+
     /*
     The dice endpoint displays two features of the Jooby framework, Parameters and Templates
 
