@@ -33,4 +33,9 @@ public class Account {
         }
         }
 
+    @Override
+    public String toString() {
+        String result = this.getName() + " " + this.getBalance();
+        return result;
+    }
 }
