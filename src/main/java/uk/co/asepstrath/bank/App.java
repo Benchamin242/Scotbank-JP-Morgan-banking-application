@@ -13,6 +13,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
+
 public class App extends Jooby {
     ArrayList<Account> accounts = new ArrayList<Account>();
     {
@@ -75,13 +79,13 @@ public class App extends Jooby {
         try (Connection connection = ds.getConnection()) {
             //
             Statement stmt = connection.createStatement();
-            stmt.executeUpdate("CREATE TABLE `accountsTable` (`Name` varchar(255),`Balance` double)");
-            stmt.executeUpdate("INSERT INTO accountsTable " + "VALUES ('Rachel', 50.00 )");
-            stmt.executeUpdate("INSERT INTO accountsTable " + "VALUES ('Monica', 50.00 )");
-            stmt.executeUpdate("INSERT INTO accountsTable " + "VALUES ('Phoebe', 50.00 )");
-            stmt.executeUpdate("INSERT INTO accountsTable " + "VALUES ('Joey', 50.00 )");
-            stmt.executeUpdate("INSERT INTO accountsTable " + "VALUES ('Chandler', 50.00 )");
-            stmt.executeUpdate("INSERT INTO accountsTable " + "VALUES ('Ross', 50.00 )");
+            stmt.executeUpdate("CREATE TABLE `accountsTable` (`id` int, `Name` varchar(255),`Balance` double)");
+            stmt.executeUpdate("INSERT INTO accountsTable " + "VALUES (1,'Rachel', 50.00 )");
+            stmt.executeUpdate("INSERT INTO accountsTable " + "VALUES (2,'Monica', 50.00 )");
+            stmt.executeUpdate("INSERT INTO accountsTable " + "VALUES (3,'Phoebe', 50.00 )");
+            stmt.executeUpdate("INSERT INTO accountsTable " + "VALUES (4,'Joey', 50.00 )");
+            stmt.executeUpdate("INSERT INTO accountsTable " + "VALUES (5,'Chandler', 50.00 )");
+            stmt.executeUpdate("INSERT INTO accountsTable " + "VALUES (6,'Ross', 50.00 )");
 
         } catch (SQLException e) {
             log.error("Database Creation Error",e);

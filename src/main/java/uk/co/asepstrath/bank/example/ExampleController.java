@@ -84,7 +84,9 @@ public class ExampleController {
 
 
     @GET("/table")
+
     public String firstName(){
+
 
         String nameKey = "Rachel";
         //creates a connection (idk what with but fuck it)
@@ -103,6 +105,9 @@ public class ExampleController {
             throw new StatusCodeException(StatusCode.SERVER_ERROR, "Database Error Occurred");
         }
     }
+
+
+
 
     /*
     The dice endpoint displays two features of the Jooby framework, Parameters and Templates
