@@ -13,6 +13,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
+
 public class App extends Jooby {
     ArrayList<Account> accounts = new ArrayList<Account>();
     {
@@ -58,7 +62,6 @@ public class App extends Jooby {
     public void onStart() {
         Logger log = getLog();
         log.info("Starting Up...");
-        populateAccount(accounts);
 
 
         // Fetch DB Source
@@ -72,22 +75,23 @@ public class App extends Jooby {
         } catch (SQLException e) {
             log.error("Database Creation Error",e);
         }
+
+        try (Connection connection = ds.getConnection()) {
+            //
+            Statement stmt = connection.createStatement();
+            stmt.executeUpdate("CREATE TABLE `accountsTable` (`id` int, `Name` varchar(255),`Balance` double)");
+            stmt.executeUpdate("INSERT INTO accountsTable " + "VALUES (1,'Rachel', 50.00 )");
+            stmt.executeUpdate("INSERT INTO accountsTable " + "VALUES (2,'Monica', 50.00 )");
+            stmt.executeUpdate("INSERT INTO accountsTable " + "VALUES (3,'Phoebe', 50.00 )");
+            stmt.executeUpdate("INSERT INTO accountsTable " + "VALUES (4,'Joey', 50.00 )");
+            stmt.executeUpdate("INSERT INTO accountsTable " + "VALUES (5,'Chandler', 50.00 )");
+            stmt.executeUpdate("INSERT INTO accountsTable " + "VALUES (6,'Ross', 50.00 )");
+
+        } catch (SQLException e) {
+            log.error("Database Creation Error",e);
+        }
     }
 
-    public void populateAccount(ArrayList<Account> temp) {
-        temp.add(new Account("Rachel"));
-        temp.add(new Account("Monica"));
-        temp.add(new Account("Phoebe"));
-        temp.add(new Account("Joey"));
-        temp.add(new Account("Chandler"));
-        temp.add(new Account("Ross"));
-        temp.get(0).deposit(50.00);
-        temp.get(1).deposit(100.00);
-        temp.get(2).deposit(76.00);
-        temp.get(3).deposit(23.90);
-        temp.get(4).deposit(3.00);
-        temp.get(5).deposit(54.12);
-    }
 
     /*
     This function will be called when the application shuts down
