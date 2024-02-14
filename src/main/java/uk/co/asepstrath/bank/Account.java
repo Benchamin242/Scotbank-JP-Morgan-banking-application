@@ -12,7 +12,7 @@ public class Account {
         name = n;
         balance= new BigDecimal("0.00");
     }
-    public void deposit(double x) { // takes in double then turns it into a BigDecimal since it uses arbritary arithmetic
+    public void deposit(double x) { // takes in do  uble then turns it into a BigDecimal since it uses arbritary arithmetic
         BigDecimal amount = new BigDecimal(x).setScale(2, RoundingMode.HALF_DOWN);
         balance = balance.add(amount);
     }

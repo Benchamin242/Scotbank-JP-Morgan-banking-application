@@ -68,6 +68,13 @@ public class BankController {
 
     }
 
+    @GET("/viewAllTransactions")
+    public ModelAndView ViewAllTransactions(){
+        Map<String, Object> model = new HashMap<>();
+        model.put("nothing", 14);
+        return new ModelAndView("ViewAllTransactions.hbs", model);
+
+    }
 
 
 
