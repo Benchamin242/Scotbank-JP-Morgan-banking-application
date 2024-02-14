@@ -1,20 +1,19 @@
 package uk.co.asepstrath.bank;
 
-import uk.co.asepstrath.bank.example.ExampleController;
+
 import io.jooby.Jooby;
 import io.jooby.handlebars.HandlebarsModule;
 import io.jooby.helper.UniRestExtension;
 import io.jooby.hikari.HikariModule;
 import org.slf4j.Logger;
+import uk.co.asepstrath.bank.bank.BankController;
+import uk.co.asepstrath.bank.example.ExampleController;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 
 
 public class App extends Jooby {
@@ -42,6 +41,7 @@ public class App extends Jooby {
         Logger log = getLog();
 
         mvc(new ExampleController(ds,log));
+        mvc(new BankController(ds, log));
 
         /*
         Finally we register our application lifecycle methods
@@ -90,6 +90,7 @@ public class App extends Jooby {
         } catch (SQLException e) {
             log.error("Database Creation Error",e);
         }
+
     }
 
 

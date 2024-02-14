@@ -2,6 +2,7 @@ package uk.co.asepstrath.bank;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Random;
 
 public class Account {
     private BigDecimal balance; //BigDecimal is more accurate when doing arithmetic
@@ -24,6 +25,7 @@ public class Account {
         return name;
     }
 
+
     public void withdraw(double x) throws ArithmeticException{
         BigDecimal amount = new BigDecimal(x);
         if(amount.compareTo(balance) > 0){ //uses BigDecimal compareTo method ->  amount > balance
@@ -31,7 +33,7 @@ public class Account {
         } else {
             balance = balance.subtract(amount); //you cannot use normal arithmetic with BigDecimal, so we use the subtract method
         }
-        }
+    }
 
     @Override
     public String toString() {

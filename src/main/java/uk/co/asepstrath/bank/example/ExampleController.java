@@ -9,6 +9,7 @@ import kong.unirest.core.Unirest;
 import org.slf4j.Logger;
 import uk.co.asepstrath.bank.Account;
 
+
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -89,7 +90,6 @@ public class ExampleController {
 
     public ArrayList<Account> firstName(){
 
-        String nameKey = "Rachel";
         //creates a connection (idk what with but fuck it)
         try(Connection connection = dataSource.getConnection()){
             Statement statement = connection.createStatement();
