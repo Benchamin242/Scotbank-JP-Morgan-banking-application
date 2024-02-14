@@ -48,6 +48,14 @@ public class App extends Jooby {
          */
         onStarted(() -> onStart());
         onStop(() -> onStop());
+
+        post("/submitForm", req -> {
+
+            String name = req.form(String.class);
+            Account account = new Account(name);
+            // ...
+            return "employee data saved successfully";
+        });
     }
 
     public static void main(final String[] args) {

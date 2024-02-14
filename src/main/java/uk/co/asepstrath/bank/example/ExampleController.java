@@ -25,6 +25,7 @@ import java.util.Random;
     in this case the controller will respond to requests from <host>/example
  */
 @Path("/example")
+
 public class ExampleController {
 
     private final DataSource dataSource;
@@ -47,6 +48,10 @@ public class ExampleController {
     public String welcome() {
 
         return "Welcome to Jooby!";
+    }
+    @POST
+    public String post(){
+        return "posting to jooby!";
     }
 
     /*
@@ -84,12 +89,22 @@ public class ExampleController {
         }
     }
 
+    @GET("/Login")
+
+    public ModelAndView login(){
+        // If no name has been sent within the query URL
+        String name = "Please";
+        // we must create a model to pass to the "dice" template
+        Map<String, Object> model = new HashMap<>();
+        model.put("name", name);
+
+        return new ModelAndView("loginView.hbs", model);
+    }
+
 
     @GET("/table")
 
     public ArrayList<Account> firstName(){
-
-        String nameKey = "Rachel";
         //creates a connection (idk what with but fuck it)
         try(Connection connection = dataSource.getConnection()){
             Statement statement = connection.createStatement();
@@ -113,7 +128,6 @@ public class ExampleController {
             throw new StatusCodeException(StatusCode.SERVER_ERROR, "Database Error Occurred");
         }
     }
-
 
 
 
