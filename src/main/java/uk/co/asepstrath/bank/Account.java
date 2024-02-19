@@ -3,10 +3,27 @@ package uk.co.asepstrath.bank;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Random;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.HashMap;
+import java.util.Map;
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.SQLException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import io.jooby.Context;
+import io.jooby.Route;
+
 
 public class Account {
     private BigDecimal balance; //BigDecimal is more accurate when doing arithmetic
     private final String name;
+    private static final Logger log = LoggerFactory.getLogger(Account.class);
+
+
 
     public Account(String n){
         name = n;
@@ -23,6 +40,39 @@ public class Account {
     }
     public String getName(){
         return name;
+    }
+
+
+    public void displaySummaryOfSpending(DataSource ds) {
+
+
+
+
+        try (Connection connection = ds.getConnection()) {
+            Statement stmt = connection.createStatement();
+
+
+            ResultSet resultSet = stmt.executeQuery("SELECT businessName, withdrawn FROM transactionsTable");
+
+
+            Map<String, Double> spendingSummary = new HashMap<>();
+            while (resultSet.next()) {
+                String businessCategory = resultSet.getString("businessName");
+                double amountWithdrawn = resultSet.getDouble("withdrawn");
+
+
+                spendingSummary.put(businessCategory, spendingSummary.getOrDefault(businessCategory, 0.0) + amountWithdrawn);
+            }
+
+
+            System.out.println("Overall Spending Summary:");
+            for (Map.Entry<String, Double> entry : spendingSummary.entrySet()) {
+                System.out.println("Business Category: " + entry.getKey() + ", Total Spent: " + entry.getValue());
+            }
+
+        } catch (SQLException e) {
+            log.error("Error fetching spending data", e);
+        }
     }
 
 
