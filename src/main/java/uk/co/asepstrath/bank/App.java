@@ -54,7 +54,8 @@ public class App extends Jooby {
             String name = req.form(String.class);
             Account account = new Account(name);
             // ...
-            return "employee data saved successfully";
+
+            return "Welcome " + account.getName();
         });
     }
 
