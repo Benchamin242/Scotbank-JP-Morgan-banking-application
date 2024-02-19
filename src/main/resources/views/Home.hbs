@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!--
+<head>
+    <title>W3.CSS Template</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins">
+    <style>
+        body,h1,h2,h3,h4,h5 {font-family: "Poppins", sans-serif}
+        body {font-size:16px;}
+        .w3-half img{margin-bottom:-6px;margin-top:16px;opacity:0.8;cursor:pointer}
+        .w3-half img:hover{opacity:1}
+    </style>
+</head>
+-->
+
+{{>style.hbs}}
+
+<body>
+
+{{> Sidebar.hbs }}
+
+<!-- Top menu on small screens -->
+{{>header.hbs}}
+
+
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+<!-- !PAGE CONTENT! -->
+<div class="w3-main" style="margin-left:340px;margin-right:40px">
+
+    <!-- Header -->
+    <div class="w3-container" style="margin-top:80px" id="showcase">
+        <h1 class="w3-jumbo"><b>Welcome To Scotbank</b></h1>
+        <h1 class="w3-xxxlarge w3-text-red"><b>Homepage.</b></h1>
+        <hr style="width:50px;border:5px solid red" class="w3-round">
+    </div>
+
+
+
+    <!-- This bit allows pictures to be full size when clicked-->
+    <div id="modal01" class="w3-modal w3-black" style="padding-top:0" onclick="this.style.display='none'">
+        <span class="w3-button w3-black w3-xxlarge w3-display-topright">×</span>
+        <div class="w3-modal-content w3-animate-zoom w3-center w3-transparent w3-padding-64">
+            <img id="img01" class="w3-image">
+            <p id="caption"></p>
+        </div>
+    </div>
+
+    <!-- Login- Could add the login section here-->
+    <div class="w3-container" id="services" style="margin-top:75px">
+        <h1 class="w3-xxxlarge w3-text-red"><b>Secure Login.</b></h1>
+        <hr style="width:50px;border:5px solid red" class="w3-round">
+
+        <p>Enter your login details
+        </p>
+    </div>
+
+    <!-- Account details -->
+    <div class="w3-container" id="Account details" style="margin-top:75px">
+        <h1 class="w3-xxxlarge w3-text-red"><b>Account details.</b></h1>
+        <hr style="width:50px;border:5px solid red" class="w3-round">
+        <p>View your current balance and account details</p>
+
+
+    </div>
+
+    <!-- Transactions -->
+    <div class="w3-container" id="Transactions" style="margin-top:75px">
+        <h1 class="w3-xxxlarge w3-text-red"><b>Transactions.</b></h1>
+        <hr style="width:50px;border:5px solid red" class="w3-round">
+        <p>View your current balance and account details</p>
+
+
+    </div>
+
+    <!-- Summary -->
+    <div class="w3-container" id="Spending Summary" style="margin-top:75px">
+        <h1 class="w3-xxxlarge w3-text-red"><b>Spending Summary.</b></h1>
+        <hr style="width:50px;border:5px solid red" class="w3-round">
+        <p>View a detailed summary of your spending habits</p>
+
+
+    </div>
+
+
+    <!-- Contact -->
+    <div class="w3-container" id="contact" style="margin-top:75px">
+        <h1 class="w3-xxxlarge w3-text-red"><b>Contact.</b></h1>
+        <hr style="width:50px;border:5px solid red" class="w3-round">
+        <p>Contact us for any queries, and a member of Scotbank will be in contact</p>
+        <form action="/action_page.php" target="_blank">
+            <div class="w3-section">
+                <label>Name</label>
+                <input class="w3-input w3-border" type="text" name="Name" required>
+            </div>
+            <div class="w3-section">
+                <label>Email</label>
+                <input class="w3-input w3-border" type="text" name="Email" required>
+            </div>
+            <div class="w3-section">
+                <label>Message</label>
+                <input class="w3-input w3-border" type="text" name="Message" required>
+            </div>
+            <button type="submit" class="w3-button w3-block w3-padding-large w3-red w3-margin-bottom">Send Message</button>
+        </form>
+    </div>
+
+    <!-- End page content -->
+</div>
+
+<!-- W3.CSS Container -->
+<div class="w3-light-grey w3-container w3-padding-32" style="margin-top:75px;padding-right:58px"><p class="w3-right">Group 6 </p></div>
+
+<script>
+    // Script to open and close sidebar
+    function w3_open() {
+        document.getElementById("mySidebar").style.display = "block";
+        document.getElementById("myOverlay").style.display = "block";
+    }
+
+    function w3_close() {
+        document.getElementById("mySidebar").style.display = "none";
+        document.getElementById("myOverlay").style.display = "none";
+    }
+
+    // Modal Image Gallery
+    function onClick(element) {
+        document.getElementById("img01").src = element.src;
+        document.getElementById("modal01").style.display = "block";
+        var captionText = document.getElementById("caption");
+        captionText.innerHTML = element.alt;
+    }
+</script>
+
+</body>
+</html>

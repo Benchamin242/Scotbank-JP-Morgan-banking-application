@@ -51,6 +51,11 @@ public class BankController {
         return "Welcome to Jooby!";
     }
 
+
+    @GET("/homepage")
+    public ModelAndView Homepage(){
+        return new ModelAndView("Home.hbs");
+    }
     /*
     This @Get annotation takes an optional path parameter which denotes the function should be invoked on GET <host>/example/hello
     Note that this function makes it's own request to another API (http://faker.hook.io/) and returns the response
@@ -68,10 +73,11 @@ public class BankController {
 
     }
 
+
     @GET("/viewAllTransactions")
     public ModelAndView ViewAllTransactions(){
         Map<String, Object> model = new HashMap<>();
-        model.put("nothing", 14);
+
         return new ModelAndView("ViewAllTransactions.hbs", model);
 
     }
