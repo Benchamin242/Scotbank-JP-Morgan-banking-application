@@ -4,11 +4,13 @@ import io.jooby.ModelAndView;
 import io.jooby.StatusCode;
 import io.jooby.annotation.*;
 import io.jooby.exception.StatusCodeException;
+import jakarta.inject.Inject;
 import kong.unirest.core.Unirest;
 import org.slf4j.Logger;
 import uk.co.asepstrath.bank.Account;
 import uk.co.asepstrath.bank.example.MyMessage;
 import javax.sql.DataSource;
+import javax.xml.transform.Result;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -75,6 +77,49 @@ public class BankController {
         return "Hello";
     }
 
+    @GET("/Login")
+
+    public ModelAndView login(){
+        // If no name has been sent within the query URL
+        String name = "Please";
+        // we must create a model to pass to the "dice" template
+        Map<String, Object> model = new HashMap<>();
+        model.put("name", name);
+
+        return new ModelAndView("loginView.hbs", model);
+    }
+    @POST
+    @Path("/viewAccount")
+    public ModelAndView submit(String accountID) {
+        if(accountID == null){
+            accountID = "1";
+        }
+        try(Connection connection = dataSource.getConnection()){
+
+            // Use a prepared statement to avoid SQL injection vulnerabilities
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM `accountsTable` WHERE `id` = ?");
+            // Set the accountID parameter in the prepared statement
+            statement.setString(1, accountID);
+
+            Map<String, Object> model = new HashMap<>();
+            ResultSet set = statement.executeQuery();
+            while(set.next()){
+                model.put("name", set.getString("Name"));
+                model.put("balance", set.getDouble("balance"));
+                model.put("id", set.getInt("id"));
+
+            }
+            set.close();
+            return new ModelAndView("simpleDetails.hbs", model);
+
+        } catch (SQLException e) {
+            // If something does go wrong this will log the stack trace
+            logger.error("Database Error Occurred", e);
+            // And return a HTTP 500 error to the requester
+            throw new StatusCodeException(StatusCode.SERVER_ERROR, "Database Error Occurred");
+        }
+    }
+
     @GET("/viewAccount")
     public ModelAndView viewAccounts(@QueryParam String accountID){
 
@@ -109,7 +154,7 @@ public class BankController {
 
 
     @GET("/viewAllTransactions")
-    public ModelAndView ViewAllTransactions() {
+    public ModelAndView ViewAllTransactions(){
         Map<String, Object> model = new HashMap<>();
 
         return new ModelAndView("ViewAllTransactions.hbs", model);
@@ -123,7 +168,7 @@ public class BankController {
      */
     @POST
     public String post(MyMessage message) {
-        return "You successfully POSTed: " + message.Message + " To: " + message.Recipient;
+        return "You successfully POSTed: "+message.Message+ " To: "+message.Recipient;
     }
 
 

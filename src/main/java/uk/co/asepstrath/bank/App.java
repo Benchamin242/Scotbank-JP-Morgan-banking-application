@@ -1,7 +1,7 @@
 package uk.co.asepstrath.bank;
 
-
 import io.jooby.Jooby;
+import io.jooby.XSS;
 import io.jooby.handlebars.HandlebarsModule;
 import io.jooby.helper.UniRestExtension;
 import io.jooby.hikari.HikariModule;
@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import uk.co.asepstrath.bank.bank.BankController;
 import uk.co.asepstrath.bank.example.ExampleController;
 
+import javax.management.Query;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -17,8 +18,9 @@ import java.util.ArrayList;
 
 import kong.unirest.core.Unirest;
 
+
 public class App extends Jooby {
-    ArrayList<Account> accounts = new ArrayList<Account>();
+    public ArrayList<Account> accounts = new ArrayList<Account>();
     {
 
         /*
@@ -50,14 +52,14 @@ public class App extends Jooby {
         onStarted(() -> onStart());
         onStop(() -> onStop());
 
-        post("/submitForm", req -> {
 
+        /*get("/Login", req -> {
             String name = req.form(String.class);
             Account account = new Account(name);
-            // ...
+            accounts.add(account);
+        });*/
 
-            return "Welcome " + account.getName();
-        });
+
     }
 
     public static void main(final String[] args) {

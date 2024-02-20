@@ -8,9 +8,26 @@ import org.junit.jupiter.api.Test;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import io.jooby.StatusCode;
+import io.jooby.test.MockRouter;
+import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class UnitTest {
+
+
+    @Test
+    public void submit() {
+        MockRouter router = new MockRouter(new App());
+        router.get("/bank/Login", rsp ->{
+
+        });
+        router.get("/bank/submitForm", rsp -> {
+            assertEquals("Employee data saved successfulLy", rsp.value());
+            assertEquals(StatusCode.OK, rsp.getStatusCode());
+        });
+    }
 
     /*
     Unit tests should be here
