@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
-
+{{>Style.hbs}}
+{{>Header.hbs}}
+{{>Sidebar.hbs}}
 <!-- Overlay effect when opening sidebar on small screens -->
 <div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
-
+<div class="w3-main" style="margin-left:340px;margin-right:40px">
 
 <div class="w3-container" id="services" style="margin-top:75px">
-    {{>Style.hbs}}
-    {{>Header.hbs}}
-    {{>Sidebar.hbs}}
+    
 <head>
     <meta charset="UTF-8">
     <title>Roll</title>
@@ -38,5 +38,6 @@
     }
 </script>
 </body>
+</div>
 </div>
 </html>
