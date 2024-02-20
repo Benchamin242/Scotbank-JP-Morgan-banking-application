@@ -9,6 +9,16 @@
 
 <body>
 <h1> All previous transactions </h1>
+{{#if spendingSummary}}
+  <ul>
+    {{#each spendingSummary}}
+      <li>Business Category: {{@key}}, Total Spent: {{this}}</li>
+    {{/each}}
+  </ul>
+{{else}}
+  <p>No transactions available.</p>
+{{/if}}
+
 <div style="width: 128px; height: 128px; overflow: hidden;">
 </div>
 

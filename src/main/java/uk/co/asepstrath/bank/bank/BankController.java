@@ -9,8 +9,6 @@ import kong.unirest.core.Unirest;
 import org.slf4j.Logger;
 import uk.co.asepstrath.bank.Account;
 import uk.co.asepstrath.bank.example.MyMessage;
-
-
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -61,7 +59,7 @@ public class BankController {
     }
 
     @GET("/viewAccount")
-    public ModelAndView viewAccounts(){
+    public ModelAndView viewAccounts() {
         Map<String, Object> model = new HashMap<>();
         model.put("nothing", 14);
         return new ModelAndView("simpleDetails.hbs", model);
@@ -69,18 +67,12 @@ public class BankController {
     }
 
     @GET("/viewAllTransactions")
-    public ModelAndView ViewAllTransactions(){
+    public ModelAndView ViewAllTransactions() {
         Map<String, Object> model = new HashMap<>();
         model.put("nothing", 14);
         return new ModelAndView("ViewAllTransactions.hbs", model);
 
     }
-
-
-
-
-
-
 
 
     /*
@@ -89,6 +81,33 @@ public class BankController {
      */
     @POST
     public String post(MyMessage message) {
-        return "You successfully POSTed: "+message.Message+ " To: "+message.Recipient;
+        return "You successfully POSTed: " + message.Message + " To: " + message.Recipient;
+    }
+
+    @GET("/viewBusinessTransactions")
+    public ModelAndView viewAllTransactions() {
+        try (Connection connection = dataSource.getConnection()) {
+            Statement stmt = connection.createStatement();
+            ResultSet resultSet = stmt.executeQuery("SELECT businessName, withdrawn FROM transactionsTable");
+
+            Map<String, Double> spendingSummary = new HashMap<>();
+            while (resultSet.next()) {
+                String businessCategory = resultSet.getString("businessName");
+                double amountWithdrawn = resultSet.getDouble("withdrawn");
+
+                spendingSummary.put(businessCategory, spendingSummary.getOrDefault(businessCategory, 0.0) + amountWithdrawn);
+            }
+
+
+            Map<String, Object> model = new HashMap<>();
+            model.put("spendingSummary", spendingSummary);
+
+
+            return new ModelAndView("ViewAllTransactions.hbs", model);
+
+        } catch (SQLException e) {
+            logger.error("Error providing spending data", e);
+            throw new StatusCodeException(StatusCode.SERVER_ERROR, "Error providing spending data", e);
+        }
     }
 }

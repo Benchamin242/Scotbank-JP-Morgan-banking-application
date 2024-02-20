@@ -43,37 +43,7 @@ public class Account {
     }
 
 
-    public void displaySummaryOfSpending(DataSource ds) {
 
-
-
-
-        try (Connection connection = ds.getConnection()) {
-            Statement stmt = connection.createStatement();
-
-
-            ResultSet resultSet = stmt.executeQuery("SELECT businessName, withdrawn FROM transactionsTable");
-
-
-            Map<String, Double> spendingSummary = new HashMap<>();
-            while (resultSet.next()) {
-                String businessCategory = resultSet.getString("businessName");
-                double amountWithdrawn = resultSet.getDouble("withdrawn");
-
-
-                spendingSummary.put(businessCategory, spendingSummary.getOrDefault(businessCategory, 0.0) + amountWithdrawn);
-            }
-
-
-            System.out.println("Overall Spending Summary:");
-            for (Map.Entry<String, Double> entry : spendingSummary.entrySet()) {
-                System.out.println("Business Category: " + entry.getKey() + ", Total Spent: " + entry.getValue());
-            }
-
-        } catch (SQLException e) {
-            log.error("Error fetching spending data", e);
-        }
-    }
 
 
     public void withdraw(double x) throws ArithmeticException{

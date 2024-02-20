@@ -77,11 +77,13 @@ public class App extends Jooby {
         }
 
         try (Connection connection = ds.getConnection()) {
-            //
+
 
             Statement stmt = connection.createStatement();
             stmt.executeUpdate("CREATE TABLE `transactionsTable` (`id` int, `businessName` varchar(255),`withdrawn` double)" );
             stmt.executeUpdate("INSERT INTO transactionsTable " + "VALUES (1,'The COOP', 50.00 )");
+            stmt.executeUpdate("INSERT INTO transactionsTable " + "VALUES (1,'Morrison', 25.00 )");
+            stmt.executeUpdate("INSERT INTO transactionsTable " + "VALUES (1,'Tesco', 25.00 )");
             stmt.executeUpdate("CREATE TABLE `accountsTable` (`id` int, `Name` varchar(255),`Balance` double)");
             stmt.executeUpdate("INSERT INTO accountsTable " + "VALUES (1,'Rachel', 50.00 )");
             stmt.executeUpdate("INSERT INTO accountsTable " + "VALUES (2,'Monica', 100.00 )");
