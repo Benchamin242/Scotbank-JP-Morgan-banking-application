@@ -57,6 +57,18 @@ public class BankController {
     This @Get annotation takes an optional path parameter which denotes the function should be invoked on GET <host>/example/hello
     Note that this function makes it's own request to another API (http://faker.hook.io/) and returns the response
      */
+    @GET("/Login")
+    public ModelAndView Loginpage(){
+        return new ModelAndView("Login.hbs");
+    }
+
+    @GET("/AccountDetails")
+    public ModelAndView AccountDetails(){
+        return new ModelAndView("AccountDetails.hbs");
+    }
+
+
+
     @GET("/hello")
     public String sayHi() {
         return "Hello";

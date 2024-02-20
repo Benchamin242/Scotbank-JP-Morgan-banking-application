@@ -53,63 +53,20 @@
     </div>
 
     <!-- Login- Could add the login section here-->
-    <div class="w3-container" id="services" style="margin-top:75px">
-        <h1 class="w3-xxxlarge w3-text-red"><b>Secure Login.</b></h1>
-        <hr style="width:50px;border:5px solid red" class="w3-round">
-
-        <p>Enter your login details
-        </p>
-    </div>
+    {{> Login.hbs}}
 
     <!-- Account details -->
-    <div class="w3-container" id="Account details" style="margin-top:75px">
-        <h1 class="w3-xxxlarge w3-text-red"><b>Account details.</b></h1>
-        <hr style="width:50px;border:5px solid red" class="w3-round">
-        <p>View your current balance and account details</p>
-
-
-    </div>
+    {{> AccountDetails.hbs}}
 
     <!-- Transactions -->
-    <div class="w3-container" id="Transactions" style="margin-top:75px">
-        <h1 class="w3-xxxlarge w3-text-red"><b>Transactions.</b></h1>
-        <hr style="width:50px;border:5px solid red" class="w3-round">
-        <p>View your current balance and account details</p>
-
-
-    </div>
+    {{> Transactions.hbs}}
 
     <!-- Summary -->
-    <div class="w3-container" id="Spending Summary" style="margin-top:75px">
-        <h1 class="w3-xxxlarge w3-text-red"><b>Spending Summary.</b></h1>
-        <hr style="width:50px;border:5px solid red" class="w3-round">
-        <p>View a detailed summary of your spending habits</p>
-
-
-    </div>
+    {{> Summary.hbs}}
 
 
     <!-- Contact -->
-    <div class="w3-container" id="contact" style="margin-top:75px">
-        <h1 class="w3-xxxlarge w3-text-red"><b>Contact.</b></h1>
-        <hr style="width:50px;border:5px solid red" class="w3-round">
-        <p>Contact us for any queries, and a member of Scotbank will be in contact</p>
-        <form action="/action_page.php" target="_blank">
-            <div class="w3-section">
-                <label>Name</label>
-                <input class="w3-input w3-border" type="text" name="Name" required>
-            </div>
-            <div class="w3-section">
-                <label>Email</label>
-                <input class="w3-input w3-border" type="text" name="Email" required>
-            </div>
-            <div class="w3-section">
-                <label>Message</label>
-                <input class="w3-input w3-border" type="text" name="Message" required>
-            </div>
-            <button type="submit" class="w3-button w3-block w3-padding-large w3-red w3-margin-bottom">Send Message</button>
-        </form>
-    </div>
+    {{> ContactUs.hbs}}
 
     <!-- End page content -->
 </div>
