@@ -15,6 +15,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import kong.unirest.core.Unirest;
 
 public class App extends Jooby {
     ArrayList<Account> accounts = new ArrayList<Account>();

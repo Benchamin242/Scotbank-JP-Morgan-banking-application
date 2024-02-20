@@ -13,6 +13,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.PreparedStatement;
 import java.util.HashMap;
 import java.util.*;
 import java.util.Map;
@@ -75,11 +76,35 @@ public class BankController {
     }
 
     @GET("/viewAccount")
-    public ModelAndView viewAccounts() {
-        Map<String, Object> model = new HashMap<>();
-        model.put("nothing", 14);
-        return new ModelAndView("simpleDetails.hbs", model);
+    public ModelAndView viewAccounts(@QueryParam String accountID){
 
+        if(accountID == null){
+            accountID = "1";
+        }
+        try(Connection connection = dataSource.getConnection()){
+
+            // Use a prepared statement to avoid SQL injection vulnerabilities
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM `accountsTable` WHERE `id` = ?");
+            // Set the accountID parameter in the prepared statement
+            statement.setString(1, accountID);
+
+            Map<String, Object> model = new HashMap<>();
+            ResultSet set = statement.executeQuery();
+            while(set.next()){
+                model.put("name", set.getString("Name"));
+                model.put("balance", set.getDouble("balance"));
+                model.put("id", set.getInt("id"));
+
+            }
+            set.close();
+            return new ModelAndView("simpleDetails.hbs", model);
+
+        } catch (SQLException e) {
+            // If something does go wrong this will log the stack trace
+            logger.error("Database Error Occurred", e);
+            // And return a HTTP 500 error to the requester
+            throw new StatusCodeException(StatusCode.SERVER_ERROR, "Database Error Occurred");
+        }
     }
 
 
