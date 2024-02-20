@@ -59,7 +59,7 @@ public class BankController {
      */
     @GET("/hello")
     public String sayHi() {
-        return "Hello ";
+        return "Hello";
     }
 
     @GET("/viewAccount")
