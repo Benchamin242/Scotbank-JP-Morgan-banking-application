@@ -84,6 +84,7 @@ public class BankController {
         return "You successfully POSTed: " + message.Message + " To: " + message.Recipient;
     }
 
+
     @GET("/viewBusinessTransactions")
     public ModelAndView viewAllTransactions() {
         try (Connection connection = dataSource.getConnection()) {
