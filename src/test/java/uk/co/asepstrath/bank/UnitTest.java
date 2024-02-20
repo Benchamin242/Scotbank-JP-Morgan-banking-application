@@ -33,9 +33,16 @@ public class UnitTest {
     @Test
     public void viewAccount() {
         MockRouter router = new MockRouter(new App());
-        router.get("/bank", rsp->{
+        router.get("/bank/viewAccount", rsp->{
 
         });
     }
 
+    @Test
+    public void viewAllTransaction(){
+        MockRouter router = new MockRouter(new App());
+        router.get("/bank/viewAllTransactions", rsp->{
+
+        });
+    }
 }

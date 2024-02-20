@@ -86,8 +86,6 @@ public class App extends Jooby {
         }
 
         try (Connection connection = ds.getConnection()) {
-
-
             Statement stmt = connection.createStatement();
             stmt.executeUpdate("CREATE TABLE `transactionsTable` (`id` int, `businessName` varchar(255),`withdrawn` double)" );
             stmt.executeUpdate("INSERT INTO transactionsTable " + "VALUES (1,'The COOP', 50.00 )");
