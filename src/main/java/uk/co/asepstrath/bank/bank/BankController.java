@@ -1,5 +1,4 @@
 package uk.co.asepstrath.bank.bank;
-
 import ch.qos.logback.core.model.Model;
 import io.jooby.ModelAndView;
 import io.jooby.StatusCode;

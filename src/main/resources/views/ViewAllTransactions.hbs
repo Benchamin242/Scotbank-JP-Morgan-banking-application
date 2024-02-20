@@ -13,6 +13,51 @@
 </div>
 
 
+ <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #007bff;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            background-color: #fff;
+            border: 1px solid #dee2e6;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+
+        p {
+            color: #6c757d;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>All Previous Transactions</h1>
+
+    {{#if spendingSummary}}
+        <ul>
+            {{#each spendingSummary}}
+                <li>
+                    <strong>Business Category:</strong> {{@key}},
+                    <strong>Total Spent:</strong> ${{this}}
+                </li>
+            {{/each}}
+        </ul>
+    {{else}}
+        <p>No transactions available.</p>
+    {{/if}}
 
 
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
