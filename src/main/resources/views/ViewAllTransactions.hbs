@@ -1,54 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
     <meta charset="UTF-8">
     <title>Your Details</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
- <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f8f9fa;
-            padding: 20px;
-        }
-
-        h1 {
-            color: #007bff;
-        }
-
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        li {
-            background-color: #fff;
-            border: 1px solid #dee2e6;
-            margin-bottom: 10px;
-            padding: 10px;
-            border-radius: 4px;
-        }
-
-        p {
-            color: #6c757d;
-        }
-    </style>
 </head>
-
 
 <body>
 <h1> All previous transactions </h1>
-{{#if spendingSummary}}
-  <ul>
-    {{#each spendingSummary}}
-      <li>Business Category: {{@key}}, Total Spent: {{this}}</li>
-    {{/each}}
-  </ul>
-{{else}}
-  <p>No transactions available.</p>
-{{/if}}
-
 <div style="width: 128px; height: 128px; overflow: hidden;">
 </div>
 
