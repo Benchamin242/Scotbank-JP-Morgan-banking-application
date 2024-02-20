@@ -5,6 +5,9 @@ import uk.co.asepstrath.bank.App;
 import io.jooby.StatusCode;
 import org.junit.jupiter.api.Test;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class UnitTest {
@@ -42,6 +45,14 @@ public class UnitTest {
     public void viewAllTransaction(){
         MockRouter router = new MockRouter(new App());
         router.get("/bank/viewAllTransactions", rsp->{
+
+        });
+    }
+
+    @Test
+    public void viewBusinessTransactions() throws SQLException {
+        MockRouter router = new MockRouter(new App());
+        router.get("/bank/viewBusinessTransactions", rsp->{
 
         });
     }
