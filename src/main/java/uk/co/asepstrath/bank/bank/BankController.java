@@ -77,6 +77,10 @@ public class BankController {
         return new ModelAndView("Summary.hbs");
     }
 
+    @GET("/ContactUs")
+    public ModelAndView Contact(){
+        return new ModelAndView("ContactUs.hbs");
+    }
 
     @GET("/hello")
     public String sayHi() {
