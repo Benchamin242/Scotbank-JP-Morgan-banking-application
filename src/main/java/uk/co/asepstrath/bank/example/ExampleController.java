@@ -90,17 +90,6 @@ public class ExampleController {
         }
     }
 
-    @GET("/Login")
-
-    public ModelAndView login(){
-        // If no name has been sent within the query URL
-        String name = "Please";
-        // we must create a model to pass to the "dice" template
-        Map<String, Object> model = new HashMap<>();
-        model.put("name", name);
-
-        return new ModelAndView("loginView.hbs", model);
-    }
 
 
     @GET("/table")
