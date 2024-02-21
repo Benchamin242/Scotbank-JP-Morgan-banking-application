@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+{{>Style.hbs}}
+{{>Header.hbs}}
+{{>Sidebar.hbs}}
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+<div class="w3-main" style="margin-left:340px;margin-right:40px">
+
+    <div class="w3-container" id="services" style="margin-top:75px">
+
+        <head>
+            <meta charset="UTF-8">
+            <title>Roll</title>
+            <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+                  integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        </head>
+        <body>
+        <h1>{{name}} Signup</h1>
+        <form enctype="application/x-www-form-urlencoded" action="/bank/viewAccount" method="post">
+            <label>Name:</label><br>
+            <label>
+                <input type="text" placeholder="Enter full name" name="ID" required>
+            </label><br>
+            <label>Password:</label><br>
+            <label>
+                <input name="password" required/>
+            </label><br>
+            <input type="submit" value="Submit"/>
+
+
+        </form>
+        <p><a href="/bank/Login">cancel</a></p>
+        <script>
+            // Script to open and close sidebar
+            function w3_open() {
+                document.getElementById("mySidebar").style.display = "block";
+                document.getElementById("myOverlay").style.display = "block";
+            }
+
+            function w3_close() {
+                document.getElementById("mySidebar").style.display = "none";
+                document.getElementById("myOverlay").style.display = "none";
+
+            }
+        </script>
+        </body>
+    </div>
+</div>
+</html>
