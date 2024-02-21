@@ -98,6 +98,13 @@ public class BankController {
 
         return new ModelAndView("loginView.hbs", model);
     }
+    @GET("/Signup")
+    public ModelAndView signup(){
+
+        Map<String, Object> model = new HashMap<>();
+
+        return new ModelAndView("signupView.hbs",model);
+    }
     @POST
     @Path("/viewAccount")
     public ModelAndView submit(String accountID) {
