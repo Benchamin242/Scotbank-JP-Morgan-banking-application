@@ -20,10 +20,15 @@
 <form enctype="application/x-www-form-urlencoded" action="/bank/viewAccount" method="post">
     <label>Name:</label><br>
     <label>
-        <input name="ID"/>
+        <input name="id"/>
+    </label><br>
+    <label>Password:</label><br>
+    <label>
+        <input name="password" required/>
     </label><br>
     <input type="submit" value="Submit"/>
 </form>
+<p>not an online user? <a href="/bank/Signup">sign up</a></p>
 <script>
     // Script to open and close sidebar
     function w3_open() {
