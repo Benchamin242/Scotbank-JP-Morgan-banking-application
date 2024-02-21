@@ -67,7 +67,20 @@ public class BankController {
         return new ModelAndView("AccountDetails.hbs");
     }
 
+    @GET("/Transactions")
+    public ModelAndView Transactions(){
+        return new ModelAndView("Transactions.hbs");
+    }
 
+    @GET("/Summary")
+    public ModelAndView Summary(){
+        return new ModelAndView("Summary.hbs");
+    }
+
+    @GET("/ContactUs")
+    public ModelAndView Contact(){
+        return new ModelAndView("ContactUs.hbs");
+    }
 
     @GET("/hello")
     public String sayHi() {

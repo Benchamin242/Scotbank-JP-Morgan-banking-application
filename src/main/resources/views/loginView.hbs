@@ -1,5 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+{{>Style.hbs}}
+{{>Header.hbs}}
+{{>Sidebar.hbs}}
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+<div class="w3-main" style="margin-left:340px;margin-right:40px">
+
+<div class="w3-container" id="services" style="margin-top:75px">
+    
 <head>
     <meta charset="UTF-8">
     <title>Roll</title>
@@ -15,6 +24,20 @@
     </label><br>
     <input type="submit" value="Submit"/>
 </form>
+<script>
+    // Script to open and close sidebar
+    function w3_open() {
+        document.getElementById("mySidebar").style.display = "block";
+        document.getElementById("myOverlay").style.display = "block";
+    }
 
+    function w3_close() {
+        document.getElementById("mySidebar").style.display = "none";
+        document.getElementById("myOverlay").style.display = "none";
+
+    }
+</script>
 </body>
+</div>
+</div>
 </html>
