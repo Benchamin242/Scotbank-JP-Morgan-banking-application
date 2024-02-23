@@ -6,6 +6,7 @@ import io.jooby.handlebars.HandlebarsModule;
 import io.jooby.helper.UniRestExtension;
 import io.jooby.hikari.HikariModule;
 import org.slf4j.Logger;
+import uk.co.asepstrath.bank.bank.AuthController;
 import uk.co.asepstrath.bank.bank.BankController;
 import uk.co.asepstrath.bank.example.ExampleController;
 
@@ -43,8 +44,11 @@ public class App extends Jooby {
         DataSource ds = require(DataSource.class);
         Logger log = getLog();
 
+        BankController bankController = new BankController(ds,log);
+
         mvc(new ExampleController(ds,log));
-        mvc(new BankController(ds, log));
+        mvc(bankController);
+        mvc(new AuthController(bankController));
 
         /*
         Finally we register our application lifecycle methods
@@ -53,14 +57,9 @@ public class App extends Jooby {
         onStop(() -> onStop());
 
 
-        /*get("/Login", req -> {
-            String name = req.form(String.class);
-            Account account = new Account(name);
-            accounts.add(account);
-        });*/
-
 
     }
+    
 
     public static void main(final String[] args) {
         runApp(args, App::new);
@@ -94,13 +93,20 @@ public class App extends Jooby {
             stmt.executeUpdate("INSERT INTO transactionsTable " + "VALUES (1,'The COOP', 50.00 )");
             stmt.executeUpdate("INSERT INTO transactionsTable " + "VALUES (1,'Morrison', 25.00 )");
             stmt.executeUpdate("INSERT INTO transactionsTable " + "VALUES (1,'Tesco', 25.00 )");
-            stmt.executeUpdate("CREATE TABLE `accountsTable` (`id` int, `Name` varchar(255),`Balance` double)");
+            stmt.executeUpdate("CREATE TABLE `accountsTable` (`id` int not null primary key, `Name` varchar(255),`Balance` double)");
             stmt.executeUpdate("INSERT INTO accountsTable " + "VALUES (1,'Rachel', 50.00 )");
             stmt.executeUpdate("INSERT INTO accountsTable " + "VALUES (2,'Monica', 100.00 )");
             stmt.executeUpdate("INSERT INTO accountsTable " + "VALUES (3,'Phoebe', 76.00 )");
             stmt.executeUpdate("INSERT INTO accountsTable " + "VALUES (4,'Joey', 23.90 )");
             stmt.executeUpdate("INSERT INTO accountsTable " + "VALUES (5,'Chandler', 3.00 )");
             stmt.executeUpdate("INSERT INTO accountsTable " + "VALUES (6,'Ross', 54.32 )");
+            stmt.executeUpdate("CREATE TABLE `accountsPassword` (`id` int not null primary key, `password` varchar(255) )");
+            stmt.executeUpdate("INSERT INTO accountsPassword " + "VALUES (1,'couch123')");
+            stmt.executeUpdate("INSERT INTO accountsPassword " + "VALUES (2,'elephant5')");
+            stmt.executeUpdate("INSERT INTO accountsPassword " + "VALUES (3,'456')");
+            stmt.executeUpdate("INSERT INTO accountsPassword " + "VALUES (4,'hey')");
+            stmt.executeUpdate("INSERT INTO accountsPassword " + "VALUES (5,'123apple')");
+            stmt.executeUpdate("INSERT INTO accountsPassword " + "VALUES (6,'bank')");
 
         } catch (SQLException e) {
             log.error("Database Creation Error",e);
