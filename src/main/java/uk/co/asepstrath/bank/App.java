@@ -7,7 +7,7 @@ import io.jooby.helper.UniRestExtension;
 import io.jooby.hikari.HikariModule;
 import org.slf4j.Logger;
 import uk.co.asepstrath.bank.bank.BankController;
-import uk.co.asepstrath.bank.example.ExampleController;
+//
 
 import javax.management.Query;
 import javax.sql.DataSource;
@@ -43,7 +43,7 @@ public class App extends Jooby {
         DataSource ds = require(DataSource.class);
         Logger log = getLog();
 
-        mvc(new ExampleController(ds,log));
+       // mvc(new ExampleController(ds,log));
         mvc(new BankController(ds, log));
 
         /*
