@@ -9,7 +9,6 @@ import kong.unirest.core.HttpResponse;
 import org.slf4j.Logger;
 import uk.co.asepstrath.bank.bank.AuthController;
 import uk.co.asepstrath.bank.bank.BankController;
-import uk.co.asepstrath.bank.example.ExampleController;
 
 import javax.sql.DataSource;
 import java.math.BigDecimal;
@@ -20,6 +19,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import kong.unirest.core.Unirest;
+
+import static java.lang.String.valueOf;
 
 public class App extends Jooby {
     ArrayList<Account> accounts = new ArrayList<Account>();
@@ -47,7 +48,6 @@ public class App extends Jooby {
 
         BankController bankController = new BankController(ds,log);
 
-        mvc(new ExampleController(ds,log));
         mvc(bankController);
         mvc(new AuthController(bankController));
 
@@ -113,7 +113,7 @@ public class App extends Jooby {
 
             //this was just so i could test that it actually is seperating the accounts properly, it just prints out the details of each account
             for(Account account : please){
-                System.out.println(account.toString());
+                //System.out.println(account.toString());
             }
 
 
@@ -128,7 +128,7 @@ public class App extends Jooby {
             for(Account account : please){
 
                 //declaring all our variables to plug into the prepared statement
-                int num = count;
+                String num = String.valueOf(count);
                 String currId = account.getId();
                 String currName = account.getName();
                 double startingBal;
@@ -142,13 +142,14 @@ public class App extends Jooby {
 
 
                 //plugs our variables into the prepared statement, then executes the statement
-                pstmt.setInt(1, num);
+                pstmt.setString(1, num);
                 pstmt.setString(2, currId);
                 pstmt.setString(3, currName);
                 pstmt.setDouble(4, startingBal);
                 pstmt.setBoolean(5, roundE);
 
                 pstmt.executeUpdate();
+                System.out.println(num + currId);
                 count += 1;
             }
 
@@ -156,20 +157,14 @@ public class App extends Jooby {
             stmt.executeUpdate("INSERT INTO transactionsTable " + "VALUES (1,'The COOP', 50.00 )");
             stmt.executeUpdate("INSERT INTO transactionsTable " + "VALUES (1,'Morrison', 25.00 )");
             stmt.executeUpdate("INSERT INTO transactionsTable " + "VALUES (1,'Tesco', 25.00 )");
-            stmt.executeUpdate("CREATE TABLE `accountsTable` (`id` int not null primary key, `Name` varchar(255),`Balance` double)");
-            stmt.executeUpdate("INSERT INTO accountsTable " + "VALUES (1,'Rachel', 50.00 )");
-            stmt.executeUpdate("INSERT INTO accountsTable " + "VALUES (2,'Monica', 100.00 )");
-            stmt.executeUpdate("INSERT INTO accountsTable " + "VALUES (3,'Phoebe', 76.00 )");
-            stmt.executeUpdate("INSERT INTO accountsTable " + "VALUES (4,'Joey', 23.90 )");
-            stmt.executeUpdate("INSERT INTO accountsTable " + "VALUES (5,'Chandler', 3.00 )");
-            stmt.executeUpdate("INSERT INTO accountsTable " + "VALUES (6,'Ross', 54.32 )");
-            stmt.executeUpdate("CREATE TABLE `accountsPassword` (`id` int not null primary key, `password` varchar(255) )");
-            stmt.executeUpdate("INSERT INTO accountsPassword " + "VALUES (1,'couch123')");
-            stmt.executeUpdate("INSERT INTO accountsPassword " + "VALUES (2,'elephant5')");
-            stmt.executeUpdate("INSERT INTO accountsPassword " + "VALUES (3,'456')");
-            stmt.executeUpdate("INSERT INTO accountsPassword " + "VALUES (4,'hey')");
-            stmt.executeUpdate("INSERT INTO accountsPassword " + "VALUES (5,'123apple')");
-            stmt.executeUpdate("INSERT INTO accountsPassword " + "VALUES (6,'bank')");
+
+            stmt.executeUpdate("CREATE TABLE `accountsPassword` (`id` varchar(255), `password` varchar(255) )");
+            stmt.executeUpdate("INSERT INTO accountsPassword " + "VALUES ('1','couch123')");
+            stmt.executeUpdate("INSERT INTO accountsPassword " + "VALUES ('2','elephant5')");
+            stmt.executeUpdate("INSERT INTO accountsPassword " + "VALUES ('3','456')");
+            stmt.executeUpdate("INSERT INTO accountsPassword " + "VALUES ('4','hey')");
+            stmt.executeUpdate("INSERT INTO accountsPassword " + "VALUES ('5','123apple')");
+            stmt.executeUpdate("INSERT INTO accountsPassword " + "VALUES ('6','bank')");
 
         } catch (SQLException e) {
             log.error("Database Creation Error",e);

@@ -115,7 +115,7 @@ public class BankController {
     }
     @POST
     @Path("/viewAccount")
-    public ModelAndView submit(String accountID, String password) {
+    public ModelAndView submit(String accountID) {
         if(accountID == null){
             accountID = "1";
         }
