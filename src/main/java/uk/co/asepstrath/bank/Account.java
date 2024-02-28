@@ -19,15 +19,21 @@ import io.jooby.Route;
 
 
 public class Account {
-    private BigDecimal balance; //BigDecimal is more accurate when doing arithmetic
+
+    private  String id;
     private final String name;
+    private BigDecimal balance; //BigDecimal is more accurate when doing arithmetic
+    private boolean roundupEnabled;
+
     private static final Logger log = LoggerFactory.getLogger(Account.class);
 
 
 
-    public Account(String n){
-        name = n;
-        balance= new BigDecimal("0.00");
+    public Account(String fullName, String uniqueid, BigDecimal startingBal, boolean re){
+        id = uniqueid;
+        name = fullName;
+        balance= startingBal;
+        roundupEnabled = re;
     }
     public void deposit(double x) { // takes in do  uble then turns it into a BigDecimal since it uses arbritary arithmetic
         BigDecimal amount = new BigDecimal(x).setScale(2, RoundingMode.HALF_DOWN);
@@ -40,6 +46,14 @@ public class Account {
     }
     public String getName(){
         return name;
+    }
+
+    public String getId(){
+        return id;
+    }
+
+    public boolean getRe(){
+        return roundupEnabled;
     }
 
 
@@ -57,7 +71,7 @@ public class Account {
 
     @Override
     public String toString() {
-        String result = this.getName() + " " + this.getBalance();
+        String result = this.getId() + " " + this.getName() + " " + this.getBalance() + " " + this.getRe();
         return result;
     }
 }
