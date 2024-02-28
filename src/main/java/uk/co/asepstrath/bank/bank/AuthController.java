@@ -38,19 +38,20 @@ public class AuthController {
         try(Connection connection = bankController.getDataSource().getConnection()){
 
             // Use a prepared statement to avoid SQL injection vulnerabilities
+            //PreparedStatement statementAccounts = connection.prepareStatement("SELECT * FROM `accountsTable` JOIN `accountsPassword` ON accountsTable.accountNum = accountsPassword.accountNum WHERE `accountNum` = ?");
             PreparedStatement statementAccounts = connection.prepareStatement("SELECT * FROM `accountsTable` WHERE `accountNum` = ?");
             // Set the accountID parameter in the prepared statement
             statementAccounts.setString(1, ID);
             ResultSet setAccounts = statementAccounts.executeQuery();
 
             //execute query for stored passwords
-            PreparedStatement statementPassword = connection.prepareStatement("SELECT * FROM `accountsPassword` WHERE `id` = ?");
+            PreparedStatement statementPassword = connection.prepareStatement("SELECT * FROM `accountsPassword` WHERE `accountNum` = ?");
             statementPassword.setString(1,ID);
             ResultSet setPassword = statementPassword.executeQuery();
             while(setPassword.next()){
                 while(setAccounts.next()) {
 
-                    if (setAccounts.getString("accountNum").equals(setPassword.getString("id")) && setPassword.getString("password").equals(password)  ) {
+                    if (setAccounts.getString("accountNum").equals(setPassword.getString("accountNum")) && setPassword.getString("password").equals(password)  ) {
                         return bankController.submit(ID);
                     }
                     //return bankController.Homepage();

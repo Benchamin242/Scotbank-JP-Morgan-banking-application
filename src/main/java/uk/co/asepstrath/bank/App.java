@@ -106,7 +106,7 @@ public class App extends Jooby {
             Statement stmt = connection.createStatement();
 
             //creating our table of accounts, will hold an id, a name, a balance, and a boolean called "roundup enabled"
-            stmt.executeUpdate("CREATE TABLE `accountsTable` (`accountNum` int, `id` varchar(255), `Name` varchar(255),`Balance` double, `roundupEnabled` boolean)");
+            stmt.executeUpdate("CREATE TABLE `accountsTable` (`accountNum` int not null primary key , `id` varchar(255), `Name` varchar(255),`Balance` double, `roundupEnabled` boolean)");
 
             //this splits up our accounts into individual objects of type Account, placing them all in an array called "please"
             Account[] please = help.getBody();
@@ -158,7 +158,8 @@ public class App extends Jooby {
             stmt.executeUpdate("INSERT INTO transactionsTable " + "VALUES (1,'Morrison', 25.00 )");
             stmt.executeUpdate("INSERT INTO transactionsTable " + "VALUES (1,'Tesco', 25.00 )");
 
-            stmt.executeUpdate("CREATE TABLE `accountsPassword` (`id` varchar(255), `password` varchar(255) )");
+            stmt.executeUpdate("CREATE TABLE `accountsPassword` (`accountNum` varchar(255) not null primary key, `password` varchar(255), foreign key (`accountNum`) references `accountsTable`(`accountNum`) )");
+
             stmt.executeUpdate("INSERT INTO accountsPassword " + "VALUES ('1','couch123')");
             stmt.executeUpdate("INSERT INTO accountsPassword " + "VALUES ('2','elephant5')");
             stmt.executeUpdate("INSERT INTO accountsPassword " + "VALUES ('3','456')");
