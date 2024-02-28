@@ -122,16 +122,18 @@ public class BankController {
         try(Connection connection = dataSource.getConnection()){
 
             // Use a prepared statement to avoid SQL injection vulnerabilities
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM `accountsTable` WHERE `id` = ?");
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM `accountsTable` WHERE `accountNum` = ?");
             // Set the accountID parameter in the prepared statement
             statement.setString(1, accountID);
 
             Map<String, Object> model = new HashMap<>();
             ResultSet set = statement.executeQuery();
             while(set.next()){
+                model.put("accountNum", set.getInt("accountNum"));
+                model.put("id", set.getString("id"));
                 model.put("name", set.getString("Name"));
-                model.put("balance", set.getDouble("balance"));
-                model.put("id", set.getInt("id"));
+                model.put("balance", set.getDouble("Balance"));
+                model.put("roundupEnabled", set.getBoolean("roundupEnabled"));
 
             }
 
