@@ -174,7 +174,7 @@ public class BankController {
     public ModelAndView ViewAllTransactions(){
         Map<String, Object> model = new HashMap<>();
 
-        return new ModelAndView("ViewAllTransactions.hbs", model);
+        return new ModelAndView("ViewBusinessTransactions.hbs", model);
 
     }
 
@@ -208,7 +208,7 @@ public class BankController {
             model.put("spendingSummary", spendingSummary);
 
 
-            return new ModelAndView("ViewAllTransactions.hbs", model);
+            return new ModelAndView("ViewBusinessTransactions.hbs", model);
 
         } catch (SQLException e) {
             logger.error("Error providing spending data", e);

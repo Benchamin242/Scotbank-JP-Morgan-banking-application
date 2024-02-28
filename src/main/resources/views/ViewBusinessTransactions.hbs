@@ -26,30 +26,35 @@
         <h1 class="w3-jumbo"><b>Your details</b></h1>
         <hr style="width:500px;border:5px solid red" class="w3-round">
     </div>
-    <div class="accountPage">
-        <div class="account">
-            <h2>Account id: {{id}}</h2>
-            <h3>Name: {{name}}</h3>
-            <h4>Current balance: {{balance}}</h4>
-        </div>
-    </div>
+    {{#if spendingSummary}}
+        <ul>
+            {{#each spendingSummary}}
+                <li>
+                    <strong>Business Category:</strong> {{@key}},
+                    <strong>Total Spent:</strong> ${{this}}
+                </li>
+            {{/each}}
+        </ul>
+    {{else}}
+        <p>No transactions available.</p>
+    {{/if}}
 
 
 
 
-<script>
-    // Script to open and close sidebar
-    function w3_open() {
-        document.getElementById("mySidebar").style.display = "block";
-        document.getElementById("myOverlay").style.display = "block";
-    }
+    <script>
+        // Script to open and close sidebar
+        function w3_open() {
+            document.getElementById("mySidebar").style.display = "block";
+            document.getElementById("myOverlay").style.display = "block";
+        }
 
-    function w3_close() {
-        document.getElementById("mySidebar").style.display = "none";
-        document.getElementById("myOverlay").style.display = "none";
-    }
+        function w3_close() {
+            document.getElementById("mySidebar").style.display = "none";
+            document.getElementById("myOverlay").style.display = "none";
+        }
 
-</script>
+    </script>
 </div>
 </body>
 </html>
