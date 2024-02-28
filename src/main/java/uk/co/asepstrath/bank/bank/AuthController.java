@@ -35,14 +35,6 @@ public class AuthController {
         if(ID == null || password == null){
             return bankController.login();
         }
-        int id;
-        try {
-            id = Integer.parseInt(ID);
-        }
-        catch (NumberFormatException e) {
-             return bankController.login();
-        }
-
         try(Connection connection = bankController.getDataSource().getConnection()){
 
             // Use a prepared statement to avoid SQL injection vulnerabilities
@@ -55,7 +47,7 @@ public class AuthController {
             PreparedStatement statementPassword = connection.prepareStatement("SELECT * FROM `accountsPassword` WHERE `id` = ?");
             statementPassword.setString(1,ID);
             ResultSet setPassword = statementPassword.executeQuery();
-            /*while(setPassword.next()){
+            while(setPassword.next()){
                 while(setAccounts.next()) {
 
                     if (setAccounts.getString("id").equals(setPassword.getString("id")) && setPassword.getString("password").equals(password)  ) {
@@ -63,10 +55,10 @@ public class AuthController {
                     }
                 }
 
-            }*/
+            }
 
-            //setAccounts.close();
-            //setPassword.close();
+            setAccounts.close();
+            setPassword.close();
             return bankController.login();
 
 
@@ -76,8 +68,6 @@ public class AuthController {
             bankController.getLogger().error("Database Error Occurred", e);
             // And return a HTTP 500 error to the requester
             throw new StatusCodeException(StatusCode.SERVER_ERROR, "Database Error Occurred");
-        } finally {
-            bankController.login();
         }
 
     }
