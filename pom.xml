@@ -56,6 +56,13 @@
             <version>2.2.224</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.konghq/unirest-object-mappers-gson -->
+        <dependency>
+            <groupId>com.konghq</groupId>
+            <artifactId>unirest-object-mappers-gson</artifactId>
+            <version>4.2.7</version>
+        </dependency>
+
         <!-- Tests -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
