@@ -8,7 +8,6 @@ import io.jooby.hikari.HikariModule;
 import kong.unirest.core.HttpResponse;
 import org.slf4j.Logger;
 import uk.co.asepstrath.bank.bank.BankController;
-//
 
 import javax.sql.DataSource;
 import java.math.BigDecimal;
@@ -44,7 +43,6 @@ public class App extends Jooby {
         DataSource ds = require(DataSource.class);
         Logger log = getLog();
 
-       // mvc(new ExampleController(ds,log));
         mvc(new BankController(ds, log));
 
         /*
