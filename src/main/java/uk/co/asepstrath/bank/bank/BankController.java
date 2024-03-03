@@ -122,7 +122,7 @@ public class BankController {
         try(Connection connection = dataSource.getConnection()){
 
             // Use a prepared statement to avoid SQL injection vulnerabilities
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM `accountsTable` WHERE `accountNum` = ?");
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM `accountsTable` WHERE `Name` = ?");
             // Set the accountID parameter in the prepared statement
             statement.setString(1, accountID);
 

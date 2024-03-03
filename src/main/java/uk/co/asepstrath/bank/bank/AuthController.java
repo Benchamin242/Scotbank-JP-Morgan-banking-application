@@ -8,6 +8,7 @@ import io.jooby.annotation.Path;
 import io.jooby.annotation.QueryParam;
 import io.jooby.exception.StatusCodeException;
 import org.slf4j.Logger;
+import uk.co.asepstrath.bank.App;
 import uk.co.asepstrath.bank.example.MyMessage;
 
 import javax.sql.DataSource;
@@ -27,39 +28,35 @@ public class AuthController {
     This constructor can take in any dependencies the controller may need to respond to a request
      */
     private BankController bankController;
+
     public AuthController(BankController controller) {
         bankController = controller;
     }
+
     @POST
-    public ModelAndView AuthenticateLogin(String ID, String password) {
-        if(ID == null || password == null){
+    public ModelAndView AuthenticateLogin(String name, String password) {
+        if (name == null || password == null) {
             return bankController.login();
         }
+
         try(Connection connection = bankController.getDataSource().getConnection()){
 
-            // Use a prepared statement to avoid SQL injection vulnerabilities
-            //PreparedStatement statementAccounts = connection.prepareStatement("SELECT * FROM `accountsTable` JOIN `accountsPassword` ON accountsTable.accountNum = accountsPassword.accountNum WHERE `accountNum` = ?");
-            PreparedStatement statementAccounts = connection.prepareStatement("SELECT * FROM `accountsTable` WHERE `accountNum` = ?");
-            // Set the accountID parameter in the prepared statement
-            statementAccounts.setString(1, ID);
-            ResultSet setAccounts = statementAccounts.executeQuery();
+            // SQL query to simulate FULL OUTER JOIN
+            Statement statement = connection.createStatement();;
 
-            //execute query for stored passwords
-            PreparedStatement statementPassword = connection.prepareStatement("SELECT * FROM `accountsPassword` WHERE `accountNum` = ?");
-            statementPassword.setString(1,ID);
-            ResultSet setPassword = statementPassword.executeQuery();
-            while(setPassword.next()){
-                while(setAccounts.next()) {
-
-                    if (setAccounts.getString("accountNum").equals(setPassword.getString("accountNum")) && setPassword.getString("password").equals(password)  ) {
-                        return bankController.submit(ID);
-                    }
-                    //return bankController.Homepage();
+            String sqlQuery = "SELECT * FROM accountsTable LEFT JOIN accountsPassword ON accountsTable.accountNum = accountsPassword.accountNum " +
+                    "UNION " +
+                    "SELECT * FROM accountsTable RIGHT JOIN accountsPassword ON accountsTable.accountNum = accountsPassword.accountNum WHERE accountsTable.accountNum IS NULL";
+            // Create a Statement
+            ResultSet resultSet = statement.executeQuery(sqlQuery);
+            while(resultSet.next()){
+                if (resultSet.getString("Name").equals(name) && resultSet.getString("password").equals(password)  ) {
+                    return bankController.submit(name);
                 }
             }
-
-            setAccounts.close();
-            setPassword.close();
+            resultSet.close();
+            statement.close();
+            connection.close();
             return bankController.login();
 
 
@@ -70,9 +67,5 @@ public class AuthController {
             // And return a HTTP 500 error to the requester
             throw new StatusCodeException(StatusCode.SERVER_ERROR, "Database Error Occurred");
         }
-
     }
-
-
-
 }

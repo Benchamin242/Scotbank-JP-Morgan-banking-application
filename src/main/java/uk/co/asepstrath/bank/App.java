@@ -149,7 +149,7 @@ public class App extends Jooby {
                 pstmt.setBoolean(5, roundE);
 
                 pstmt.executeUpdate();
-                System.out.println(num + currId);
+                System.out.println(num + " " + currId + " " + currName);
                 count += 1;
             }
 
@@ -158,17 +158,17 @@ public class App extends Jooby {
             stmt.executeUpdate("INSERT INTO transactionsTable " + "VALUES (1,'Morrison', 25.00 )");
             stmt.executeUpdate("INSERT INTO transactionsTable " + "VALUES (1,'Tesco', 25.00 )");
 
-            stmt.executeUpdate("CREATE TABLE `accountsPassword` (`accountNum` varchar(255) not null primary key, `password` varchar(255), foreign key (`accountNum`) references `accountsTable`(`accountNum`) )");
+            stmt.executeUpdate("CREATE TABLE `accountsPassword` (`accountNum` int not null primary key, `password` varchar(255), foreign key (`accountNum`) references `accountsTable`(`accountNum`) )");
 
-            stmt.executeUpdate("INSERT INTO accountsPassword " + "VALUES ('1','couch123')");
-            stmt.executeUpdate("INSERT INTO accountsPassword " + "VALUES ('2','elephant5')");
-            stmt.executeUpdate("INSERT INTO accountsPassword " + "VALUES ('3','456')");
-            stmt.executeUpdate("INSERT INTO accountsPassword " + "VALUES ('4','hey')");
-            stmt.executeUpdate("INSERT INTO accountsPassword " + "VALUES ('5','123apple')");
-            stmt.executeUpdate("INSERT INTO accountsPassword " + "VALUES ('6','bank')");
+            stmt.executeUpdate("INSERT INTO accountsPassword " + "VALUES (1,'couch123')");
+            stmt.executeUpdate("INSERT INTO accountsPassword " + "VALUES (2,'elephant5')");
+            stmt.executeUpdate("INSERT INTO accountsPassword " + "VALUES (3,'456')");
+            stmt.executeUpdate("INSERT INTO accountsPassword " + "VALUES (4,'hey')");
+            stmt.executeUpdate("INSERT INTO accountsPassword " + "VALUES (5,'123apple')");
+            stmt.executeUpdate("INSERT INTO accountsPassword " + "VALUES (6,'bank')");
 
         } catch (SQLException e) {
-            log.error("Database Creation Error",e);
+            log.error("Database Creation Error" + e.getMessage());
         }
 
 
