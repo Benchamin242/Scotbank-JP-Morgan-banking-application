@@ -26,34 +26,35 @@
         <h1 class="w3-jumbo"><b>Your details</b></h1>
         <hr style="width:500px;border:5px solid red" class="w3-round">
     </div>
+    {{#if spendingSummary}}
+        <ul>
+            {{#each spendingSummary}}
+                <li>
+                    <strong>Business Category:</strong> {{@key}},
+                    <strong>Total Spent:</strong> ${{this}}
+                </li>
+            {{/each}}
+        </ul>
+    {{else}}
+        <p>No transactions available.</p>
+    {{/if}}
 
 
 
-    <div>
-    <!-- Account details -->
-        <p>Account number: {{accountNum}}</p>
-        <p>Account id: {{id}}</p>
-        <p>Name: {{name}}</p>
-        <p>Current balance: {{balance}}</p>
-        <p>Roundup enabled: {{roundupEnabled}}</p>
-    </div>
 
+    <script>
+        // Script to open and close sidebar
+        function w3_open() {
+            document.getElementById("mySidebar").style.display = "block";
+            document.getElementById("myOverlay").style.display = "block";
+        }
 
+        function w3_close() {
+            document.getElementById("mySidebar").style.display = "none";
+            document.getElementById("myOverlay").style.display = "none";
+        }
 
-
-<script>
-    // Script to open and close sidebar
-    function w3_open() {
-        document.getElementById("mySidebar").style.display = "block";
-        document.getElementById("myOverlay").style.display = "block";
-    }
-
-    function w3_close() {
-        document.getElementById("mySidebar").style.display = "none";
-        document.getElementById("myOverlay").style.display = "none";
-    }
-
-</script>
+    </script>
 </div>
 </body>
 </html>

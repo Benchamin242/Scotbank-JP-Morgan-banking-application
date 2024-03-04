@@ -1,46 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 
-
-
-{{>style.hbs}}
-
 <body>
-
 {{> Sidebar.hbs }}
-
-<!-- Top menu on small screens -->
-{{>header.hbs}}
-
-
+{{> Style.hbs}}
+{{> Header.hbs}}
 
 <!-- Overlay effect when opening sidebar on small screens -->
 <div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
 
-<!-- !PAGE CONTENT! -->
-<div class="w3-main" style="margin-left:340px;margin-right:40px">
+<!-- Top Container -->
+<div class="w3-light-grey w3-container w3-padding-32 top-container" style="border-bottom: 5px solid black; display: flex; justify-content: space-between; align-items: center;">
+    <h1 class="w3-jumbo" style="margin: 0;"><b>Welcome To Scotbank</b></h1>
+    <div style="margin-right: 20px;">
+        <a href="http://localhost:8080/bank/Signup" class="white-button" style="background-color: white; color: red; padding: 10px 20px; border: 2px solid red; border-radius: 5px; cursor: pointer; margin-right: 20px;">Signup</a>
+        <a href="http://localhost:8080/bank/Login" class="login-button" style="background-color: red; color: white; padding: 10px 20px; border: 2px solid black; border-radius: 5px; cursor: pointer;">Secure Login</a>
+    </div>
+</div>
 
+<!-- !PAGE CONTENT! -->
+<div class="w3-main" style="margin-left:340px;margin-right:40px;margin-bottom: 40px; margin-top: 0;">
     <!-- Header -->
-    <div class="w3-container" style="margin-top:80px" id="showcase">
-        <h1 class="w3-jumbo"><b>Welcome To Scotbank</b></h1>
-        <h1 class="w3-xxxlarge w3-text-red"><b>Homepage.</b></h1>
+    <div class="w3-container" style="margin-top:40px" id="showcase">
+        <h1 class="w3-xxxlarge w3-text-red"><b>Homepage</b></h1>
         <hr style="width:50px;border:5px solid red" class="w3-round">
     </div>
-
-
-
-
-
-
-
-
-
+    <p>Welcome to Scotbank, your trusted financial partner in Scotland's central belt since the 1970s. We blend tradition with innovation, now offering digital banking services to better serve you, our valued customers.</p>
     <!-- End page content -->
 </div>
 
 <!-- W3.CSS Container -->
-<div class="w3-light-grey w3-container w3-padding-32" style="margin-top:75px;padding-right:58px"><p class="w3-right">Group 6 </p></div>
+<div class="w3-light-grey w3-container w3-padding-32 bottom-container" style="position: fixed; bottom: 0; width: 100%;">
+    <p class="w3-right">Group 6</p>
+</div>
 
+<!-- JavaScript and any additional scripts -->
 <script>
     // Script to open and close sidebar
     function w3_open() {
@@ -61,6 +55,27 @@
         captionText.innerHTML = element.alt;
     }
 </script>
+
+<style>
+    @media only screen and (max-width: 768px) {
+        .top-container {
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 20px;
+            position: static;
+            width: auto;
+            left: auto;
+            right: auto;
+        }
+        .top-container h1 {
+            margin-bottom: 20px;
+        }
+        .top-container div {
+            margin-top: 20px;
+            margin-right: 0;
+        }
+    }
+</style>
 
 </body>
 </html>
