@@ -5,7 +5,6 @@ import io.jooby.handlebars.HandlebarsModule;
 import io.jooby.helper.UniRestExtension;
 import io.jooby.hikari.HikariModule;
 import kong.unirest.core.HttpResponse;
-import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 import org.jasypt.iv.RandomIvGenerator;
 import org.jasypt.util.password.StrongPasswordEncryptor;
 import org.slf4j.Logger;
