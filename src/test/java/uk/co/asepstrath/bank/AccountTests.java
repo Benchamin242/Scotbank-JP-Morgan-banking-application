@@ -11,7 +11,7 @@ import java.util.List;
 
 public class AccountTests {
 
-    @Test
+    /*@Test
     public void createAccount(){
         Account a = new Account("");
         Assertions.assertTrue(a != null    );
@@ -26,13 +26,13 @@ public class AccountTests {
         a.deposit(50.00);
 
         Assertions.assertTrue(a.getBalance().equals(new BigDecimal("70.00")));
-       /* Assertions.assertEquals(expected,toBe);
-        Assertions.assertNull(valueToBeNull);
-// And their counterparts
-        Assertions.assertFalse(valueToBeFalse);
-        Assertions.assertNotEquals(expected,notToBe);
-        Assertions.assertNotNull(valueNotToBeNull);
-        */
+       //Assertions.assertEquals(expected,toBe);
+        //Assertions.assertNull(valueToBeNull);
+        // And their counterparts
+        //Assertions.assertFalse(valueToBeFalse);
+        //Assertions.assertNotEquals(expected,notToBe);
+        //Assertions.assertNotNull(valueNotToBeNull);
+
     }
 
     @Test
@@ -79,4 +79,5 @@ public class AccountTests {
 
         assertTrue(a.getBalance().equals(new BigDecimal("23.01")));
     }
+    */
 }

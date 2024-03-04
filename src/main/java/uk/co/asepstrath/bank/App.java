@@ -5,6 +5,9 @@ import io.jooby.handlebars.HandlebarsModule;
 import io.jooby.helper.UniRestExtension;
 import io.jooby.hikari.HikariModule;
 import kong.unirest.core.HttpResponse;
+import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
+import org.jasypt.iv.RandomIvGenerator;
+import org.jasypt.util.password.StrongPasswordEncryptor;
 import org.slf4j.Logger;
 import uk.co.asepstrath.bank.bank.AuthController;
 import uk.co.asepstrath.bank.bank.BankController;
@@ -18,16 +21,20 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import kong.unirest.core.Unirest;
+import io.jooby.jasypt.JasyptModule;
 
 import static java.lang.String.valueOf;
 
 public class App extends Jooby {
     ArrayList<Account> accounts = new ArrayList<Account>();
+    AuthController authController;
+    BankController bankController;
     {
 
         /*
         This section is used for setting up the Jooby Framework modules
          */
+        //install(new JasyptModule());
         install(new UniRestExtension());
         install(new HandlebarsModule());
         install(new HikariModule("mem"));
@@ -45,10 +52,11 @@ public class App extends Jooby {
         DataSource ds = require(DataSource.class);
         Logger log = getLog();
 
-        BankController bankController = new BankController(ds,log);
+        bankController = new BankController(ds,log);
+        authController = new AuthController(bankController);
 
         mvc(bankController);
-        mvc(new AuthController(bankController));
+        mvc(authController);
 
         /*
         Finally we register our application lifecycle methods
@@ -151,18 +159,18 @@ public class App extends Jooby {
                 System.out.println(num + " " + currId + " " + currName);
                 count += 1;
             }
-
             stmt.executeUpdate("CREATE TABLE `transactionsTable` (`id` int, `businessName` varchar(255),`withdrawn` double)" );
             stmt.executeUpdate("INSERT INTO transactionsTable " + "VALUES (1,'The COOP', 50.00 )");
             stmt.executeUpdate("INSERT INTO transactionsTable " + "VALUES (1,'Morrison', 25.00 )");
             stmt.executeUpdate("INSERT INTO transactionsTable " + "VALUES (1,'Tesco', 25.00 )");
+            String testPassword = authController.getPasswordEncryptor().encryptPassword("test");
+            String test2 = "temp";
 
             stmt.executeUpdate("CREATE TABLE `accountsPassword` (`accountNum` int not null primary key, `password` varchar(255), foreign key (`accountNum`) references `accountsTable`(`accountNum`) )");
-
-            stmt.executeUpdate("INSERT INTO accountsPassword " + "VALUES (1,'couch123')");
-            stmt.executeUpdate("INSERT INTO accountsPassword " + "VALUES (2,'elephant5')");
-            stmt.executeUpdate("INSERT INTO accountsPassword " + "VALUES (3,'456')");
-            stmt.executeUpdate("INSERT INTO accountsPassword " + "VALUES (4,'hey')");
+            stmt.executeUpdate("INSERT INTO accountsPassword " + "VALUES (1,'"+ testPassword +"')");
+            stmt.executeUpdate("INSERT INTO accountsPassword " + "VALUES (2, '"+ authController.getPasswordEncryptor().encryptPassword("couch123") +"')");
+            stmt.executeUpdate("INSERT INTO accountsPassword " + "VALUES (3,'"+ authController.getPasswordEncryptor().encryptPassword("456") +"')");
+            stmt.executeUpdate("INSERT INTO accountsPassword " + "VALUES (4,'"+ authController.getPasswordEncryptor().encryptPassword("testing") +"')");
             stmt.executeUpdate("INSERT INTO accountsPassword " + "VALUES (5,'123apple')");
             stmt.executeUpdate("INSERT INTO accountsPassword " + "VALUES (6,'bank')");
 

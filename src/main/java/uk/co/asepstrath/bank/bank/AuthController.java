@@ -2,19 +2,13 @@ package uk.co.asepstrath.bank.bank;
 
 import io.jooby.ModelAndView;
 import io.jooby.StatusCode;
-import io.jooby.annotation.GET;
 import io.jooby.annotation.POST;
 import io.jooby.annotation.Path;
-import io.jooby.annotation.QueryParam;
 import io.jooby.exception.StatusCodeException;
-import org.slf4j.Logger;
-import uk.co.asepstrath.bank.App;
-import uk.co.asepstrath.bank.example.MyMessage;
+import org.jasypt.exceptions.EncryptionOperationNotPossibleException;
+import org.jasypt.util.password.StrongPasswordEncryptor;
 
-import javax.sql.DataSource;
 import java.sql.*;
-import java.util.HashMap;
-import java.util.Map;
 
 /*
     Example Controller is a Controller from the MVC paradigm.
@@ -32,10 +26,16 @@ public class AuthController {
     public AuthController(BankController controller) {
         bankController = controller;
     }
+    private StrongPasswordEncryptor passwordEncryptor = new StrongPasswordEncryptor();
+    public StrongPasswordEncryptor getPasswordEncryptor(){
+        return passwordEncryptor;
+    }
+
+
 
     @POST
-    public ModelAndView AuthenticateLogin(String name, String password) {
-        if (name == null || password == null) {
+    public ModelAndView AuthenticateLogin(String name, String password1) {
+        if (name == null || password1 == null) {
             return bankController.login();
         }
 
@@ -48,11 +48,18 @@ public class AuthController {
                     "UNION " +
                     "SELECT * FROM accountsTable RIGHT JOIN accountsPassword ON accountsTable.accountNum = accountsPassword.accountNum WHERE accountsTable.accountNum IS NULL";
             // Create a Statement
+            //String encryptedPassword = passwordEncryptor.encryptPassword("test");
             ResultSet resultSet = statement.executeQuery(sqlQuery);
+
             while(resultSet.next()){
-                if (resultSet.getString("Name").equals(name) && resultSet.getString("password").equals(password)  ) {
-                    return bankController.submit(name);
+                try { //catches non-encrypted password
+                    if (resultSet.getString("Name").equals(name) && resultSet.getString("password") != null && passwordEncryptor.checkPassword(password1, resultSet.getString("password"))) {
+                        return bankController.submit(name);
+                    }
+                }catch(EncryptionOperationNotPossibleException ignored){
+
                 }
+
             }
             resultSet.close();
             statement.close();
