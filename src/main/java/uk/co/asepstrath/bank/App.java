@@ -62,6 +62,10 @@ public class App extends Jooby {
 
     }
 
+    private void onStop() {
+        System.out.println("Shutting Down...");
+    }
+
     public static void main(final String[] args) {
         runApp(args, App::new);
     }
@@ -101,20 +105,18 @@ public class App extends Jooby {
             stmt.executeUpdate("INSERT INTO accountsTable " + "VALUES (4,'Joey', 23.90 )");
             stmt.executeUpdate("INSERT INTO accountsTable " + "VALUES (5,'Chandler', 3.00 )");
             stmt.executeUpdate("INSERT INTO accountsTable " + "VALUES (6,'Ross', 54.32 )");
+            stmt.executeUpdate("CREATE TABLE `transactionHistory` (`id` int, `paidTo` varchar(255), `amount` double)");
+            stmt.executeUpdate("INSERT INTO transactionHistory" + "VALUES (4, 'Rachel', 6.10)");
+            stmt.executeUpdate("INSERT INTO transactionHistory" + "VALUES (4, 'Ross', 10)");
+
 
         } catch (SQLException e) {
             log.error("Database Creation Error",e);
         }
 
-
-    }
-
-
     /*
     This function will be called when the application shuts down
      */
-    public void onStop() {
-        System.out.println("Shutting Down...");
-    }
 
-}
+
+}}

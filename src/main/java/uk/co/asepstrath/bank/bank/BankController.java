@@ -161,9 +161,33 @@ public class BankController {
 
     @GET("/viewAllTransactions")
     public ModelAndView ViewAllTransactions(){
-        Map<String, Object> model = new HashMap<>();
 
-        return new ModelAndView("ViewAllTransactions.hbs", model);
+        try (Connection connection = dataSource.getConnection()) {
+            Statement stmt = connection.createStatement();
+            ResultSet resultSet = stmt.executeQuery("SELECT * FROM transactionHistory");
+
+            Map<String, Double> values = new HashMap<>();
+
+            while (resultSet.next()) {
+                String paidTo = resultSet.getString("paidTo");
+                double due = resultSet.getDouble("amount");
+
+                values.put(paidTo, values.getOrDefault(paidTo, 0.0) + due);
+                values.put(paidTo, values.getOrDefault(paidTo, 0.0) + due);
+            }
+
+
+            Map<String, Object> model = new HashMap<>();
+            model.put("transaction", values);
+
+
+            return new ModelAndView("Transactions.hbs", model);
+
+        } catch (SQLException e) {
+            logger.error("Error providing spending data", e);
+            throw new StatusCodeException(StatusCode.SERVER_ERROR, "Error providing business data", e);
+
+        }
 
     }
 
@@ -185,9 +209,13 @@ public class BankController {
             ResultSet resultSet = stmt.executeQuery("SELECT businessName, withdrawn FROM transactionsTable");
 
             Map<String, Double> spendingSummary = new HashMap<>();
+
             while (resultSet.next()) {
                 String businessCategory = resultSet.getString("businessName");
                 double amountWithdrawn = resultSet.getDouble("withdrawn");
+
+                spendingSummary.put(businessCategory, spendingSummary.getOrDefault(businessCategory, 0.0) + amountWithdrawn);
+
 
                 spendingSummary.put(businessCategory, spendingSummary.getOrDefault(businessCategory, 0.0) + amountWithdrawn);
             }
@@ -201,7 +229,8 @@ public class BankController {
 
         } catch (SQLException e) {
             logger.error("Error providing spending data", e);
-            throw new StatusCodeException(StatusCode.SERVER_ERROR, "Error providing spending data", e);
+            throw new StatusCodeException(StatusCode.SERVER_ERROR, "Error providing business data", e);
+
         }
     }
 }
