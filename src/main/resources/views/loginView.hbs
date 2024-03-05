@@ -17,14 +17,14 @@
 </head>
 <body>
 <h1>{{name}} Login</h1>
-<form enctype="application/x-www-form-urlencoded" action="/bank/viewAccount" method="post">
+<form enctype="application/x-www-form-urlencoded" action="/bank/Login" method="post">
     <label>Name:</label><br>
     <label>
-        <input name="id"/>
+        <input name="id" required/>
     </label><br>
     <label>Password:</label><br>
     <label>
-        <input name="password" required/>
+        <input type="password" name="password" required/>
     </label><br>
     <input type="submit" value="Submit"/>
 </form>

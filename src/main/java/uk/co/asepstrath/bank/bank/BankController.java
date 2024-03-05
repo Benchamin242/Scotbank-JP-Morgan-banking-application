@@ -5,6 +5,7 @@ import io.jooby.StatusCode;
 import io.jooby.annotation.*;
 import io.jooby.exception.StatusCodeException;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import kong.unirest.core.Unirest;
 import org.slf4j.Logger;
 import uk.co.asepstrath.bank.Account;
@@ -26,6 +27,7 @@ import java.util.Random;
     The @Path Annotation will tell Jooby what /path this Controller can respond to,
     in this case the controller will respond to requests from <host>/example
  */
+@Singleton
 @Path("/bank")
 public class BankController {
 
@@ -45,6 +47,12 @@ public class BankController {
     The @GET annotation denotes that this function should be invoked when a GET HTTP request is sent to <host>/example
     The returned string will then be sent to the requester
      */
+    public DataSource getDataSource(){
+        return dataSource;
+    }
+    public Logger getLogger(){
+        return logger;
+    }
     @GET
     public String welcome() {
 
@@ -114,7 +122,7 @@ public class BankController {
         try(Connection connection = dataSource.getConnection()){
 
             // Use a prepared statement to avoid SQL injection vulnerabilities
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM `accountsTable` WHERE `accountNum` = ?");
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM `accountsTable` WHERE `Name` = ?");
             // Set the accountID parameter in the prepared statement
             statement.setString(1, accountID);
 
@@ -128,6 +136,7 @@ public class BankController {
                 model.put("roundupEnabled", set.getBoolean("roundupEnabled"));
 
             }
+
             set.close();
             return new ModelAndView("simpleDetails.hbs", model);
 
