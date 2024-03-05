@@ -1,12 +1,14 @@
 package uk.co.asepstrath.bank.bank;
 
 import io.jooby.ModelAndView;
+import io.jooby.Session;
 import io.jooby.StatusCode;
 import io.jooby.annotation.POST;
 import io.jooby.annotation.Path;
 import io.jooby.exception.StatusCodeException;
 import org.jasypt.exceptions.EncryptionOperationNotPossibleException;
 import org.jasypt.util.password.StrongPasswordEncryptor;
+import io.jooby.Context;
 
 import java.sql.*;
 
@@ -34,7 +36,7 @@ public class AuthController {
 
 
     @POST
-    public ModelAndView AuthenticateLogin(String name, String password1) {
+    public ModelAndView AuthenticateLogin(String name, String password1,Context ctx) {
         if (name == null || password1 == null) {
             return bankController.login();
         }
@@ -54,7 +56,13 @@ public class AuthController {
             while(resultSet.next()){
                 try { //catches non-encrypted password
                     if (resultSet.getString("Name").equals(name) && resultSet.getString("password") != null && passwordEncryptor.checkPassword(password1, resultSet.getString("password"))) {
-                        return bankController.submit(name);
+
+                        Session CurrentSession= ctx.session();
+                        //CurrentSession.put("id",resultSet.getString("id"));
+                        CurrentSession.setId(resultSet.getString("id"));
+                        //CurrentSession.put("id", resultSet.getString("id"));
+
+                        return bankController.submit(CurrentSession);
                     }
                 }catch(EncryptionOperationNotPossibleException ignored){
 
@@ -75,4 +83,5 @@ public class AuthController {
             throw new StatusCodeException(StatusCode.SERVER_ERROR, "Database Error Occurred");
         }
     }
+
 }

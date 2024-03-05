@@ -1,6 +1,8 @@
 package uk.co.asepstrath.bank.bank;
 import ch.qos.logback.core.model.Model;
+import io.jooby.Context;
 import io.jooby.ModelAndView;
+import io.jooby.Session;
 import io.jooby.StatusCode;
 import io.jooby.annotation.*;
 import io.jooby.exception.StatusCodeException;
@@ -96,16 +98,34 @@ public class BankController {
     }
 
     @GET("/Login")
-
     public ModelAndView login(){
         // If no name has been sent within the query URL
         String name = "Please";
         // we must create a model to pass to the "dice" template
         Map<String, Object> model = new HashMap<>();
         model.put("name", name);
-
         return new ModelAndView("loginView.hbs", model);
+
     }
+
+    /*public String checkIfLoggedIn(Context ctx){
+
+        Session CurrentSession = ctx.session();
+        try {
+            return String.valueOf(CurrentSession.get("id"));
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+    }*/
+
+  /*  public void something(ModelAndView model,Context ctx){
+        if (checkIfLoggedIn(ctx) != null){
+            model.put("UserLoggedIn", Boolean.TRUE);
+        } else {
+            model.put("UserLoggedIn", Boolean.FALSE);
+        }
+    } */
+
     @GET("/Signup")
     public ModelAndView signup(){
 
@@ -115,16 +135,17 @@ public class BankController {
     }
     @POST
     @Path("/viewAccount")
-    public ModelAndView submit(String accountID) {
-        if(accountID == null){
-            accountID = "1";
-        }
+    public ModelAndView submit(Session session) {
         try(Connection connection = dataSource.getConnection()){
 
             // Use a prepared statement to avoid SQL injection vulnerabilities
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM `accountsTable` WHERE `Name` = ?");
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM `accountsTable` WHERE `id` = ?");
             // Set the accountID parameter in the prepared statement
-            statement.setString(1, accountID);
+            System.out.println(session.get("id"));
+            System.out.println(session.getId());
+
+
+            statement.setString(1, session.getId());
 
             Map<String, Object> model = new HashMap<>();
             ResultSet set = statement.executeQuery();
@@ -170,6 +191,7 @@ public class BankController {
 
             }
             set.close();
+
             return new ModelAndView("simpleDetails.hbs", model);
 
         } catch (SQLException e) {
