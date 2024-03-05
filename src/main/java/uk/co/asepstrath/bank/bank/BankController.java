@@ -63,8 +63,8 @@ public class BankController {
 
 
     @GET("/homepage")
-    public ModelAndView Homepage(){
-        return new ModelAndView("Home.hbs");
+    public ModelAndView Homepage(Context ctx){
+        return setBoolean(new ModelAndView("Home.hbs"),ctx);
     }
     /*
     This @Get annotation takes an optional path parameter which denotes the function should be invoked on GET <host>/example/hello
@@ -73,23 +73,24 @@ public class BankController {
 
 
     @GET("/AccountDetails")
-    public ModelAndView AccountDetails(){
-        return new ModelAndView("AccountDetails.hbs");
+    public ModelAndView AccountDetails(Context ctx){
+
+        return setBoolean(new ModelAndView("AccountDetails.hbs"),ctx);
     }
 
     @GET("/Transactions")
-    public ModelAndView Transactions(){
-        return new ModelAndView("Transactions.hbs");
+    public ModelAndView Transactions(Context ctx){
+        return setBoolean(new ModelAndView("Transactions.hbs"),ctx);
     }
 
     @GET("/Summary")
-    public ModelAndView Summary(){
-        return new ModelAndView("Summary.hbs");
+    public ModelAndView Summary(Context ctx){
+        return setBoolean(new ModelAndView("Summary.hbs"),ctx);
     }
 
     @GET("/ContactUs")
-    public ModelAndView Contact(){
-        return new ModelAndView("ContactUs.hbs");
+    public ModelAndView Contact(Context ctx){
+        return setBoolean(new ModelAndView("ContactUs.hbs"),ctx);
     }
 
     @GET("/hello")
@@ -108,7 +109,7 @@ public class BankController {
 
     }
 
-    /*public String checkIfLoggedIn(Context ctx){
+    public String checkIfLoggedIn(Context ctx){
 
         Session CurrentSession = ctx.session();
         try {
@@ -116,15 +117,16 @@ public class BankController {
         } catch (IllegalArgumentException e) {
             return null;
         }
-    }*/
+    }
 
-  /*  public void something(ModelAndView model,Context ctx){
+    public ModelAndView setBoolean(ModelAndView model,Context ctx){
         if (checkIfLoggedIn(ctx) != null){
-            model.put("UserLoggedIn", Boolean.TRUE);
+            model.put("userLoggedIn", Boolean.TRUE);
         } else {
-            model.put("UserLoggedIn", Boolean.FALSE);
+            model.put("userLoggedIn", Boolean.FALSE);
         }
-    } */
+        return model;
+    }
 
     @GET("/Signup")
     public ModelAndView signup(){
@@ -170,8 +172,10 @@ public class BankController {
     }
 
     @GET("/viewAccount")
-    public ModelAndView viewAccounts(@QueryParam String accountID){
-
+    public ModelAndView viewAccounts(Context ctx){
+        Session session= ctx.session();
+        //CurrentSession.put("id",resultSet.getString("id"));
+        String accountID = session.getId();
         if(accountID == null){
             accountID = "1";
         }
@@ -180,19 +184,25 @@ public class BankController {
             // Use a prepared statement to avoid SQL injection vulnerabilities
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM `accountsTable` WHERE `id` = ?");
             // Set the accountID parameter in the prepared statement
-            statement.setString(1, accountID);
+            System.out.println(session.get("id"));
+            System.out.println(session.getId());
+
+
+            statement.setString(1, String.valueOf(session.get("id")));
 
             Map<String, Object> model = new HashMap<>();
             ResultSet set = statement.executeQuery();
             while(set.next()){
+                model.put("accountNum", set.getInt("accountNum"));
+                model.put("id", set.getString("id"));
                 model.put("name", set.getString("Name"));
-                model.put("balance", set.getDouble("balance"));
-                model.put("id", set.getInt("id"));
+                model.put("balance", set.getDouble("Balance"));
+                model.put("roundupEnabled", set.getBoolean("roundupEnabled"));
 
             }
-            set.close();
 
-            return new ModelAndView("simpleDetails.hbs", model);
+            set.close();
+            return setBoolean(new ModelAndView("simpleDetails.hbs", model),ctx);
 
         } catch (SQLException e) {
             // If something does go wrong this will log the stack trace
@@ -223,7 +233,7 @@ public class BankController {
 
 
     @GET("/viewBusinessTransactions")
-    public ModelAndView viewAllTransactions() {
+    public ModelAndView viewAllTransactions(Context ctx) {
         try (Connection connection = dataSource.getConnection()) {
             Statement stmt = connection.createStatement();
             ResultSet resultSet = stmt.executeQuery("SELECT businessName, withdrawn FROM transactionsTable");
@@ -241,7 +251,8 @@ public class BankController {
             model.put("spendingSummary", spendingSummary);
 
 
-            return new ModelAndView("ViewBusinessTransactions.hbs", model);
+            return setBoolean(new ModelAndView("ViewBusinessTransactions.hbs"),ctx);
+
 
         } catch (SQLException e) {
             logger.error("Error providing spending data", e);

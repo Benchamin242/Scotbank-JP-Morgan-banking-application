@@ -58,10 +58,10 @@ public class AuthController {
                     if (resultSet.getString("Name").equals(name) && resultSet.getString("password") != null && passwordEncryptor.checkPassword(password1, resultSet.getString("password"))) {
 
                         Session CurrentSession= ctx.session();
-                        //CurrentSession.put("id",resultSet.getString("id"));
-                        CurrentSession.setId(resultSet.getString("id"));
+                        CurrentSession.put("id",resultSet.getString("id"));
+                        //CurrentSession.se(resultSet.getString("id"));
                         //CurrentSession.put("id", resultSet.getString("id"));
-
+                        ctx.sendRedirect("/bank/viewAccount");
                         return bankController.submit(CurrentSession);
                     }
                 }catch(EncryptionOperationNotPossibleException ignored){
@@ -82,6 +82,23 @@ public class AuthController {
             // And return a HTTP 500 error to the requester
             throw new StatusCodeException(StatusCode.SERVER_ERROR, "Database Error Occurred");
         }
+        /*public String checkIfLoggedIn(Context ctx){
+
+        Session CurrentSession = ctx.session();
+        try {
+            return String.valueOf(CurrentSession.get("id"));
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+    }*/
+
+  /*  public void setBoolean(ModelAndView model,Context ctx){
+        if (checkIfLoggedIn(ctx) != null){
+            model.put("UserLoggedIn", Boolean.TRUE);
+        } else {
+            model.put("UserLoggedIn", Boolean.FALSE);
+        }
+    } */
     }
 
 }
