@@ -199,9 +199,33 @@ public class BankController {
         return "You successfully POSTed: "+message.Message+ " To: "+message.Recipient;
     }
 
+    @GET("/viewAllTransactions")
+    public ModelAndView viewAllTransactions(){
+        try(Connection connection = dataSource.getConnection()){
+            Statement stmt = connection.createStatement();
+            ResultSet resultset = stmt.executeQuery("SELECT paidTo, amount FROM transactionHistory");
+
+            Map<String, Double> values = new HashMap<>();
+            while(resultset.next()){
+                String payingToo = resultset.getString("paidTo");
+                Double amount = resultset.getDouble("amount");
+
+                values.put(payingToo, values.getOrDefault(payingToo, 0.0) + amount);
+            }
+            Map<String, Object> model = new HashMap<>();
+            model.put("values", values);
+
+            return new ModelAndView("ViewAllTransactions.hbs", model);
+
+        } catch (SQLException e) {
+            logger.error("Error providing spending data", e);
+            throw new StatusCodeException(StatusCode.SERVER_ERROR, "Error providing spending data", e);
+        }
+    }
+
 
     @GET("/viewBusinessTransactions")
-    public ModelAndView viewAllTransactions() {
+    public ModelAndView viewBusinessTransactions() {
         try (Connection connection = dataSource.getConnection()) {
             Statement stmt = connection.createStatement();
             ResultSet resultSet = stmt.executeQuery("SELECT businessName, withdrawn FROM transactionsTable");
