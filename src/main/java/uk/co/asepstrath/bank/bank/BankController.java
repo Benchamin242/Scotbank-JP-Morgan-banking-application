@@ -115,7 +115,7 @@ public class BankController {
     public void logout(Context ctx){
         Session CurrentSession = ctx.session();
         CurrentSession.destroy();
-        ctx.sendRedirect("/");
+        ctx.sendRedirect("/bank/homepage");
     }
 
     public String checkIfLoggedIn(Context ctx){
