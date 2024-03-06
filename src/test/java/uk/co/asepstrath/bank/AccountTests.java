@@ -26,8 +26,8 @@ class AccountTests {
     @Test
     void addFunds() {
         Account a = new Account("testname","testID", new BigDecimal(10.00), false);
-        a.deposit(20.00);
-        a.deposit(50.00);
+        a.deposit(BigDecimal.valueOf(20.00));
+        a.deposit(BigDecimal.valueOf(50.00));
 
         assertEquals(a.getBalance(), new BigDecimal("80.00"));
        //Assertions.assertEquals(expected,toBe);
@@ -42,7 +42,7 @@ class AccountTests {
     @Test
     void withdrawFunds() {
         Account a = new Account("testname","testID", new BigDecimal(10.00), false);
-        a.deposit(40);
+        a.deposit(BigDecimal.valueOf(40));
         a.withdraw(20);
 
         assertEquals(a.getBalance(), new BigDecimal("30.00"));
@@ -51,7 +51,7 @@ class AccountTests {
     @Test
     void withdrawOverdraft() {
         Account a = new Account("testname","testID", new BigDecimal(10.00), false);
-        a.deposit(30);
+        a.deposit(BigDecimal.valueOf(30));
 
 
         Assertions.assertThrows(ArithmeticException.class,() -> a.withdraw(100));
@@ -60,12 +60,12 @@ class AccountTests {
     @Test
     void test5() {
         Account a = new Account("testname","testID", new BigDecimal(00.00), false);
-        a.deposit(20.00);
-        a.deposit(10.00);
-        a.deposit(10.00);
-        a.deposit(10.00);
-        a.deposit(10.00);
-        a.deposit(10.00);
+        a.deposit(BigDecimal.valueOf(20.00));
+        a.deposit(BigDecimal.valueOf(10.00));
+        a.deposit(BigDecimal.valueOf(10.00));
+        a.deposit(BigDecimal.valueOf(10.00));
+        a.deposit(BigDecimal.valueOf(10.00));
+        a.deposit(BigDecimal.valueOf(10.00));
         a.withdraw(20.00);
         a.withdraw(20.00);
         a.withdraw(20.00);
@@ -78,8 +78,8 @@ class AccountTests {
     @Test
     void pennies(){
         Account a = new Account("testname","testID", new BigDecimal(0.00), false);
-        a.deposit(5.45);
-        a.deposit(17.56);
+        a.deposit(BigDecimal.valueOf(5.45));
+        a.deposit(BigDecimal.valueOf(17.56));
 
         assertEquals(a.getBalance(), new BigDecimal("23.01"));
     }
@@ -108,5 +108,19 @@ class AccountTests {
         assertEquals(val, a.getBalance());
         assertEquals(re, a.getRe());
         assertEquals(Test.toString(), a.toString());
+    }
+
+    @Test
+    public void depositTest(){
+        Account a = new Account("Pls", "Work", new BigDecimal(0), false);
+
+        BigDecimal initial = new BigDecimal(String.valueOf(a.getBalance()));
+        BigDecimal add = new BigDecimal(100);
+
+        a.deposit(add);
+
+        BigDecimal expected = initial.add(new BigDecimal(String.valueOf(add)).setScale(2, BigDecimal.ROUND_HALF_DOWN));
+
+        assertEquals(expected, a.getBalance());
     }
 }

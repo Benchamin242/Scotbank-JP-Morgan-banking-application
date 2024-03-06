@@ -35,8 +35,9 @@ public class Account {
         balance= startingBal;
         roundupEnabled = re;
     }
-    public void deposit(double x) { // takes in do  uble then turns it into a BigDecimal since it uses arbritary arithmetic
-        BigDecimal amount = new BigDecimal(x).setScale(2, RoundingMode.HALF_DOWN);
+
+    public void deposit(BigDecimal x) { // takes in do  uble then turns it into a BigDecimal since it uses arbritary arithmetic
+        BigDecimal amount = new BigDecimal(String.valueOf(x)).setScale(2, RoundingMode.HALF_DOWN);
         balance = balance.add(amount);
     }
 

@@ -86,6 +86,17 @@ public class UnitTest {
         assertEquals("01b02232-eeff-4294-aad0-c3cdbbbf773c Miss Lavina Waelchi null false", t[0].toString());
     }
 
+    @Test
+    public void signup(){
+        App app = new App();
+        BankController bankController = app.bankController;
+        ModelAndView signupModel = bankController.signup();
+
+        Map<String, Object> model = new HashMap<>();
+        assertEquals(model,signupModel.getModel());
+
+    }
+
     /*
     @Test
     public void viewAccount() throws InstantiationException, IllegalAccessException {

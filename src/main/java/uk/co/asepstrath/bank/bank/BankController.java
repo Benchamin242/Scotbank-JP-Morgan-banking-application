@@ -100,11 +100,6 @@ public class BankController {
         return setBoolean(new ModelAndView("ContactUs.hbs"),ctx);
     }
 
-    @GET("/hello")
-    public String sayHi() {
-        return "Hello";
-    }
-
     @GET("/Login")
     public ModelAndView login(){
         // If no name has been sent within the query URL
@@ -236,10 +231,6 @@ public class BankController {
     The @POST annotation registers this function as a HTTP POST handler.
     It will look at the body of the POST request and try to deserialise into a MyMessage object
      */
-    @POST
-    public String post(MyMessage message) {
-        return "You successfully POSTed: "+message.Message+ " To: "+message.Recipient;
-    }
 
     @GET("/viewAllTransactions")
     public  ModelAndView viewAllTransactions(Context ctx){
