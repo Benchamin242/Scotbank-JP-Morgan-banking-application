@@ -171,6 +171,7 @@ public class BankController {
         }
     }
 
+
     @GET("/viewAccount")
     public ModelAndView viewAccounts(Context ctx){
         Session session= ctx.session();
