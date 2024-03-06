@@ -284,4 +284,6 @@ public class BankController {
             throw new StatusCodeException(StatusCode.SERVER_ERROR, "Error providing spending data", e);
         }
     }
+
+
 }

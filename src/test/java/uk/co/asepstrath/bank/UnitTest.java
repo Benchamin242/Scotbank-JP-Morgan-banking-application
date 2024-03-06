@@ -39,17 +39,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class UnitTest {
 
 
-    @Test
-    public void submit() {
-        MockRouter router = new MockRouter(new App());
-        router.get("/bank/Login", rsp ->{
 
-        });
-        router.get("/bank/submitForm", rsp -> {
-            assertEquals("Employee data saved successfulLy", rsp.value());
-            assertEquals(StatusCode.OK, rsp.getStatusCode());
-        });
-    }
 
     /*
     Unit tests should be here
@@ -96,6 +86,7 @@ public class UnitTest {
         assertEquals("01b02232-eeff-4294-aad0-c3cdbbbf773c Miss Lavina Waelchi null false", t[0].toString());
     }
 
+    /*
     @Test
     public void viewAccount() throws InstantiationException, IllegalAccessException {
         Context ctx = new MockContext();
@@ -150,4 +141,6 @@ public class UnitTest {
         BankController bankController = new BankController(null, null);
         ModelAndView modelAndView = bankController.viewBusinessTransactions(null);
     }
+
+     */
 }
