@@ -109,11 +109,22 @@ public class BankController {
 
     }
 
+    @GET("/logout")
+    public void logout(Context ctx){
+        Session CurrentSession = ctx.session();
+        CurrentSession.destroy();
+        ctx.sendRedirect("/");
+    }
+
     public String checkIfLoggedIn(Context ctx){
 
         Session CurrentSession = ctx.session();
         try {
-            return String.valueOf(CurrentSession.get("id"));
+            String id = String.valueOf(CurrentSession.get("id"));
+            if(id.equals("<missing>")){
+                throw new IllegalArgumentException();
+            }
+            return id;
         } catch (IllegalArgumentException e) {
             return null;
         }
