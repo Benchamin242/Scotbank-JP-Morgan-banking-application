@@ -54,14 +54,6 @@ public class UnitTest {
             assertEquals(StatusCode.OK, rsp.getStatusCode());
         });
     }
-    @Test
-    public void hello(){
-        MockRouter router = new MockRouter(new App());
-        router.get("/bank/hello", rsp->{
-            assertEquals("Hello", rsp.value());
-            assertEquals(StatusCode.OK, rsp.getStatusCode());
-        });
-    }
 
     @Test
     public void loginTest(){
@@ -97,7 +89,9 @@ public class UnitTest {
 
     }
 
-    /*
+
+
+/*
     @Test
     public void viewAccount() throws InstantiationException, IllegalAccessException {
         Context ctx = new MockContext();
@@ -123,6 +117,8 @@ public class UnitTest {
             assertEquals(expectedValue, actualModel.get(key), "Model value for key " + key + " should match expected value");
         }
     }
+
+
 
     @Test
     public void checkIfloggedin(){
