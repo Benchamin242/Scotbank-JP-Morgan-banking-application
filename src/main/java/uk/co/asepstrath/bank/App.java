@@ -66,7 +66,7 @@ public class App extends Jooby {
         post("/submitForm", req -> {
 
             String name = req.form(String.class);
-            Account account = new Account(name, "ppp", new BigDecimal("0.00"), false);
+            Account account = new Account(name, "ppp", new BigDecimal(0.00), false);
             // ...
 
             return "Welcome " + account.getName();
@@ -92,10 +92,15 @@ public class App extends Jooby {
         DataSource ds = require(DataSource.class);
         // Open Connection to DB
         try (Connection connection = ds.getConnection()) {
-            //
-            Statement stmt = connection.createStatement();
-            stmt.executeUpdate("CREATE TABLE `Example` (`Key` varchar(255),`Value` varchar(255))");
-            stmt.executeUpdate("INSERT INTO Example " + "VALUES ('WelcomeMessage', 'Welcome to A Bank')");
+
+            try (Statement stmt = connection.createStatement()){
+                stmt.executeUpdate("CREATE TABLE `Example` (`Key` varchar(255),`Value` varchar(255))");
+                stmt.executeUpdate("INSERT INTO Example " + "VALUES ('WelcomeMessage', 'Welcome to A Bank')");
+            }
+            catch (SQLException e){
+                log.error("Database error", e);
+            }
+
         } catch (SQLException e) {
             log.error("Database Creation Error",e);
         }
@@ -118,7 +123,7 @@ public class App extends Jooby {
 
             //this was just so i could test that it actually is seperating the accounts properly, it just prints out the details of each account
             for(Account account : please){
-                //System.out.println(account.toString());
+                System.out.println(account.toString());
             }
 
 
@@ -126,6 +131,7 @@ public class App extends Jooby {
             //prepared statement basically just means we have a statement already ready that we will be calling multiple times
             //we need it so that accounts with ` in the name or other tokenisers will not mess up the insert
             PreparedStatement pstmt = connection.prepareStatement("INSERT INTO accountsTable (accountNum, id, Name, Balance, roundupEnabled) VALUES (?, ?, ?, ?, ?)");
+
 
             //loops through our array of accounts, calling the preparedstatement on each iteration
             //(the "count" variable i added to basically act as an account number)
@@ -136,12 +142,12 @@ public class App extends Jooby {
                 String num = String.valueOf(count);
                 String currId = account.getId();
                 String currName = account.getName();
-                double startingBal;
+                BigDecimal startingBal;
                 if(account.getBalance() == null){
-                    startingBal = 0.00;
+                    startingBal = new BigDecimal(0.00);
                 }
                 else{
-                    startingBal = account.getBalance().doubleValue();
+                    startingBal = account.getBalance();
                 }
                 boolean roundE = account.getRe();
 
@@ -150,11 +156,11 @@ public class App extends Jooby {
                 pstmt.setString(1, num);
                 pstmt.setString(2, currId);
                 pstmt.setString(3, currName);
-                pstmt.setDouble(4, startingBal);
+                pstmt.setBigDecimal(4, startingBal);
                 pstmt.setBoolean(5, roundE);
 
                 pstmt.executeUpdate();
-                System.out.println(num + " " + currId + " " + currName);
+                System.out.println(num + " " + currId + " " + currName + " " + startingBal);
                 count += 1;
             }
             stmt.executeUpdate("CREATE TABLE `transactionsTable` (`id` int, `businessName` varchar(255),`withdrawn` double)" );
@@ -171,6 +177,10 @@ public class App extends Jooby {
             stmt.executeUpdate("INSERT INTO accountsPassword " + "VALUES (4,'"+ authController.getPasswordEncryptor().encryptPassword("testing") +"')");
             stmt.executeUpdate("INSERT INTO accountsPassword " + "VALUES (5,'123apple')");
             stmt.executeUpdate("INSERT INTO accountsPassword " + "VALUES (6,'bank')");
+
+            stmt.executeUpdate("CREATE TABLE `transactionHistory` (`id` int, `paidTo` varchar(255), `amount` double)");
+            stmt.executeUpdate("INSERT INTO transactionHistory " + "VALUES (4, 'Rachel', 6.10)");
+            stmt.executeUpdate("INSERT INTO transactionHistory " + "VALUES (4, 'Ross', 10)");
 
         } catch (SQLException e) {
             log.error("Database Creation Error" + e.getMessage());
