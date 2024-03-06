@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Your Transactions</title>
+    <title>Your Transactions </title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 </head>
@@ -27,22 +27,11 @@
         <hr style="width:500px;border:5px solid red" class="w3-round">
     </div>
 
-    <!-- Outputs -->
-    {{#if values.length}}
-        <ul>
-            {{#each values}}
-                <li>
-                    <strong>Paying to:</strong> {{@key}},
-                    <strong>amount paid:</strong> ${{this.amount}}
-                </li>
-            {{/each}}
-        </ul>
-    {{else}}
-        <p>No transactions available.</p>
-    {{/if}}
+    <div>
+        <p> Paid to: {{paidTo}}</p>
+        <p> Amount: {{amount}}</p>
 
-
-
+    </div>
 
     <script>
         // Script to open and close sidebar

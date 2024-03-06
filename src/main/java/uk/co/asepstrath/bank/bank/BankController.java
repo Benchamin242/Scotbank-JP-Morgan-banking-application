@@ -23,6 +23,11 @@ import java.util.HashMap;
 import java.util.*;
 import java.util.Map;
 import java.util.Random;
+import io.jooby.ModelAndView;
+
+import java.util.HashMap;
+import java.util.Map;
+
 
 /*
     Example Controller is a Controller from the MVC paradigm.
@@ -43,6 +48,8 @@ public class BankController {
         dataSource = ds;
         logger = log;
     }
+
+
 
     /*
     This is the simplest action a controller can perform
@@ -214,15 +221,6 @@ public class BankController {
     }
 
 
-    @GET("/viewAllTransactions")
-    public ModelAndView ViewAllTransactions(){
-        Map<String, Object> model = new HashMap<>();
-
-        return new ModelAndView("ViewBusinessTransactions.hbs", model);
-
-    }
-
-
     /*
     The @POST annotation registers this function as a HTTP POST handler.
     It will look at the body of the POST request and try to deserialise into a MyMessage object
@@ -232,9 +230,35 @@ public class BankController {
         return "You successfully POSTed: "+message.Message+ " To: "+message.Recipient;
     }
 
+    @GET("/viewAllTransactions")
+    public  ModelAndView viewAllTransactions(Context ctx){
+        Session session= ctx.session();
+
+        try(Connection connection = dataSource.getConnection()){
+
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM `transactionHistory` WHERE `id` = ?");
+            // Set the accountID parameter in the prepared statement
+
+            Map<String, Object> model = new HashMap<>();
+            ResultSet set = statement.executeQuery();
+            while(set.next()) {
+                model.put("paidTo", set.getString("paidTo"));
+                model.put("amount", set.getInt("amount"));
+                System.out.println(model.toString());
+            }
+
+
+            return setBoolean(new ModelAndView("ViewAllTransactions.hbs",model),ctx);
+
+        } catch (SQLException e) {
+            logger.error("Error providing spending data", e);
+            throw new StatusCodeException(StatusCode.SERVER_ERROR, "Error providing spending data", e);
+        }
+    }
+
 
     @GET("/viewBusinessTransactions")
-    public ModelAndView viewAllTransactions(Context ctx) {
+    public ModelAndView viewBusinessTransactions(Context ctx) {
         try (Connection connection = dataSource.getConnection()) {
             Statement stmt = connection.createStatement();
             ResultSet resultSet = stmt.executeQuery("SELECT businessName, withdrawn FROM transactionsTable");

@@ -1,23 +1,40 @@
 package uk.co.asepstrath.bank;
 
-import io.jooby.ModelAndView;
+import io.jooby.*;
+import io.jooby.test.MockContext;
 import io.jooby.test.MockRouter;
+import io.jooby.test.MockSession;
 import kong.unirest.core.HttpResponse;
 import kong.unirest.core.Unirest;
 import uk.co.asepstrath.bank.App;
-import io.jooby.StatusCode;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Test;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.*;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.jooby.StatusCode;
 import io.jooby.test.MockRouter;
 import org.junit.jupiter.api.Test;
+import uk.co.asepstrath.bank.bank.BankController;
+import io.jooby.ModelAndView;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.sql.DataSource;
+
+import static org.junit.jupiter.api.Assertions.*;
+
 
 public class UnitTest {
 
@@ -55,13 +72,18 @@ public class UnitTest {
             assertEquals(StatusCode.OK, rsp.getStatusCode());
         });
     }
+
     @Test
-    public void viewAccount() {
-        Map<String, Object> map = new HashMap<>();
-        MockRouter router = new MockRouter(new App());
-        router.get("/bank/viewAccount", rsp->{
-            assertEquals(new ModelAndView("simpleDetails.hbs", map).toString(), rsp.value().toString());
-        });
+    public void loginTest(){
+        BankController bankController = new BankController(null, null);
+        ModelAndView modelAndView = bankController.login();
+
+        assertEquals("loginView.hbs", modelAndView.getView(), "View name should be 'loginView.hbs'");
+
+        Map<String, Object> expectedModel = new HashMap<>();
+        expectedModel.put("name", "Please");
+        assertEquals(expectedModel, modelAndView.getModel(), "Model should contain 'name' with value 'Please'");
+
     }
 
     @Test
@@ -75,18 +97,57 @@ public class UnitTest {
     }
 
     @Test
-    public void viewAllTransaction(){
-        MockRouter router = new MockRouter(new App());
-        router.get("/bank/viewAllTransactions", rsp->{
+    public void viewAccount() throws InstantiationException, IllegalAccessException {
+        Context ctx = new MockContext();
+        MockSession session = (MockSession) ctx.session();
+        session.put("id", "test_id");
 
-        });
+
+
+        BankController bankController = new BankController(null, null);
+        ModelAndView modelAndView = bankController.viewAccounts(ctx);
+
+        assertEquals("simpleDetails.hbs", modelAndView.getView(), "View name should be 'simpleDetails.hbs'");
+
+        Map<String, Object> expectedModel = new HashMap<>();
+        expectedModel.put("accountNum", 1);
+        expectedModel.put("id", "test_id");
+
+        Map<String, Object> actualModel = modelAndView.getModel();
+        for (Map.Entry<String, Object> entry : expectedModel.entrySet()) {
+            String key = entry.getKey();
+            Object expectedValue = entry.getValue();
+            assertTrue(actualModel.containsKey(key), "Model should contain key: " + key);
+            assertEquals(expectedValue, actualModel.get(key), "Model value for key " + key + " should match expected value");
+        }
     }
 
     @Test
-    public void viewBusinessTransactions() throws SQLException {
-        MockRouter router = new MockRouter(new App());
-        router.get("/bank/viewBusinessTransactions", rsp->{
+    public void checkIfloggedin(){
+        Context ctx = new MockContext();
 
-        });
+        Session session = new MockSession();
+        session.put("id", "test_id");
+
+
+
+        BankController bankController = new BankController(null, null);
+
+        String result = bankController.checkIfLoggedIn(null);
+
+        assertNotNull(result);
+        assertEquals("test_id", result, "Returned ID should match session ID");
+    }
+
+    @Test
+    public void AllTransactions(){
+        BankController bankController = new BankController(null, null);
+        ModelAndView modelAndView = bankController.viewAllTransactions(null);
+    }
+
+    @Test
+    public void BusinessTransactions(){
+        BankController bankController = new BankController(null, null);
+        ModelAndView modelAndView = bankController.viewBusinessTransactions(null);
     }
 }

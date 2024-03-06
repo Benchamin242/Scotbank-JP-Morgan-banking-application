@@ -179,8 +179,8 @@ public class App extends Jooby {
             stmt.executeUpdate("INSERT INTO accountsPassword " + "VALUES (6,'bank')");
 
             stmt.executeUpdate("CREATE TABLE `transactionHistory` (`id` int, `paidTo` varchar(255), `amount` double)");
-            stmt.executeUpdate("INSERT INTO transactionHistory" + "VALUES (4, 'Rachel', 6.10)");
-            stmt.executeUpdate("INSERT INTO transactionHistory" + "VALUES (4, 'Ross', 10)");
+            stmt.executeUpdate("INSERT INTO transactionHistory " + "VALUES (4, 'Rachel', 6.10)");
+            stmt.executeUpdate("INSERT INTO transactionHistory " + "VALUES (4, 'Ross', 10)");
 
         } catch (SQLException e) {
             log.error("Database Creation Error" + e.getMessage());
