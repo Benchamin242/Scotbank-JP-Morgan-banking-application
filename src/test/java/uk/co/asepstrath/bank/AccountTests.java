@@ -90,4 +90,23 @@ class AccountTests {
         Account a = new Account("testname","testID", new BigDecimal(0.00), false);
         assertEquals("testID testname 0 false", a.toString());
     }
+
+    @Test
+    void accountTest(){
+
+        Account a = new Account("Pls", "Work", new BigDecimal(0.00), false);
+
+        String name = "Pls";
+        String unique = "Work";
+        BigDecimal val = new BigDecimal(0.00);
+        boolean re = false;
+
+        Account Test = new Account(name, unique, val, re);
+
+        assertEquals(name, a.getName());
+        assertEquals(unique, a.getId());
+        assertEquals(val, a.getBalance());
+        assertEquals(re, a.getRe());
+        assertEquals(Test.toString(), a.toString());
+    }
 }
