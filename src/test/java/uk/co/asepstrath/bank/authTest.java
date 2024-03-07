@@ -1,8 +1,12 @@
 package uk.co.asepstrath.bank;
 
 
+import io.jooby.Context;
+import io.jooby.ModelAndView;
+import io.jooby.Session;
 import io.jooby.StatusCode;
 import io.jooby.exception.StatusCodeException;
+import io.jooby.test.MockContext;
 import io.jooby.test.MockRouter;
 import org.jasypt.exceptions.EncryptionOperationNotPossibleException;
 import org.jasypt.util.password.StrongPasswordEncryptor;
@@ -14,14 +18,37 @@ import uk.co.asepstrath.bank.bank.BankController;
 
 import javax.sql.DataSource;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 public class authTest {
+
+
+    @Test
+    public void AuthenticateLogin(){
+        //App app = new App();
+        AuthController authController = mock(AuthController.class);
+        BankController bankController = mock(BankController.class);
+        Context context = mock(Context.class);
+        //Session session = context.session();
+        Session session = mock(Session.class);
+        session.put("id","01b02232-eeff-4294-aad0-c3cdbbbf773c");
+
+        ModelAndView model = bankController.submit(session);
+
+
+        when(authController.AuthenticateLogin("Miss Lavina Waelchi", "test", context)).thenReturn(model);
+
+        ModelAndView result = authController.AuthenticateLogin("Miss Lavina Waelchi", "test", context);
+
+        assertEquals(model, result);
+
+
+    }
 
     @Test
     public void encryption() throws SQLException {

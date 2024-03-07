@@ -1,11 +1,13 @@
 package uk.co.asepstrath.bank;
 
 import io.jooby.*;
+import io.jooby.exception.StatusCodeException;
 import io.jooby.test.MockContext;
 import io.jooby.test.MockRouter;
 import io.jooby.test.MockSession;
 import kong.unirest.core.HttpResponse;
 import kong.unirest.core.Unirest;
+import org.slf4j.Logger;
 import uk.co.asepstrath.bank.App;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Test;
@@ -139,8 +141,23 @@ public class UnitTest {
 
     @Test
     public void AllTransactions(){
-        BankController bankController = new BankController(null, null);
-        ModelAndView modelAndView = bankController.viewAllTransactions(null);
+        MockContext ctx = new MockContext();
+        App app = new App();
+        MockRouter router = new MockRouter(app);
+
+        DataSource ds = app.require(DataSource.class);
+        Logger log = app.getLog();
+        BankController bankController = new BankController(ds,log);
+
+        ModelAndView modelAndView = bankController.viewAllTransactions(ctx);
+        Map<String, Object> model = new HashMap<>();
+
+        model.put("paidTo", "test");
+        model.put("amount", "test");
+
+        assertNotEquals(model,modelAndView.getModel() );
+
+
     }
 
     @Test

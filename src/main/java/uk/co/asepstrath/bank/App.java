@@ -28,6 +28,7 @@ public class App extends Jooby {
     ArrayList<Account> accounts = new ArrayList<Account>();
     AuthController authController;
     BankController bankController;
+
     {
 
         /*

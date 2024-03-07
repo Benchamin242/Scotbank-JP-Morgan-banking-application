@@ -232,7 +232,7 @@ public class BankController {
     It will look at the body of the POST request and try to deserialise into a MyMessage object
      */
 
-    /*
+
     @GET("/viewAllTransactions")
     public  ModelAndView viewAllTransactions(Context ctx){
         Session session= ctx.session();
@@ -287,6 +287,6 @@ public class BankController {
             throw new StatusCodeException(StatusCode.SERVER_ERROR, "Error providing spending data", e);
         }
     }
-*/
+
 
 }
