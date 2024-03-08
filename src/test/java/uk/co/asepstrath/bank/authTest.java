@@ -30,8 +30,8 @@ public class authTest {
 
     @Test
     public void AuthenticateLogin(){
-        //App app = new App();
-        AuthController authController = mock(AuthController.class);
+        App app = new App();
+        AuthController authController = app.authController;
         BankController bankController = mock(BankController.class);
         Context context = mock(Context.class);
         //Session session = context.session();
@@ -39,13 +39,15 @@ public class authTest {
         session.put("id","01b02232-eeff-4294-aad0-c3cdbbbf773c");
 
         ModelAndView model = bankController.submit(session);
+        //ModelAndView model = new ModelAndView("home.hbs");
 
 
-        when(authController.AuthenticateLogin("Miss Lavina Waelchi", "test", context)).thenReturn(model);
+        //when(authController.AuthenticateLogin("Miss Lavina Waelchi", "test", context)).thenReturn(model);
 
         ModelAndView result = authController.AuthenticateLogin("Miss Lavina Waelchi", "test", context);
 
         assertEquals(model, result);
+
 
 
     }

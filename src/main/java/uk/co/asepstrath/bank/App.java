@@ -164,7 +164,7 @@ public class App extends Jooby {
                 System.out.println(num + " " + currId + " " + currName + " " + startingBal);
                 count += 1;
             }
-            stmt.executeUpdate("CREATE TABLE `transactionsTable` (`id` int, `businessName` varchar(255),`withdrawn` double)" );
+            stmt.executeUpdate("CREATE TABLE `transactionsTable` (`id` varchar(255), `businessName` varchar(255),`withdrawn` double)" );
             stmt.executeUpdate("INSERT INTO transactionsTable " + "VALUES (1,'The COOP', 50.00 )");
             stmt.executeUpdate("INSERT INTO transactionsTable " + "VALUES (1,'Morrison', 25.00 )");
             stmt.executeUpdate("INSERT INTO transactionsTable " + "VALUES (1,'Tesco', 25.00 )");
@@ -179,9 +179,9 @@ public class App extends Jooby {
             stmt.executeUpdate("INSERT INTO accountsPassword " + "VALUES (5,'123apple')");
             stmt.executeUpdate("INSERT INTO accountsPassword " + "VALUES (6,'bank')");
 
-            stmt.executeUpdate("CREATE TABLE `transactionHistory` (`id` int, `paidTo` varchar(255), `amount` double)");
-            stmt.executeUpdate("INSERT INTO transactionHistory " + "VALUES (4, 'Rachel', 6.10)");
-            stmt.executeUpdate("INSERT INTO transactionHistory " + "VALUES (4, 'Ross', 10)");
+            stmt.executeUpdate("CREATE TABLE `transactionHistory` (`id` varchar(255), `paidTo` varchar(255), `amount` double)");
+            stmt.executeUpdate("INSERT INTO transactionHistory " + "VALUES ('01b02232-eeff-4294-aad0-c3cdbbbf773c', 'Rachel', 6.10)");
+            stmt.executeUpdate("INSERT INTO transactionHistory " + "VALUES ('01b02232-eeff-4294-aad0-c3cdbbbf773c', 'Ross', 10)");
 
         } catch (SQLException e) {
             log.error("Database Creation Error" + e.getMessage());

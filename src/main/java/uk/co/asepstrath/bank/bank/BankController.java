@@ -155,6 +155,7 @@ public class BankController {
 
             // Use a prepared statement to avoid SQL injection vulnerabilities
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM `accountsTable` WHERE `id` = ?");
+
             // Set the accountID parameter in the prepared statement
             System.out.println(session.get("id"));
             System.out.println(session.getId());
@@ -234,13 +235,13 @@ public class BankController {
 
 
     @GET("/viewAllTransactions")
-    public  ModelAndView viewAllTransactions(Context ctx){
-        Session session= ctx.session();
+    public  ModelAndView viewAllTransactions(Session session){
 
         try(Connection connection = dataSource.getConnection()){
 
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM `transactionHistory` WHERE `id` = ?");
-            // Set the accountID parameter in the prepared statement
+
+            statement.setString(1, String.valueOf(session.get("id")));
 
             Map<String, Object> model = new HashMap<>();
             ResultSet set = statement.executeQuery();
@@ -251,7 +252,7 @@ public class BankController {
             }
 
 
-            return setBoolean(new ModelAndView("ViewAllTransactions.hbs",model),ctx);
+            return new ModelAndView("ViewAllTransactions.hbs",model);
 
         } catch (SQLException e) {
             logger.error("Error providing spending data", e);
@@ -265,6 +266,7 @@ public class BankController {
         try (Connection connection = dataSource.getConnection()) {
             Statement stmt = connection.createStatement();
             ResultSet resultSet = stmt.executeQuery("SELECT businessName, withdrawn FROM transactionsTable");
+
 
             Map<String, Double> spendingSummary = new HashMap<>();
             while (resultSet.next()) {
