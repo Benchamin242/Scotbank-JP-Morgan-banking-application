@@ -34,7 +34,7 @@ import java.util.Map;
     The @Path Annotation will tell Jooby what /path this Controller can respond to,
     in this case the controller will respond to requests from <host>/example
  */
-@Singleton
+//@Singleton
 @Path("/bank")
 public class BankController {
 
