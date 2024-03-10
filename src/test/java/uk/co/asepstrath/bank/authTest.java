@@ -29,26 +29,38 @@ public class authTest {
 
 
     @Test
-    public void AuthenticateLogin(){
+    public void AuthenticateCorrectLogin(){
+
         App app = new App();
+        app.onStart();
         AuthController authController = app.authController;
-        BankController bankController = mock(BankController.class);
-        Context context = mock(Context.class);
-        //Session session = context.session();
-        Session session = mock(Session.class);
+        //AuthController authController = mock(AuthController.class);
+        BankController bankController = app.bankController;
+        MockContext context = new MockContext();
+
+        Session session = context.session();
         session.put("id","01b02232-eeff-4294-aad0-c3cdbbbf773c");
 
         ModelAndView model = bankController.submit(session);
-        //ModelAndView model = new ModelAndView("home.hbs");
-
-
-        //when(authController.AuthenticateLogin("Miss Lavina Waelchi", "test", context)).thenReturn(model);
 
         ModelAndView result = authController.AuthenticateLogin("Miss Lavina Waelchi", "test", context);
 
-        assertEquals(model, result);
+        assertEquals(model.getView(), result.getView());
 
+    }
+    @Test
+    public void AuthenticateIncorrectLogin(){ //Right username, wrong password
+        App app = new App();
+        app.onStart();
+        AuthController authController = app.authController;
+        BankController bankController = app.bankController;
+        MockContext context = new MockContext();
 
+        ModelAndView model = bankController.login();
+
+        ModelAndView result = authController.AuthenticateLogin("Miss Lavina Waelchi", "wrongpassword", context);
+
+        assertEquals(model.getView(), result.getView());
 
     }
 
