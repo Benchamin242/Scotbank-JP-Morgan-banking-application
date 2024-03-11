@@ -6,12 +6,12 @@ public class Transactions {
 
     private String type;
     private BigDecimal amount;
+    private String to;
+    private String from;
 
-    private Account to;
 
-    private Account from;
 
-    Transactions(String type, BigDecimal amount, Account to, Account from){
+    Transactions(String type, BigDecimal amount, String to, String from){
         type = type;
         amount = amount;
         to = to;
@@ -19,39 +19,55 @@ public class Transactions {
 
     }
     public void payment(){
-        if(type.equals("Payment")){
+        if(type.equals("PAYMENT")){
 
         }
 
     }
     public void withdrawal(){
-        if(type.equals("Withdrawal") && from.getBalance().compareTo(amount) == 1 ){
+        /*if(type.equals("WITHDRAWAL") && from.getBalance().compareTo(amount) == 1 ){
             from.withdraw(amount.doubleValue());
-        }
+        }*/
     }
     public void Deposit(){
-        if(type.equals("Deposit")) {
-            to.deposit(new BigDecimal("amount"));
-        }
+        /*if(type.equals("DEPOSIT")) {
+            to.deposit(new BigDecimal("AMOUNT"));
+        }*/
 
     }
 
     public void collectionRoundups(){
-        if(type.equals("Collect Roundups")){
+        if(type.equals("COLLECT ROUNDUPS")){
 
         }
     }
 
     public void transfer(){
-        if(type.equals("Transfer")){
+        /*if(type.equals("TRANSFER")){
             to.deposit(amount);
             from.withdraw(amount.doubleValue());
-        }
+        }*/
     }
 
-    /*@Override
+    public String getType(){
+        return type;
+    }
+    public BigDecimal getAmount(){
+        return amount;
+    }
+
+    public String getTo(){
+        return to;
+    }
+
+    public String getFrom(){
+        return from;
+    }
+
+    @Override
     public String toString() {
-        String result = this.getId() + " " + this.getName() + " " + this.getBalance() + " " + this.getRe();
+        String result = this.getType() + " " + this.getAmount() + " " + this.getTo() + " " + this.getFrom();
         return result;
-    }*/
+    }
+
 }

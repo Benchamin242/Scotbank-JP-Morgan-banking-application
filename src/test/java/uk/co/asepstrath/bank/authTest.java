@@ -8,6 +8,8 @@ import io.jooby.StatusCode;
 import io.jooby.exception.StatusCodeException;
 import io.jooby.test.MockContext;
 import io.jooby.test.MockRouter;
+import kong.unirest.core.HttpResponse;
+import kong.unirest.core.Unirest;
 import org.jasypt.exceptions.EncryptionOperationNotPossibleException;
 import org.jasypt.util.password.StrongPasswordEncryptor;
 import org.junit.jupiter.api.Assertions;
@@ -92,15 +94,6 @@ public class authTest {
         }catch(EncryptionOperationNotPossibleException e){
             assertFalse(false);
         }
-
-
-
-
     }
-
-    /*@Test
-    public void loginEncryption(){
-        MockRouter router = new MockRouter(new App());
-    }*/
 
 }

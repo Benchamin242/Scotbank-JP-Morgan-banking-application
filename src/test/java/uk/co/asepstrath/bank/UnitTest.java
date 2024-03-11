@@ -7,6 +7,7 @@ import io.jooby.test.MockRouter;
 import io.jooby.test.MockSession;
 import kong.unirest.core.HttpResponse;
 import kong.unirest.core.Unirest;
+import org.h2.mvstore.tx.Transaction;
 import org.slf4j.Logger;
 import uk.co.asepstrath.bank.App;
 import org.junit.jupiter.api.Test;
@@ -90,6 +91,29 @@ public class UnitTest {
         assertEquals(model,signupModel.getModel());
 
     }
+
+    @Test
+    public void transactionsAPI(){
+        //HttpResponse<Transactions[]> help = Unirest.get("https://api.asep-strath.co.uk/api/transactions").asObject(Transactions[].class);
+        String type = "";
+        HttpResponse<Transactions[]> help = Unirest.get("https://api.asep-strath.co.uk/api/transactions")
+                .queryString("Page", 0)
+                .queryString("Size", 5)
+                .asObject(Transactions[].class);
+
+        //assertNotNull(help.getBody());
+        assertEquals(200, help.getStatus());
+        Transactions[] transactionsList = help.getBody();
+
+        if(transactionsList != null) {
+            for (Transactions transaction : transactionsList) {
+                System.out.println("transaction: " + transaction.toString());
+
+            }
+        }
+
+    }
+
 
 
 
