@@ -6,6 +6,7 @@ import io.jooby.test.MockContext;
 import io.jooby.test.MockRouter;
 import io.jooby.test.MockSession;
 import kong.unirest.core.HttpResponse;
+import kong.unirest.core.JsonNode;
 import kong.unirest.core.Unirest;
 import org.h2.mvstore.tx.Transaction;
 import org.slf4j.Logger;
@@ -95,7 +96,6 @@ public class UnitTest {
     @Test
     public void transactionsAPI(){
         //HttpResponse<Transactions[]> help = Unirest.get("https://api.asep-strath.co.uk/api/transactions").asObject(Transactions[].class);
-        String type = "";
         HttpResponse<Transactions[]> help = Unirest.get("https://api.asep-strath.co.uk/api/transactions")
                 .queryString("Page", 0)
                 .queryString("Size", 5)
@@ -112,6 +112,20 @@ public class UnitTest {
             }
         }
 
+    }
+    @Test
+    public void authenticationAPI(){
+        HttpResponse<JsonNode> help = Unirest.post("https://api.asep-strath.co.uk/0auth2/token").asObject(JsonNode.class);
+
+        assertEquals(200, help.getStatus());
+
+    }
+
+    @Test
+    public void businessAPI(){
+        HttpResponse<JsonNode> help = Unirest.post("https://api.asep-strath.co.uk/api/businesses").asObject(JsonNode.class); // change from JsonNode to business class
+
+        assertEquals(200, help.getStatus());
     }
 
 
