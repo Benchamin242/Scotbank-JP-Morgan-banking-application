@@ -1,6 +1,22 @@
 
 
-<header class="w3-container w3-top w3-hide-large w3-red w3-xlarge w3-padding">
-    <a href="javascript:void(0)" class="w3-button w3-red w3-margin-right" onclick="w3_open()">☰</a>
-    <span>Scotbank by Mcwatson</span>
+
+<header class="w3-container w3-top w3-hide-large w3-red w3-small" style="position: fixed; left: 0; top: 0; padding: 10px;">
+    <a href="javascript:void(0)" class="w3-button w3-red" onclick="w3_open()">☰</a>
+</header>
+<header class="w3-light-grey w3-container w3-center w3-padding-32" style="border-bottom: 5px solid black;">
+    <h1 class="w3-jumbo" style="margin: 0; display: flex; align-items: center;"><b style="margin: 0 auto;">Scotbank</b></h1>
+    <p style="font-size: 24px;">Your Financial Partner For Life</p>
+
+    {{#userLoggedIn}}
+    <div style="margin-right: 20px;">
+        <a href="http://localhost:8080/bank/logout" class="login-button" style="background-color: red; color: white; padding: 10px 20px; border: 2px solid black; border-radius: 5px; cursor: pointer;">Logout</a>
+    </div>
+    {{^}}
+        <div style="margin-right: 20px;"> <!-- Aligning the buttons to the right -->
+            <a href="http://localhost:8080/bank/Signup" class="white-button" style="background-color: white; color: red; padding: 10px 20px; border: 2px solid red; border-radius: 5px; cursor: pointer; margin-right: 20px;">Signup</a>
+            <a href="http://localhost:8080/bank/Login" class="login-button" style="background-color: red; color: white; padding: 10px 20px; border: 2px solid black; border-radius: 5px; cursor: pointer;">Secure Login</a>
+        </div>
+    {{/userLoggedIn}}
+
 </header>

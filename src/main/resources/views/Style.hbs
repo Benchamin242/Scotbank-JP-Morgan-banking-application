@@ -24,6 +24,28 @@
             color: white;
         }
 
+        @media only screen and (max-width: 768px) {
+            .top-container {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 20px;
+                position: static;
+                width: auto;
+                left: auto;
+                right: auto;
+            }
+            .top-container h1 {
+                margin-bottom: 20px;
+            }
+            .top-container div {
+                margin-top: 20px;
+                margin-right: 0;
+            }
+            .login-button {
+                margin-top: 10px; /* Add margin to create space between the buttons */
+            }
+        }
+
 
 
     </style>
