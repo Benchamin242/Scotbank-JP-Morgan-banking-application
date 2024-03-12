@@ -246,8 +246,8 @@ public class BankController {
             Map<String, Object> model = new HashMap<>();
             ResultSet set = statement.executeQuery();
             while(set.next()) {
-                model.put("paidTo", set.getString("to"));
-                model.put("amount", set.getInt("amount"));
+                model.put("paidTo", set.getString("from"));
+                //model.put("amount", set.getInt("amount"));
                 System.out.println(model.toString());
             }
 
