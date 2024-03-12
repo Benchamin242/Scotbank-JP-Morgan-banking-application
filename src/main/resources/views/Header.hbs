@@ -19,4 +19,32 @@
         </div>
     {{/userLoggedIn}}
 
+    <div class = "background">
+        <img src="/assets/background1.jpg" >
+    </div>
+
+    <style>
+        /* CSS for background */
+        .background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -1; /* Ensure the background is behind the content */
+            opacity: 0.2; /* Adjust the opacity value as needed */
+            background-image: url('/assets/background1.jpg'); /* Set the background image */
+            background-repeat: no-repeat;
+            background-position: center;
+            background-attachment: fixed;
+            background-size: cover;
+            width: 100vw; /* Set width to cover viewport width */
+            height: 100vh; /* Set height to cover viewport height */
+        }
+
+        /* Additional CSS for content */
+        .w3-main {
+            position: relative; /* Ensure the content is positioned relative to the body */
+            z-index: 1; /* Ensure the content is above the background */
+        }
+    </style>
+
 </header>
