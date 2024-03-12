@@ -5,17 +5,21 @@ import io.jooby.exception.StatusCodeException;
 import io.jooby.test.MockContext;
 import io.jooby.test.MockRouter;
 import io.jooby.test.MockSession;
-import kong.unirest.core.HttpResponse;
-import kong.unirest.core.JsonNode;
-import kong.unirest.core.Unirest;
+import kong.unirest.core.*;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.h2.mvstore.tx.Transaction;
 import org.slf4j.Logger;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 import uk.co.asepstrath.bank.App;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Test;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.io.StringReader;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import java.sql.Connection;
@@ -36,15 +40,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.sql.DataSource;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static uk.co.asepstrath.bank.IntegrationTest.client;
 
 
 public class UnitTest {
 
 
 
-
+    static OkHttpClient cline = new OkHttpClient();
     /*
     Unit tests should be here
     Example can be found in example/UnitTest.java
@@ -95,36 +102,73 @@ public class UnitTest {
 
     @Test
     public void transactionsAPI(){
-        //HttpResponse<Transactions[]> help = Unirest.get("https://api.asep-strath.co.uk/api/transactions").asObject(Transactions[].class);
-        HttpResponse<Transactions[]> help = Unirest.get("https://api.asep-strath.co.uk/api/transactions")
-                .queryString("Page", 0)
-                .queryString("Size", 5)
-                .asObject(Transactions[].class);
 
-        //assertNotNull(help.getBody());
-        assertEquals(200, help.getStatus());
-        Transactions[] transactionsList = help.getBody();
+        String help = Unirest.get("https://api.asep-strath.co.uk/api/transactions")
+                .queryString("page", 0)
+                .queryString("size", 5)
+                .asString().getBody();
 
-        if(transactionsList != null) {
-            for (Transactions transaction : transactionsList) {
-                System.out.println("transaction: " + transaction.toString());
+        try  {
+            //.asObject(Transactions[].class);
+            DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory
+                    .newInstance();
+            DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+            InputSource is = new InputSource(new StringReader(help));
+            Document document = documentBuilder.parse(is);
 
+            NodeList type = document.getElementsByTagName("type");
+
+            NodeList amount = document.getElementsByTagName("amount");
+            NodeList to = document.getElementsByTagName("to");
+            NodeList from = document.getElementsByTagName("from");
+
+            assertEquals("PAYMENT",type.item(0).getTextContent());
+            assertEquals("62.00", amount.item(0).getTextContent());
+            assertEquals("NAN", to.item(0).getTextContent());
+            assertEquals("ce1b121f-7432-4638-848a-1edc87c39fab", from.item(0).getTextContent());
+
+            for(int i = 0; i < type.getLength(); i++ ){
+                assertNotNull(type.item(i).getTextContent());
+                assertNotNull(amount.item(i).getTextContent());
+                assertNotNull(to.item(i).getTextContent());
+                assertNotNull(from.item(i).getTextContent());
             }
+            //int i = 0;
+
+            /*while(pwd.item(i).hasChildNodes()){
+
+                System.out.println(usr.item(i).getTextContent() + " " + pwd.item(i).getTextContent());
+                i++;
+            }*/
+
+        }catch(Exception e){
+            assertTrue(false); //test fails
         }
+
 
     }
     @Test
     public void authenticationAPI(){
-        HttpResponse<JsonNode> help = Unirest.post("https://api.asep-strath.co.uk/0auth2/token").asObject(JsonNode.class);
 
-        assertEquals(200, help.getStatus());
+        // test credentials
+        String user = "scotbank";
+        String password = "this1password2is3not4secure";
+        String authHeader = " ";
+
+
+        // Send POST request to fetch OAuth2 token
+        HttpResponse<JsonNode> response = Unirest.post("https://api.asep-strath.co.uk/")
+                .field("grant_type", "client_credentials") // defaults to  .header("accept", "application/x-www-form-urlencoded") so no need to include
+                .basicAuth(user, password) //.header("Authorization", "Basic: " + authHeader)
+                .asJson();
+
+        assertEquals(200, response.getStatus());
 
     }
 
     @Test
     public void businessAPI(){
-        HttpResponse<JsonNode> help = Unirest.post("https://api.asep-strath.co.uk/api/businesses").asObject(JsonNode.class); // change from JsonNode to business class
-
+        HttpResponse<JsonNode> help = Unirest.get("https://api.asep-strath.co.uk/api/businesses").asObject(JsonNode.class); // change from JsonNode to business class
         assertEquals(200, help.getStatus());
     }
 

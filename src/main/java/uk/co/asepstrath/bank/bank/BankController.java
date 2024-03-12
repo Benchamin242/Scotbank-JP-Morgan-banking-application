@@ -239,14 +239,14 @@ public class BankController {
 
         try(Connection connection = dataSource.getConnection()){
 
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM `transactionHistory` WHERE `id` = ?");
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM `transactionHistory` WHERE `to` = ?");
 
-            statement.setString(1, String.valueOf(session.get("id")));
+            statement.setString(1, String.valueOf(session.get("to")));
 
             Map<String, Object> model = new HashMap<>();
             ResultSet set = statement.executeQuery();
             while(set.next()) {
-                model.put("paidTo", set.getString("paidTo"));
+                model.put("paidTo", set.getString("to"));
                 model.put("amount", set.getInt("amount"));
                 System.out.println(model.toString());
             }
