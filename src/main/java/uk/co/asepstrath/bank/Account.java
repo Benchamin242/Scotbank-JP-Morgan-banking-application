@@ -25,6 +25,8 @@ public class Account {
     private BigDecimal balance; //BigDecimal is more accurate when doing arithmetic
     private boolean roundupEnabled;
 
+    private boolean managerOrNot;
+
     private static final Logger log = LoggerFactory.getLogger(Account.class);
 
 
@@ -34,6 +36,7 @@ public class Account {
         name = fullName;
         balance= startingBal;
         roundupEnabled = re;
+        managerOrNot = false;
     }
 
     public void deposit(BigDecimal x) { // takes in do  uble then turns it into a BigDecimal since it uses arbritary arithmetic
@@ -55,6 +58,10 @@ public class Account {
 
     public boolean getRe(){
         return roundupEnabled;
+    }
+
+    public void makeManager() {
+        managerOrNot = true;
     }
 
 
