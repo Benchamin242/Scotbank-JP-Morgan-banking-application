@@ -16,16 +16,6 @@
         <hr style="width:500px;border:5px solid red" class="w3-round">
     </div>
 
-    <!-- Display Spending Summary -->
-    <div>
-        <h2>Spending Summary:</h2>
-        <ul>
-            {{#each spendingSummary}}
-                <li>{{@key}}: {{this}}</li>
-            {{/each}}
-        </ul>
-    </div>
-
     <!-- Display Individual Transaction Details -->
     <div>
         <h2>Transactions:</h2>
@@ -39,13 +29,14 @@
             <tbody>
                 {{#each transactions}}
                     <tr>
-                        <td>{{this.paidTo}}</td>
-                        <td>{{this.amount}}</td>
+                        <td>{{@key}} </td>
+                        <td>{{this}}</td>
                     </tr>
                 {{/each}}
             </tbody>
         </table>
     </div>
+
 
     <script>
         function w3_open() {

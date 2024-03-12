@@ -199,8 +199,8 @@ public class BankController {
             // Use a prepared statement to avoid SQL injection vulnerabilities
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM `accountsTable` WHERE `id` = ?");
             // Set the accountID parameter in the prepared statement
-            System.out.println(session.get("id"));
-            System.out.println(session.getId());
+            //System.out.println(session.get("id"));
+            //System.out.println(session.getId());
 
 
             statement.setString(1, String.valueOf(session.get("id")));
@@ -235,38 +235,34 @@ public class BankController {
 
 
     @GET("/viewAllTransactions")
-    public ModelAndView viewAllTransactions(Session session, Context ctx) {
-        try (Connection connection = dataSource.getConnection()) {
-            // Fetch spending summary
-            Statement stmt = connection.createStatement();
-            ResultSet resultSet = stmt.executeQuery("SELECT businessName, withdrawn FROM transactionsTable");
+    public  ModelAndView viewAllTransactions(Session session, Context ctx){
 
+        try(Connection connection = dataSource.getConnection()){
+
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM `transactionHistory` WHERE `from` = ?");
+
+            statement.setString(1, String.valueOf(session.get("id")));
+            System.out.println("paidFrom: " + String.valueOf(session.get("id")));
+
+            ResultSet set = statement.executeQuery();
+
+            Map<String, Object> model = new HashMap<>();
             Map<String, Double> spendingSummary = new HashMap<>();
-            while (resultSet.next()) {
-                String businessCategory = resultSet.getString("businessName");
-                double amountWithdrawn = resultSet.getDouble("withdrawn");
+
+            while(set.next()) {
+                //model.put("paidTo", set.getString("to"));
+                //model.put("amount", set.getDouble("amount"));
+                //System.out.println(model.toString());
+                String businessCategory = set.getString("to");
+                double amountWithdrawn = set.getDouble("amount");
                 spendingSummary.put(businessCategory, spendingSummary.getOrDefault(businessCategory, 0.0) + amountWithdrawn);
             }
 
-            // Fetch individual transaction details
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM `transactionHistory` WHERE `id` = ?");
-            statement.setString(1, String.valueOf(session.get("id")));
-            ResultSet transactionResultSet = statement.executeQuery();
+            model.put("transactions", spendingSummary);
 
-            List<Map<String, Object>> transactions = new ArrayList<>();
-            while (transactionResultSet.next()) {
-                Map<String, Object> transactionDetails = new HashMap<>();
-                transactionDetails.put("paidTo", transactionResultSet.getString("paidTo"));
-                transactionDetails.put("amount", transactionResultSet.getInt("amount"));
-                transactions.add(transactionDetails);
-            }
 
-            // Combine spending summary and transaction details into a single model
-            Map<String, Object> model = new HashMap<>();
-            model.put("spendingSummary", spendingSummary);
-            model.put("transactions", transactions);
 
-            return setBoolean(new ModelAndView("ViewAllTransactions.hbs", model), ctx);
+            return setBoolean(new ModelAndView("ViewAllTransactions.hbs",model), ctx);
 
         } catch (SQLException e) {
             logger.error("Error providing spending data", e);
@@ -275,13 +271,11 @@ public class BankController {
     }
 
 
-
     @GET("/viewBusinessTransactions")
     public ModelAndView viewBusinessTransactions(Context ctx) {
         try (Connection connection = dataSource.getConnection()) {
             Statement stmt = connection.createStatement();
             ResultSet resultSet = stmt.executeQuery("SELECT businessName, withdrawn FROM transactionsTable");
-
 
             Map<String, Double> spendingSummary = new HashMap<>();
             while (resultSet.next()) {
