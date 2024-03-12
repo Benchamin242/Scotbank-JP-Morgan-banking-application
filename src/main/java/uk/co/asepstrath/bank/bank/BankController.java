@@ -235,30 +235,45 @@ public class BankController {
 
 
     @GET("/viewAllTransactions")
-    public  ModelAndView viewAllTransactions(Session session, Context ctx){
+    public ModelAndView viewAllTransactions(Session session, Context ctx) {
+        try (Connection connection = dataSource.getConnection()) {
+            // Fetch spending summary
+            Statement stmt = connection.createStatement();
+            ResultSet resultSet = stmt.executeQuery("SELECT businessName, withdrawn FROM transactionsTable");
 
-        try(Connection connection = dataSource.getConnection()){
-
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM `transactionHistory` WHERE `id` = ?");
-
-            statement.setString(1, String.valueOf(session.get("id")));
-
-            Map<String, Object> model = new HashMap<>();
-            ResultSet set = statement.executeQuery();
-            while(set.next()) {
-                model.put("paidTo", set.getString("paidTo"));
-                model.put("amount", set.getInt("amount"));
-                System.out.println(model.toString());
+            Map<String, Double> spendingSummary = new HashMap<>();
+            while (resultSet.next()) {
+                String businessCategory = resultSet.getString("businessName");
+                double amountWithdrawn = resultSet.getDouble("withdrawn");
+                spendingSummary.put(businessCategory, spendingSummary.getOrDefault(businessCategory, 0.0) + amountWithdrawn);
             }
 
+            // Fetch individual transaction details
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM `transactionHistory` WHERE `id` = ?");
+            statement.setString(1, String.valueOf(session.get("id")));
+            ResultSet transactionResultSet = statement.executeQuery();
 
-            return setBoolean(new ModelAndView("ViewAllTransactions.hbs",model), ctx);
+            List<Map<String, Object>> transactions = new ArrayList<>();
+            while (transactionResultSet.next()) {
+                Map<String, Object> transactionDetails = new HashMap<>();
+                transactionDetails.put("paidTo", transactionResultSet.getString("paidTo"));
+                transactionDetails.put("amount", transactionResultSet.getInt("amount"));
+                transactions.add(transactionDetails);
+            }
+
+            // Combine spending summary and transaction details into a single model
+            Map<String, Object> model = new HashMap<>();
+            model.put("spendingSummary", spendingSummary);
+            model.put("transactions", transactions);
+
+            return setBoolean(new ModelAndView("ViewAllTransactions.hbs", model), ctx);
 
         } catch (SQLException e) {
             logger.error("Error providing spending data", e);
             throw new StatusCodeException(StatusCode.SERVER_ERROR, "Error providing spending data", e);
         }
     }
+
 
 
     @GET("/viewBusinessTransactions")
@@ -267,28 +282,25 @@ public class BankController {
             Statement stmt = connection.createStatement();
             ResultSet resultSet = stmt.executeQuery("SELECT businessName, withdrawn FROM transactionsTable");
 
-
             Map<String, Double> spendingSummary = new HashMap<>();
             while (resultSet.next()) {
                 String businessCategory = resultSet.getString("businessName");
                 double amountWithdrawn = resultSet.getDouble("withdrawn");
-
                 spendingSummary.put(businessCategory, spendingSummary.getOrDefault(businessCategory, 0.0) + amountWithdrawn);
             }
-
 
             Map<String, Object> model = new HashMap<>();
             model.put("spendingSummary", spendingSummary);
 
-
-            return setBoolean(new ModelAndView("ViewBusinessTransactions.hbs"),ctx);
-
+            // Return the ModelAndView with the model data
+            return new ModelAndView("ViewAllTransactions.hbs", model);
 
         } catch (SQLException e) {
             logger.error("Error providing spending data", e);
             throw new StatusCodeException(StatusCode.SERVER_ERROR, "Error providing spending data", e);
         }
     }
+
 
 
 }
