@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 public class Transactions {
 
+
     private String type;
     private BigDecimal amount;
     private String to;
@@ -11,11 +12,11 @@ public class Transactions {
 
 
 
-    Transactions(String type, BigDecimal amount, String to, String from){
-        type = type;
-        amount = amount;
-        to = to;
-        from = from;
+    Transactions(BigDecimal amount, String from, String to, String type){
+        this.type = type;
+        this.amount = amount;
+        this.to = to;
+        this.from = from;
 
     }
     public void payment(){

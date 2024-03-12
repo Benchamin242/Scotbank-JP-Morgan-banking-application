@@ -8,10 +8,16 @@ import kong.unirest.core.HttpResponse;
 import org.jasypt.iv.RandomIvGenerator;
 import org.jasypt.util.password.StrongPasswordEncryptor;
 import org.slf4j.Logger;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 import uk.co.asepstrath.bank.bank.AuthController;
 import uk.co.asepstrath.bank.bank.BankController;
 
 import javax.sql.DataSource;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.StringReader;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -163,7 +169,47 @@ public class App extends Jooby {
                 pstmt.executeUpdate();
                 System.out.println(num + " " + currId + " " + currName + " " + startingBal);
                 count += 1;
+
+
+
             }
+
+            stmt.executeUpdate("CREATE TABLE `transactionHistory` (`to` varchar(255), `from` varchar(255),`amount` double, `type` VARCHAR(255))");
+
+            String help2 = Unirest.get("https://api.asep-strath.co.uk/api/transactions")
+                    .queryString("page", 0)
+                    .queryString("size", 5)
+                    .asString().getBody();
+
+            try {
+                //.asObject(Transactions[].class);
+                DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory
+                        .newInstance();
+                DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+                InputSource is = new InputSource(new StringReader(help2));
+                Document document = documentBuilder.parse(is);
+
+                NodeList type = document.getElementsByTagName("type");
+                NodeList amount = document.getElementsByTagName("amount");
+                NodeList to = document.getElementsByTagName("to");
+                NodeList from = document.getElementsByTagName("from");
+
+                PreparedStatement prepared = connection.prepareStatement("INSERT INTO transactionHistory (to, from, amount, type) VALUES (?, ?, ?, ?)");
+                for(int i = 0; i < type.getLength(); i++ ){
+
+                    prepared.setString(1, to.item(i).getTextContent());
+                    prepared.setString(2, from.item(i).getTextContent());
+                    prepared.setDouble(3, Double.parseDouble( amount.item(i).getTextContent()));
+                    prepared.setString(4, to.item(i).getTextContent());
+
+                }
+
+
+            } catch (Exception e){
+
+            }
+
+
             stmt.executeUpdate("CREATE TABLE `transactionsTable` (`id` varchar(255), `businessName` varchar(255),`withdrawn` double)" );
             stmt.executeUpdate("INSERT INTO transactionsTable " + "VALUES (1,'The COOP', 50.00 )");
             stmt.executeUpdate("INSERT INTO transactionsTable " + "VALUES (1,'Morrison', 25.00 )");
@@ -179,15 +225,13 @@ public class App extends Jooby {
             stmt.executeUpdate("INSERT INTO accountsPassword " + "VALUES (5,'123apple')");
             stmt.executeUpdate("INSERT INTO accountsPassword " + "VALUES (6,'bank')");
 
-            stmt.executeUpdate("CREATE TABLE `transactionHistory` (`id` varchar(255), `paidTo` varchar(255), `amount` double)");
+            /*stmt.executeUpdate("CREATE TABLE `transactionHistory` (`id` varchar(255), `paidTo` varchar(255), `amount` double)");
             stmt.executeUpdate("INSERT INTO transactionHistory " + "VALUES ('01b02232-eeff-4294-aad0-c3cdbbbf773c', 'Rachel', 6.10)");
-            stmt.executeUpdate("INSERT INTO transactionHistory " + "VALUES ('01b02232-eeff-4294-aad0-c3cdbbbf773c', 'Ross', 10)");
+            stmt.executeUpdate("INSERT INTO transactionHistory " + "VALUES ('01b02232-eeff-4294-aad0-c3cdbbbf773c', 'Ross', 10)");*/
 
         } catch (SQLException e) {
             log.error("Database Creation Error" + e.getMessage());
         }
-
-
 
 
     }
