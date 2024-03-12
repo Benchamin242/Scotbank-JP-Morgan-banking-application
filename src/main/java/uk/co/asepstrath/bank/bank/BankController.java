@@ -235,7 +235,7 @@ public class BankController {
 
 
     @GET("/viewAllTransactions")
-    public  ModelAndView viewAllTransactions(Session session){
+    public  ModelAndView viewAllTransactions(Session session, Context ctx){
 
         try(Connection connection = dataSource.getConnection()){
 
@@ -252,7 +252,7 @@ public class BankController {
             }
 
 
-            return new ModelAndView("ViewAllTransactions.hbs",model);
+            return setBoolean(new ModelAndView("ViewAllTransactions.hbs",model), ctx);
 
         } catch (SQLException e) {
             logger.error("Error providing spending data", e);

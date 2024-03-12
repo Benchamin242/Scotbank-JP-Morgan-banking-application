@@ -1,33 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
 
+<head>
+    {{> Style.hbs}}
+</head>
+
 <body>
 {{> Sidebar.hbs }}
-{{> Style.hbs}}
 {{> Header.hbs}}
 
 <!-- Overlay effect when opening sidebar on small screens -->
-<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu"
+     id="myOverlay"></div>
 
 <!-- Top Container -->
 
 
-
-
-
 <!-- !PAGE CONTENT! -->
 <div class="w3-main" style="margin-left:340px;margin-right:40px;margin-bottom: 40px; margin-top: 0;">
-    <!-- Header -->
-    <div class="w3-container" style="margin-top:40px" id="showcase">
-        <h1 class="w3-xxxlarge w3-text-red"><b>Homepage</b></h1>
-        <hr style="width:50px;border:5px solid red" class="w3-round">
-    </div>
-    <p>Welcome to Scotbank, your trusted financial partner in Scotland's central belt since the 1970s. We blend tradition with innovation, now offering digital banking services to better serve you, our valued customers.</p>
-    <!-- End page content -->
+
+    <h1 class="w3-xxxlarge w3-text-red"><b>   </b></h1>
+    <h1 class="w3-jumbo"><b>What We Offer</b></h1>
+
+    <hr style="width:50px;border:5px solid red" class="w3-round">
+    <p style="font-size: 22px;"> Welcome to Scotbank, your trusted financial partner in Scotland's central belt
+        since the 1970s. We blend tradition with innovation, now offering digital banking services to better serve
+        you, our valued customers.. At our bank, we provide a wide range of financial services to meet your needs.
+        From basic checking and savings accounts to specialized lending options like mortgages and personal loans, we
+        offer convenient digital banking solutions and personalized support from our experienced team. Whether
+        you're saving for the future, managing your day-to-day finances, or pursuing your business goals, we're here
+        to help you every step of the way.</p>
+
 </div>
 
+<!-- Photo grid (modal) -->
+
+
 <!-- W3.CSS Container -->
-<div class="w3-light-grey w3-container w3-padding-32 bottom-container" style="position: fixed; bottom: 0; width: 100%;">
+<div class="w3-light-grey w3-container w3-padding-32 bottom-container"
+     style="position: fixed; bottom: 0; width: 100%;">
     <p class="w3-right">Group 6</p>
 </div>
 
@@ -54,4 +65,5 @@
 </script>
 
 </body>
+
 </html>
