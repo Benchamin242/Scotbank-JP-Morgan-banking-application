@@ -5,8 +5,6 @@ import io.jooby.handlebars.HandlebarsModule;
 import io.jooby.helper.UniRestExtension;
 import io.jooby.hikari.HikariModule;
 import kong.unirest.core.HttpResponse;
-import org.jasypt.iv.RandomIvGenerator;
-import org.jasypt.util.password.StrongPasswordEncryptor;
 import org.slf4j.Logger;
 import uk.co.asepstrath.bank.bank.AuthController;
 import uk.co.asepstrath.bank.bank.BankController;
@@ -20,7 +18,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import kong.unirest.core.Unirest;
-import io.jooby.jasypt.JasyptModule;
 
 import static java.lang.String.valueOf;
 
@@ -144,11 +141,11 @@ public class App extends Jooby {
                 String currId = account.getId();
                 String currName = account.getName();
                 BigDecimal startingBal;
-                if(account.getBalance() == null){
+                if(account.getStartingBalance() == null){
                     startingBal = new BigDecimal(0.00);
                 }
                 else{
-                    startingBal = account.getBalance();
+                    startingBal = account.getStartingBalance();
                 }
                 boolean roundE = account.getRe();
 
@@ -186,6 +183,7 @@ public class App extends Jooby {
         } catch (SQLException e) {
             log.error("Database Creation Error" + e.getMessage());
         }
+
 
 
 
