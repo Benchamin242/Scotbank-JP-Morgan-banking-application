@@ -271,32 +271,6 @@ public class BankController {
     }
 
 
-    @GET("/viewBusinessTransactions")
-    public ModelAndView viewBusinessTransactions(Context ctx) {
-        try (Connection connection = dataSource.getConnection()) {
-            Statement stmt = connection.createStatement();
-            ResultSet resultSet = stmt.executeQuery("SELECT businessName, withdrawn FROM transactionsTable");
-
-            Map<String, Double> spendingSummary = new HashMap<>();
-            while (resultSet.next()) {
-                String businessCategory = resultSet.getString("businessName");
-                double amountWithdrawn = resultSet.getDouble("withdrawn");
-
-                spendingSummary.put(businessCategory, spendingSummary.getOrDefault(businessCategory, 0.0) + amountWithdrawn);
-            }
-
-
-            Map<String, Object> model = new HashMap<>();
-            model.put("spendingSummary", spendingSummary);
-
-            // Return the ModelAndView with the model data
-            return new ModelAndView("ViewAllTransactions.hbs", model);
-
-        } catch (SQLException e) {
-            logger.error("Error providing spending data", e);
-            throw new StatusCodeException(StatusCode.SERVER_ERROR, "Error providing spending data", e);
-        }
-    }
 
 
 }
