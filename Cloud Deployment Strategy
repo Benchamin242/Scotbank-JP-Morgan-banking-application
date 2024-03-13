@@ -1,0 +1,5 @@
+We will make use of a Hybrid cloud system. As it allows us to have our app being secure and not widely available to the public. While also still allowing data and deliveries over the internet. Also allowing us to decrease on costs slightly.
+
+We will be using a Partial migration approach to Deploying our app onto the cloud. We decided this would be the best approach for our app due to a fully cloud native approach requiring our app to be created in the first place with cloud in mind and it hasn’t been. Along with list and shift deployment costing to much for our extremely poor company(SAAS doesn’t pay enough) and the possibility of our program not being able to run properly on the cloud. 
+
+We will overcome learning gaps by having our developers take courses to expand their knowledge in the area. While also having them share and help others in our team when others may be stuck and confused. Or we could hire new developers.
