@@ -4,8 +4,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -16,10 +14,10 @@ class AccountTests {
     void createAccount(){
         Account a = new Account("testname","testID", new BigDecimal(10.00), false);
         assertNotNull(a);
-        System.out.println(a.getBalance());
+        System.out.println(a.getStartingBalance());
         assertEquals("testname", a.getName());
         assertEquals("testID", a.getId());
-        assertEquals(a.getBalance(), new BigDecimal(10.00));
+        assertEquals(a.getStartingBalance(), new BigDecimal(10.00));
         assertFalse(a.getRe());
     }
 
@@ -29,7 +27,7 @@ class AccountTests {
         a.deposit(BigDecimal.valueOf(20.00));
         a.deposit(BigDecimal.valueOf(50.00));
 
-        assertEquals(a.getBalance(), new BigDecimal("80.00"));
+        assertEquals(a.getStartingBalance(), new BigDecimal("80.00"));
        //Assertions.assertEquals(expected,toBe);
         //Assertions.assertNull(valueToBeNull);
         // And their counterparts
@@ -45,7 +43,7 @@ class AccountTests {
         a.deposit(BigDecimal.valueOf(40));
         a.withdraw(20);
 
-        assertEquals(a.getBalance(), new BigDecimal("30.00"));
+        assertEquals(a.getStartingBalance(), new BigDecimal("30.00"));
     }
 
     @Test
@@ -70,7 +68,7 @@ class AccountTests {
         a.withdraw(20.00);
         a.withdraw(20.00);
 
-        assertEquals(a.getBalance(), new BigDecimal("10.00"));
+        assertEquals(a.getStartingBalance(), new BigDecimal("10.00"));
 
     }
 
@@ -81,7 +79,7 @@ class AccountTests {
         a.deposit(BigDecimal.valueOf(5.45));
         a.deposit(BigDecimal.valueOf(17.56));
 
-        assertEquals(a.getBalance(), new BigDecimal("23.01"));
+        assertEquals(a.getStartingBalance(), new BigDecimal("23.01"));
     }
 
     @Test
@@ -105,7 +103,7 @@ class AccountTests {
 
         assertEquals(name, a.getName());
         assertEquals(unique, a.getId());
-        assertEquals(val, a.getBalance());
+        assertEquals(val, a.getStartingBalance());
         assertEquals(re, a.getRe());
         assertEquals(Test.toString(), a.toString());
     }
@@ -114,13 +112,13 @@ class AccountTests {
     public void depositTest(){
         Account a = new Account("Pls", "Work", new BigDecimal(0), false);
 
-        BigDecimal initial = new BigDecimal(String.valueOf(a.getBalance()));
+        BigDecimal initial = new BigDecimal(String.valueOf(a.getStartingBalance()));
         BigDecimal add = new BigDecimal(100);
 
         a.deposit(add);
 
         BigDecimal expected = initial.add(new BigDecimal(String.valueOf(add)).setScale(2, BigDecimal.ROUND_HALF_DOWN));
 
-        assertEquals(expected, a.getBalance());
+        assertEquals(expected, a.getStartingBalance());
     }
 }
