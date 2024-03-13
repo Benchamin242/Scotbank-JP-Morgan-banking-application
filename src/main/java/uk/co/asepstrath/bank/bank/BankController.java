@@ -199,8 +199,8 @@ public class BankController {
             // Use a prepared statement to avoid SQL injection vulnerabilities
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM `accountsTable` WHERE `id` = ?");
             // Set the accountID parameter in the prepared statement
-            System.out.println(session.get("id"));
-            System.out.println(session.getId());
+            //System.out.println(session.get("id"));
+            //System.out.println(session.getId());
 
 
             statement.setString(1, String.valueOf(session.get("id")));
@@ -235,24 +235,34 @@ public class BankController {
 
 
     @GET("/viewAllTransactions")
-    public  ModelAndView viewAllTransactions(Session session){
+    public  ModelAndView viewAllTransactions(Session session, Context ctx){
 
         try(Connection connection = dataSource.getConnection()){
 
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM `transactionHistory` WHERE `id` = ?");
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM `transactionHistory` WHERE `from` = ?");
 
             statement.setString(1, String.valueOf(session.get("id")));
+            System.out.println("paidFrom: " + String.valueOf(session.get("id")));
+
+            ResultSet set = statement.executeQuery();
 
             Map<String, Object> model = new HashMap<>();
-            ResultSet set = statement.executeQuery();
+            Map<String, Double> spendingSummary = new HashMap<>();
+
             while(set.next()) {
-                model.put("paidTo", set.getString("paidTo"));
-                model.put("amount", set.getInt("amount"));
-                System.out.println(model.toString());
+                //model.put("paidTo", set.getString("to"));
+                //model.put("amount", set.getDouble("amount"));
+                //System.out.println(model.toString());
+                String businessCategory = set.getString("to");
+                double amountWithdrawn = set.getDouble("amount");
+                spendingSummary.put(businessCategory, spendingSummary.getOrDefault(businessCategory, 0.0) + amountWithdrawn);
             }
 
+            model.put("transactions", spendingSummary);
 
-            return new ModelAndView("ViewAllTransactions.hbs",model);
+
+
+            return setBoolean(new ModelAndView("ViewAllTransactions.hbs",model), ctx);
 
         } catch (SQLException e) {
             logger.error("Error providing spending data", e);
@@ -267,7 +277,6 @@ public class BankController {
             Statement stmt = connection.createStatement();
             ResultSet resultSet = stmt.executeQuery("SELECT businessName, withdrawn FROM transactionsTable");
 
-
             Map<String, Double> spendingSummary = new HashMap<>();
             while (resultSet.next()) {
                 String businessCategory = resultSet.getString("businessName");
@@ -280,9 +289,8 @@ public class BankController {
             Map<String, Object> model = new HashMap<>();
             model.put("spendingSummary", spendingSummary);
 
-
-            return setBoolean(new ModelAndView("ViewBusinessTransactions.hbs"),ctx);
-
+            // Return the ModelAndView with the model data
+            return new ModelAndView("ViewAllTransactions.hbs", model);
 
         } catch (SQLException e) {
             logger.error("Error providing spending data", e);

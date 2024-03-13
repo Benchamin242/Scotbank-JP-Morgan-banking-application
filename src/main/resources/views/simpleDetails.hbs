@@ -1,22 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Your Details</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    {{>style.hbs}}
 </head>
 
-
-{{>style.hbs}}
-{{>Header.hbs}}
-{{> Sidebar.hbs }}
-
 <body>
-
+{{>Header.hbs}}
+{{>Sidebar.hbs}}
 
 <!-- Overlay effect when opening sidebar on small screens -->
-<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu"
+     id="myOverlay"></div>
 
 <!-- !PAGE CONTENT! -->
 <div class="w3-main" style="margin-left:340px;margin-right:40px">
@@ -27,21 +26,44 @@
         <hr style="width:500px;border:5px solid red" class="w3-round">
     </div>
 
-
-
     <div>
-    <!-- Account details -->
+        <!-- Account details -->
         <p>Account number: {{accountNum}}</p>
         <p>Account id: {{id}}</p>
         <p>Name: {{name}}</p>
         <p>Current balance: {{balance}}</p>
-        <p>Roundup enabled: {{roundupEnabled}}</p>
+        <p>Roundup enabled: <span id="roundupStatus">{{roundupEnabled}}</span></p>
+
+        <div style="margin-right: 20px;">
+            <button onclick="toggleRoundup()" class="round-button"
+                    style="background-color: red; color: white; padding: 10px 20px; border: 2px solid black; border-radius: 5px; cursor: pointer;">
+                {{#roundupEnabled}}Disable Roundups{{/roundupEnabled}}{{^roundupEnabled}}Enable Roundups{{/roundupEnabled}}
+            </button>
+        </div>
     </div>
 
-
-
+</div>
 
 <script>
+    function toggleRoundup() {
+        var roundupStatus = document.getElementById("roundupStatus");
+        var isRoundupEnabled = roundupStatus.innerHTML.trim() === "true";
+
+        // Toggle the boolean value
+        isRoundupEnabled = !isRoundupEnabled;
+
+        // Update the UI
+        roundupStatus.innerHTML = isRoundupEnabled;
+
+        // Update the button text
+        var button = document.querySelector(".round-button");
+        if (isRoundupEnabled) {
+            button.textContent = "Disable Roundups";
+        } else {
+            button.textContent = "Enable Roundups";
+        }
+    }
+
     // Script to open and close sidebar
     function w3_open() {
         document.getElementById("mySidebar").style.display = "block";
@@ -52,8 +74,7 @@
         document.getElementById("mySidebar").style.display = "none";
         document.getElementById("myOverlay").style.display = "none";
     }
-
 </script>
-</div>
 </body>
+
 </html>
