@@ -227,6 +227,66 @@ public class BankController {
         }
     }
 
+   @GET ("/viewAllAccounts")
+    public ModelAndView viewAllAccounts(Session session) { //Session session
+        try (Connection connection = dataSource.getConnection()){
+
+            HashMap<String, Object> model = new HashMap<>();
+
+            //grabs the id of whoever is logged on and checks that it is the same id as the manager (in this case our account with id 1)
+            String managerID = String.valueOf(session.get("id"));
+            if(managerID == "635e583f-0af2-47cb-9625-5b66ba30e188"){
+
+                //i want to grab the size of the database, then loop through the entire database pulling out their details
+                PreparedStatement sizeStatement = connection.prepareStatement("SELECT COUNT(*) FROM `accountsTable`");
+                ResultSet sizeSet = sizeStatement.executeQuery();
+                int size = 0;
+                if(sizeSet.next()){
+                    System.out.println("so far so good");
+                    size = sizeSet.getInt(1);
+                    System.out.println(String.valueOf(size));
+                }
+
+                PreparedStatement pullDetails = connection.prepareStatement("SELECT * FROM `accountTable` WHERE `accountNum` = ? ");
+
+                //THIS IS UNFINISHED, i want to store all the details of the accounts in a big hashmap and display them in one big page, similar to how the transaction display works
+                //ive already forgotten how ill do that, good luck me of the future :)
+                String result = new String();
+                for(int i = 0; i < size; i++){
+                    pullDetails.setString(1, String.valueOf(i));
+                    ResultSet set = pullDetails.executeQuery();
+                    Account temp = new Account(set.getString("id"), set.getString("Name"), set.getBigDecimal("Balance"), set.getBoolean("roundupEnabled") );
+                    result.concat(temp.toString() + "\n");
+                }
+                model.put("result", result);
+                return new ModelAndView("viewAllAccounts.hbs", model);
+            }
+            else{
+                //this is just some testing im doing
+                PreparedStatement sizeStatement = connection.prepareStatement("SELECT COUNT(*) FROM `accountsTable`");
+                ResultSet sizeSet = sizeStatement.executeQuery();
+                int size = 0;
+                if(sizeSet.next()){
+                    System.out.println("so far so good");
+                    size = sizeSet.getInt(1);
+                    System.out.println(String.valueOf(size));
+                }
+
+
+                model.put("result", "ERROR: You do not have permission to view this page");
+                return new ModelAndView("viewAllAccounts.hbs", model);
+            }
+
+
+
+        } catch (SQLException e) {
+            logger.error("Error providing spending data", e);
+            throw new StatusCodeException(StatusCode.SERVER_ERROR, "Error providing spending data", e);
+        }
+
+
+    }
+
 
     /*
     The @POST annotation registers this function as a HTTP POST handler.
@@ -248,7 +308,6 @@ public class BankController {
             while(set.next()) {
                 model.put("paidTo", set.getString("paidTo"));
                 model.put("amount", set.getInt("amount"));
-                System.out.println(model.toString());
             }
 
 
