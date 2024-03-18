@@ -22,15 +22,19 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th scope="col">Paid To</th>
+                    <th scope="col">From</th>
+                    <th scope="col">To</th>
+                    <th scope="col">Type Of Transaction</th>
                     <th scope="col">Amount</th>
                 </tr>
             </thead>
             <tbody>
                 {{#each transactions}}
                     <tr>
-                        <td>{{@key}} </td>
-                        <td>{{this}}</td>
+                        <td>{{this.from}} </td>
+                        <td>{{this.to}}</td>
+                        <td>{{this.type}} </td>
+                        <td>{{this.amount}}</td>
                     </tr>
                 {{/each}}
             </tbody>

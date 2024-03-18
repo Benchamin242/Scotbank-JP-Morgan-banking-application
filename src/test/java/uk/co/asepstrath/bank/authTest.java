@@ -31,7 +31,7 @@ public class authTest {
 
 
     @Test
-    public void AuthenticateCorrectLogin(){
+    public void AuthenticateCorrectLogin() throws SQLException {
 
         App app = new App();
         app.onStart();
@@ -51,7 +51,7 @@ public class authTest {
 
     }
     @Test
-    public void AuthenticateIncorrectLogin(){ //Right username, wrong password
+    public void AuthenticateIncorrectLogin() throws SQLException { //Right username, wrong password
         App app = new App();
         app.onStart();
         AuthController authController = app.authController;

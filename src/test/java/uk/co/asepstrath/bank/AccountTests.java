@@ -121,4 +121,5 @@ class AccountTests {
 
         assertEquals(expected, a.getStartingBalance());
     }
+
 }

@@ -1,5 +1,12 @@
 package uk.co.asepstrath.bank;
-
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;
 import io.jooby.Jooby;
 import io.jooby.handlebars.HandlebarsModule;
 import io.jooby.helper.UniRestExtension;
@@ -87,7 +94,7 @@ public class App extends Jooby {
     it should be used to ensure that the DB is properly setup
      */
 
-    public void onStart() {
+    public void onStart() throws SQLException  {
         Logger log = getLog();
         log.info("Starting Up...");
 
@@ -108,12 +115,60 @@ public class App extends Jooby {
         } catch (SQLException e) {
             log.error("Database Creation Error",e);
         }
+        try (Connection connection = ds.getConnection()){
+        try (Statement stmt = connection.createStatement()) {
+            // Create transactionsTable
+            stmt.executeUpdate("CREATE TABLE `businessDetails` (`id` varchar(255), `name` varchar(255), `category` varchar(255), `sanctioned` boolean)");
 
+            // Read data from CSV file and insert into transactionsTable
+            String csvFile = "C:\\Users\\Marcus Connelly\\Documents\\ScotBankBusinessDb.csv";
+            String line;
+            String cvsSplitBy = ",";
+
+            try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
+                while ((line = br.readLine()) != null) {
+                    // Split the line into columns
+                    String[] data = line.split(cvsSplitBy);
+
+                    // Prepare and execute insert statement
+                    try (PreparedStatement pstmt = connection.prepareStatement("INSERT INTO businessDetails (id, name, category, sanctioned) VALUES (?, ?, ?, ?)")) {
+                        pstmt.setString(1, data[0]);
+                        pstmt.setString(2, data[1]);
+                        pstmt.setString(3, data[2]);
+                        pstmt.setBoolean(4, Boolean.parseBoolean(data[3]));
+                        pstmt.executeUpdate();
+                    } catch (SQLException e) {
+                        log.error("Error inserting data into transactionsTable: " + e.getMessage());
+                    }
+                }
+            } catch (IOException e) {
+                log.error("Error reading CSV file: " + e.getMessage());
+            }
+        } catch (SQLException e) {
+            log.error("Database error", e);
+        }}
         try (Connection connection = ds.getConnection()) {
 
             //this line connects us to the api, uses a get statement to place all the information from the api into an
             //array of objects of type Account
-            HttpResponse<Account[]> help = Unirest.get("https://api.asep-strath.co.uk/api/accounts").asObject(Account[].class);
+
+            String user = "scotbank";
+            String password = "this1password2is3not4secure";
+
+            // Send POST request to fetch OAuth2 token
+            HttpResponse<authToken> response = Unirest.post("https://api.asep-strath.co.uk/oauth2/token")
+                    .field("grant_type", "client_credentials") // defaults to  .header("accept", "application/x-www-form-urlencoded") so no need to include
+                    .basicAuth(user,password)
+                    //.header("Authorization", "Bearer "+ new String(encodedBytes).concat("="))
+                    .asObject(authToken.class);
+            authToken auth = response.getBody();
+
+            HttpResponse<Account[]> help = Unirest.get("https://api.asep-strath.co.uk/api/accounts")
+                    .header("Authorization", "Bearer " + auth.access_token)
+                    .queryString("include", "cardDetails,postcode")
+                    .asObject(Account[].class);
+           // HttpResponse<Account[]> help = Unirest.get("https://api.asep-strath.co.uk/api/accounts")
+           //         .asObject(Account[].class);
 
 
             //beginning of our sql adventures, the stmt variable is what we call sql commands on like create table and stuff
@@ -198,7 +253,7 @@ public class App extends Jooby {
                         prepared.setString(1, to.item(i).getTextContent());
                         prepared.setString(2, from.item(i).getTextContent());
                         prepared.setDouble(3, Double.parseDouble(amount.item(i).getTextContent()));
-                        prepared.setString(4, to.item(i).getTextContent());
+                        prepared.setString(4, type.item(i).getTextContent());
 
                         prepared.executeUpdate();
 
@@ -233,10 +288,6 @@ public class App extends Jooby {
         } catch(SQLException e){
             log.error("Database Creation Error" + e.getMessage());
         }
-
-
-
-
 
     }
 

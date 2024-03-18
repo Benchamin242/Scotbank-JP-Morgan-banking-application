@@ -1,6 +1,8 @@
 package uk.co.asepstrath.bank;
 
 import java.math.BigDecimal;
+import java.sql.Time;
+import java.sql.Timestamp;
 
 public class Transactions {
 
@@ -12,7 +14,9 @@ public class Transactions {
 
 
 
-    Transactions(BigDecimal amount, String from, String to, String type){
+
+
+    public Transactions(BigDecimal amount, String from, String to, String type){
         this.type = type;
         this.amount = amount;
         this.to = to;
@@ -64,6 +68,8 @@ public class Transactions {
     public String getFrom(){
         return from;
     }
+
+
 
     @Override
     public String toString() {

@@ -11,17 +11,16 @@ import jakarta.inject.Singleton;
 import kong.unirest.core.Unirest;
 import org.slf4j.Logger;
 import uk.co.asepstrath.bank.Account;
+import uk.co.asepstrath.bank.Transactions;
 import uk.co.asepstrath.bank.example.MyMessage;
 import javax.sql.DataSource;
 import javax.xml.transform.Result;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.PreparedStatement;
+import java.math.BigDecimal;
+import java.sql.*;
 import java.util.HashMap;
 import java.util.*;
 import java.util.Map;
+import uk.co.asepstrath.bank.Transactions;
 import java.util.Random;
 import io.jooby.ModelAndView;
 
@@ -321,18 +320,24 @@ public class BankController {
             ResultSet set = statement.executeQuery();
 
             Map<String, Object> model = new HashMap<>();
-            Map<String, Double> spendingSummary = new HashMap<>();
+            Map<String, Object> spendingSummary = new HashMap<>();
+            ArrayList transactions = new ArrayList<Transactions>();
 
             while(set.next()) {
+                Transactions tran = new Transactions(BigDecimal.valueOf(set.getDouble("amount")),set.getString("from"), set.getString("to"),set.getString("type"));
                 //model.put("paidTo", set.getString("to"));
                 //model.put("amount", set.getDouble("amount"));
                 //System.out.println(model.toString());
-                String businessCategory = set.getString("to");
-                double amountWithdrawn = set.getDouble("amount");
-                spendingSummary.put(businessCategory, spendingSummary.getOrDefault(businessCategory, 0.0) + amountWithdrawn);
+                //String businessCategory = set.getString("to");
+                //double amountWithdrawn = set.getDouble("amount");
+                //String type = set.getString("type");
+                //spendingSummary.put(businessCategory, amountWithdrawn);
+                //spendingSummary.put("type",type);
+                transactions.add(tran);
+
             }
 
-            model.put("transactions", spendingSummary);
+            model.put("transactions", transactions);
 
 
 
@@ -345,32 +350,6 @@ public class BankController {
     }
 
 
-    @GET("/viewBusinessTransactions")
-    public ModelAndView viewBusinessTransactions(Context ctx) {
-        try (Connection connection = dataSource.getConnection()) {
-            Statement stmt = connection.createStatement();
-            ResultSet resultSet = stmt.executeQuery("SELECT businessName, withdrawn FROM transactionsTable");
-
-            Map<String, Double> spendingSummary = new HashMap<>();
-            while (resultSet.next()) {
-                String businessCategory = resultSet.getString("businessName");
-                double amountWithdrawn = resultSet.getDouble("withdrawn");
-
-                spendingSummary.put(businessCategory, spendingSummary.getOrDefault(businessCategory, 0.0) + amountWithdrawn);
-            }
-
-
-            Map<String, Object> model = new HashMap<>();
-            model.put("spendingSummary", spendingSummary);
-
-            // Return the ModelAndView with the model data
-            return new ModelAndView("ViewAllTransactions.hbs", model);
-
-        } catch (SQLException e) {
-            logger.error("Error providing spending data", e);
-            throw new StatusCodeException(StatusCode.SERVER_ERROR, "Error providing spending data", e);
-        }
-    }
 
 
 }
