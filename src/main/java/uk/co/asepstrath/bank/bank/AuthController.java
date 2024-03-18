@@ -63,8 +63,8 @@ public class AuthController {
                         //CurrentSession.put("id", resultSet.getString("id"));
                         ctx.sendRedirect("/bank/viewAccount");
                         bankController.viewAllTransactions(CurrentSession);
-                        bankController.viewAllAccounts(CurrentSession);
-                        return bankController.submit(CurrentSession);
+                        return bankController.viewAllAccounts(CurrentSession);
+                        //return bankController.submit(CurrentSession);
                     }
                 }catch(EncryptionOperationNotPossibleException ignored){
 

@@ -117,7 +117,7 @@ public class UnitTest {
 
     }
 
-    /*
+
     @Test
     public void transactionsAPI(){
 
@@ -157,7 +157,7 @@ public class UnitTest {
 
                 System.out.println(usr.item(i).getTextContent() + " " + pwd.item(i).getTextContent());
                 i++;
-            }
+            }*/
 
         }catch(Exception e){
             assertTrue(false); //test fails
@@ -186,7 +186,7 @@ public class UnitTest {
 
     }
 
-    */
+
     @Test
     public void businessAPI(){
         HttpResponse<JsonNode> help = Unirest.get("https://api.asep-strath.co.uk/api/businesses").asObject(JsonNode.class); // change from JsonNode to business class
@@ -226,13 +226,16 @@ public class UnitTest {
     }
 
  */
+
     @Test
-    public void logout(){
+    public void logout() {
         App app = new App();
         BankController bankController = app.bankController;
         Context ctx = new MockContext();
 
         String output = bankController.logout(ctx);
+    }
+
 
 
 
@@ -265,4 +268,4 @@ public class UnitTest {
 
 
 
-}}
+}

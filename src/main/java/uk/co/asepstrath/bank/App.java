@@ -177,7 +177,7 @@ public class App extends Jooby {
             Statement stmt = connection.createStatement();
 
             //creating our table of accounts, will hold an id, a name, a balance, and a boolean called "roundup enabled"
-            stmt.executeUpdate("CREATE TABLE `accountsTable` (`accountNum` int not null primary key , `id` varchar(255), `Name` varchar(255),`Balance` double, `roundupEnabled` boolean)");
+            stmt.executeUpdate("CREATE TABLE `accountsTable` (`accountNum` int not null primary key , `id` varchar(255), `Name` varchar(255),`Balance` double, `roundupEnabled` boolean, `postcode` varchar(255))");
 
             //this splits up our accounts into individual objects of type Account, placing them all in an array called "please"
             Account[] please = help.getBody();
@@ -191,7 +191,7 @@ public class App extends Jooby {
             //now we are moving all the details into our accounts table, using a preparedstatement
             //prepared statement basically just means we have a statement already ready that we will be calling multiple times
             //we need it so that accounts with ` in the name or other tokenisers will not mess up the insert
-            PreparedStatement pstmt = connection.prepareStatement("INSERT INTO accountsTable (accountNum, id, Name, Balance, roundupEnabled) VALUES (?, ?, ?, ?, ?)");
+            PreparedStatement pstmt = connection.prepareStatement("INSERT INTO accountsTable (accountNum, id, Name, Balance, roundupEnabled, postcode) VALUES (?, ?, ?, ?, ?, ?)");
 
 
             //loops through our array of accounts, calling the preparedstatement on each iteration
@@ -211,6 +211,7 @@ public class App extends Jooby {
                     startingBal = account.getStartingBalance();
                 }
                 boolean roundE = account.getRe();
+                String postcode = account.getPostcode();
 
 
                 //plugs our variables into the prepared statement, then executes the statement
@@ -219,13 +220,15 @@ public class App extends Jooby {
                 pstmt.setString(3, currName);
                 pstmt.setBigDecimal(4, startingBal);
                 pstmt.setBoolean(5, roundE);
+                pstmt.setString(6,postcode);
 
                 pstmt.executeUpdate();
-                System.out.println(num + " " + currId + " " + currName + " " + startingBal);
+                //System.out.println(num + " " + currId + " " + currName + " " + startingBal);
                 count += 1;
 
 
             }
+            pstmt.close();
 
             stmt.executeUpdate("CREATE TABLE transactionHistory (`to` varchar(255), `from` varchar(255),`amount` double, `type` VARCHAR(255))");
 
@@ -251,10 +254,14 @@ public class App extends Jooby {
 
                     for (int i = 0; i < to.getLength(); i++) {
 
-                        System.out.println("transaction history: " + to.item(i).getTextContent());
+                        //System.out.println("transaction history: " + to.item(i).getTextContent());
                         prepared.setString(1, to.item(i).getTextContent());
                         prepared.setString(2, from.item(i).getTextContent());
-                        prepared.setDouble(3, Double.parseDouble(amount.item(i).getTextContent()));
+                        if(amount.item(i).getTextContent() == null){
+                            prepared.setDouble(3, 0.0);
+                        }else{
+                            prepared.setDouble(3, Double.parseDouble(amount.item(i).getTextContent()));
+                        }
                         prepared.setString(4, type.item(i).getTextContent());
 
                         prepared.executeUpdate();
@@ -263,7 +270,7 @@ public class App extends Jooby {
 
 
                 } catch (Exception e) {
-                    System.out.println("ERROR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1");
+                    System.out.println("ERROR: " + e.getMessage());
                 }
             }
 

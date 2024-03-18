@@ -170,6 +170,8 @@ public class BankController {
                 model.put("id", set.getString("id"));
                 model.put("name", set.getString("Name"));
                 model.put("balance", set.getDouble("Balance"));
+                model.put("postcode", set.getDouble("postcode"));
+                System.out.println("postdcode: " + set.getDouble("postcode"));
                 model.put("roundupEnabled", set.getBoolean("roundupEnabled"));
 
             }
@@ -211,6 +213,8 @@ public class BankController {
                 model.put("id", set.getString("id"));
                 model.put("name", set.getString("Name"));
                 model.put("balance", set.getDouble("Balance"));
+                model.put("postcode", set.getString("postcode"));
+                //System.out.println("postcode: " + set.getString("postcode"));
                 model.put("roundupEnabled", set.getBoolean("roundupEnabled"));
 
             }
@@ -263,12 +267,20 @@ public class BankController {
                     account.put("id", set.getString("id"));
                     account.put("Balance", set.getDouble("Balance"));
                     account.put("roundupEnabled", set.getString("roundupEnabled"));
+                    account.put("postcode",set.getString("postcode"));
                     accounts.add(account);
 
                     //accounts.put(set.getInt("accountNum"),temp.toString());
 
                     counter++;
                 }
+
+                Collections.sort(accounts, (account1,account2) -> Double.compare(new Double(account2.get("Balance").toString()), new Double(account1.get("Balance").toString())));
+                List<String> bigSpenders = new ArrayList<>();
+                for(int i = 0; i<10; i++) {
+                    bigSpenders.add(accounts.get(i).get("postcode").toString());
+                }
+                model.put("bigSpenders", bigSpenders);
                 model.put("accounts",accounts);
 
                 //THIS IS UNFINISHED, i want to store all the details of the accounts in a big hashmap and display them in one big page, similar to how the transaction display works

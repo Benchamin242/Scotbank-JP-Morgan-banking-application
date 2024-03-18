@@ -26,17 +26,29 @@
         <h1 class="w3-jumbo"><b>Accounts List</b></h1>
         <hr style="width:500px;border:5px solid red" class="w3-round">
     </div>
+    <div>
+        <h1>locations of top 10 big spenders</h1>
+        {{#bigSpenders}}
+            <tr>
+                <p>postcode: {{this}}</p><br>
+            </tr>
+        {{/bigSpenders}}
 
+
+    </div>
 
 
     <div>
+        <h1>All accounts</h1>
+        <h4>accounts in descending order of balance</h4>
         {{#accounts}}
             <tr>
                 <p>Name: {{Name}}</p>
                 <p>Account Number: {{accountNum}}</p>
                 <p>ID: {{id}}</p>
                 <p>Balance: {{Balance}}</p>
-                <p>Roundup Enabled: {{roundupEnabled}}</p><br>
+                <p>Roundup Enabled: {{roundupEnabled}}</p>
+                <p>postcode: {{postcode}}</p><br>
 
 
             </tr>
