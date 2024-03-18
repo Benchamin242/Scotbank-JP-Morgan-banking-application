@@ -1,0 +1,67 @@
+ALD,Aldi,Groceries,FALSE
+AMA,Amazon,Online Retailer,FALSE
+ARG,Argos,Online Retailer,FALSE
+BOO,Boom Battle Bar,Entertainment,FALSE
+BOT,Boots,Health & Beauty,FALSE
+BUR,Burger King,Eating Out,FALSE
+CAF,Cafe Nero,Coffee,FALSE
+CEX,CEX,Entertainment,TRUE
+CLA,Clarks,Clothing,FALSE
+CLI,Clinton Cards,Gifts,FALSE0
+COS,Costa,Coffee,FALSE
+EE,EE,Utilities,FALSE
+FLY,Flying Tiger,Gifts,FALSE
+GIF,GiffGaff,Utilities,FALSE
+GRE,Greggs,Eating Out,FALSE
+H&M,H&M,Clothing,FALSE
+HAM,Hamleys,Entertainment,FALSE
+HAR,Hard Rock Cafe,Eating Out,TRUE
+HMV,HMV,Entertainment,FALSE
+IKE,Ikea,Furniture,FALSE
+JDS,JD Sports,Clothing,FALSE
+JOH,John Lewis,Department Store,FALSE
+KFC,KFC,Eating Out,FALSE
+KRI,Krispy Kreme,Eating Out,FALSE
+LEG,Lego,Entertainment,FALSE
+LID,Lidl,Groceries,FALSE
+LOY,Loyds Pharmacy,Health & Beauty,FALSE
+LUS,Lush,Health & Beauty,FALSE
+MAR,Marks & Spencers,Groceries,FALSE
+MCD,McDonalds,Eating Out,FALSE
+MIL,Millies Cookies,Eating Out,FALSE
+MOR,Morrisons,Groceries,FALSE
+NAN,Nandos,Eating Out,FALSE
+NEW,New Look,Clothing,FALSE
+NEX,Next,Clothing,FALSE
+NIP,Nippon Kitchen,Eating Out,FALSE
+NOR,North Face,Clothing,FALSE
+O2,O2,Utilities,FALSE
+ODE,Odeon,Entertainment,FALSE
+OPT,Optical Express,Opticians,FALSE
+PAN,Pandora,Jewlery,FALSE
+PAP,Paperchase,Gifts,FALSE
+PIZ,Pizza Hut,Eating Out,FALSE
+RIV,River Island,Clothing,FALSE
+SAI,Sainsburies,Groceries,FALSE
+SCH,Schuh,Clothing,FALSE
+SCO,Scotmid,Groceries,FALSE
+SPA,Spar,Groceries,FALSE
+SPE,Specsavers,Opticians,FALSE
+STA,Starbucks,Coffee,FALSE
+SUP,Superdrug,Health & Beauty,FALSE
+SWA,Swatch,Jewlery,FALSE
+TEN,TenPin,Entertainment,FALSE
+TES,Tesco,Groceries,FALSE
+THE,The Perfume Shop,Health & Beauty,FALSE
+THR,Three,Utilities,FALSE
+TIM,Timpson,Other,FALSE
+TOP,Topolabamba,Eating Out,FALSE
+TRE,Trespass,Clothing,FALSE
+URB,Urban Outfitters,Clothing,FALSE
+VIR,Virgin Media,Utilities,FALSE
+VIS,Vision Express,Opticians,FALSE
+VOD,Vodafone,Utilities,FALSE
+VUE,VUE,Entertainment,FALSE
+WAT,Waterstones,Books,FALSE
+WHS,WH Smith,Books,FALSE
+YAN,Yankee Candle,Gifts,TRUE

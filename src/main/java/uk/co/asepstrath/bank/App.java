@@ -121,7 +121,8 @@ public class App extends Jooby {
             stmt.executeUpdate("CREATE TABLE `businessDetails` (`id` varchar(255), `name` varchar(255), `category` varchar(255), `sanctioned` boolean)");
 
             // Read data from CSV file and insert into transactionsTable
-            String csvFile = "C:\\Users\\Marcus Connelly\\Documents\\ScotBankBusinessDb.csv";
+            String csvFile = "src/main/resources/assets/ScotBankBusinessDb.csv";
+
             String line;
             String cvsSplitBy = ",";
 
@@ -147,6 +148,7 @@ public class App extends Jooby {
         } catch (SQLException e) {
             log.error("Database error", e);
         }}
+
         try (Connection connection = ds.getConnection()) {
 
             //this line connects us to the api, uses a get statement to place all the information from the api into an
