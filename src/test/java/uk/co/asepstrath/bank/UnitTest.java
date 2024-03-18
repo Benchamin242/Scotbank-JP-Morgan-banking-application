@@ -81,12 +81,28 @@ public class UnitTest {
 
     @Test
     public void apiInteraction(){
+        String user = "scotbank";
+        String password = "this1password2is3not4secure";
 
-        HttpResponse<Account[]> help = Unirest.get("https://api.asep-strath.co.uk/api/accounts").asObject(Account[].class);
+        // Send POST request to fetch OAuth2 token
+        HttpResponse<authToken> response = Unirest.post("https://api.asep-strath.co.uk/oauth2/token")
+                .field("grant_type", "client_credentials") // defaults to  .header("accept", "application/x-www-form-urlencoded") so no need to include
+                .basicAuth(user,password)
+                //.header("Authorization", "Bearer "+ new String(encodedBytes).concat("="))
+                .asObject(authToken.class);
+        authToken auth = response.getBody();
+
+
+
+        HttpResponse<Account[]> help = Unirest.get("https://api.asep-strath.co.uk/api/accounts")
+                .header("Authorization", "Bearer " + auth.access_token)
+                .queryString("include", "cardDetails,postcode")
+                .asObject(Account[].class);
 
         assertEquals(200, help.getStatus());
         Account[] t = help.getBody();
-        assertEquals("01b02232-eeff-4294-aad0-c3cdbbbf773c Miss Lavina Waelchi 544.91 false", t[0].toString());
+        System.out.println(t[1].toString());
+        assertEquals("01b02232-eeff-4294-aad0-c3cdbbbf773c Miss Lavina Waelchi 544.91 false EH3 9HU 0", t[0].toString());
     }
 
     @Test
@@ -151,19 +167,18 @@ public class UnitTest {
 
     @Test
     public void authenticationAPI(){
-
         // test credentials
         String user = "scotbank";
         String password = "this1password2is3not4secure";
-        String authHeader = " ";
-
 
         // Send POST request to fetch OAuth2 token
-        HttpResponse<JsonNode> response = Unirest.post("https://api.asep-strath.co.uk/")
+        HttpResponse<authToken> response = Unirest.post("https://api.asep-strath.co.uk/oauth2/token")
                 .field("grant_type", "client_credentials") // defaults to  .header("accept", "application/x-www-form-urlencoded") so no need to include
-                .basicAuth(user, password) //.header("Authorization", "Basic: " + authHeader)
-                .asJson();
-
+                .basicAuth(user,password)
+                //.header("Authorization", "Bearer "+ new String(encodedBytes).concat("="))
+                .asObject(authToken.class);
+        authToken auth = response.getBody();
+        System.out.println(auth.access_token);
         assertEquals(200, response.getStatus());
 
     }

@@ -94,7 +94,7 @@ public class App extends Jooby {
     it should be used to ensure that the DB is properly setup
      */
 
-    public void onStart() throws SQLException {
+    public void onStart() throws SQLException  {
         Logger log = getLog();
         log.info("Starting Up...");
 
@@ -151,7 +151,24 @@ public class App extends Jooby {
 
             //this line connects us to the api, uses a get statement to place all the information from the api into an
             //array of objects of type Account
-            HttpResponse<Account[]> help = Unirest.get("https://api.asep-strath.co.uk/api/accounts").asObject(Account[].class);
+
+            String user = "scotbank";
+            String password = "this1password2is3not4secure";
+
+            // Send POST request to fetch OAuth2 token
+            HttpResponse<authToken> response = Unirest.post("https://api.asep-strath.co.uk/oauth2/token")
+                    .field("grant_type", "client_credentials") // defaults to  .header("accept", "application/x-www-form-urlencoded") so no need to include
+                    .basicAuth(user,password)
+                    //.header("Authorization", "Bearer "+ new String(encodedBytes).concat("="))
+                    .asObject(authToken.class);
+            authToken auth = response.getBody();
+
+            HttpResponse<Account[]> help = Unirest.get("https://api.asep-strath.co.uk/api/accounts")
+                    .header("Authorization", "Bearer " + auth.access_token)
+                    .queryString("include", "cardDetails,postcode")
+                    .asObject(Account[].class);
+           // HttpResponse<Account[]> help = Unirest.get("https://api.asep-strath.co.uk/api/accounts")
+           //         .asObject(Account[].class);
 
 
             //beginning of our sql adventures, the stmt variable is what we call sql commands on like create table and stuff
@@ -271,10 +288,6 @@ public class App extends Jooby {
         } catch(SQLException e){
             log.error("Database Creation Error" + e.getMessage());
         }
-
-
-
-
 
     }
 
