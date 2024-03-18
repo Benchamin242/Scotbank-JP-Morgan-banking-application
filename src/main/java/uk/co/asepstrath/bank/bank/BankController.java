@@ -235,7 +235,8 @@ public class BankController {
 
             //grabs the id of whoever is logged on and checks that it is the same id as the manager (in this case our account with id 1)
             String managerID = String.valueOf(session.get("id"));
-            if(managerID == "635e583f-0af2-47cb-9625-5b66ba30e188"){
+            System.out.println(managerID);
+            if(managerID.equals("635e583f-0af2-47cb-9625-5b66ba30e188")){
 
                 //i want to grab the size of the database, then loop through the entire database pulling out their details
                 PreparedStatement sizeStatement = connection.prepareStatement("SELECT COUNT(*) FROM `accountsTable`");
@@ -247,18 +248,32 @@ public class BankController {
                     System.out.println(String.valueOf(size));
                 }
 
-                PreparedStatement pullDetails = connection.prepareStatement("SELECT * FROM `accountTable` WHERE `accountNum` = ? ");
+                PreparedStatement pullDetails = connection.prepareStatement("SELECT * FROM `accountsTable`");
+                ResultSet set = pullDetails.executeQuery();
 
+
+                Map<String, Object> accounts = new HashMap<>();
+
+                while (set.next()){
+                    accounts.put("accountNum", set.getInt("accountNum"));
+                    accounts.put("id", set.getString("id"));
+                    accounts.put("name", set.getString("Name"));
+                    accounts.put("balance", set.getDouble("Balance"));
+                    accounts.put("roundupEnabled", set.getBoolean("roundupEnabled"));
+                }
                 //THIS IS UNFINISHED, i want to store all the details of the accounts in a big hashmap and display them in one big page, similar to how the transaction display works
                 //ive already forgotten how ill do that, good luck me of the future :)
-                String result = new String();
-                for(int i = 0; i < size; i++){
+                //String result = new String();
+                /*
                     pullDetails.setString(1, String.valueOf(i));
                     ResultSet set = pullDetails.executeQuery();
                     Account temp = new Account(set.getString("id"), set.getString("Name"), set.getBigDecimal("Balance"), set.getBoolean("roundupEnabled") );
                     result.concat(temp.toString() + "\n");
-                }
-                model.put("result", result);
+
+
+                 */
+                model.put("accounts",accounts);
+                //model.put("result", result);
                 return new ModelAndView("viewAllAccounts.hbs", model);
             }
             else{
@@ -295,14 +310,14 @@ public class BankController {
 
 
     @GET("/viewAllTransactions")
-    public  ModelAndView viewAllTransactions(Session session, Context ctx){
+    public  ModelAndView viewAllTransactions(Session session){
 
         try(Connection connection = dataSource.getConnection()){
 
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM `transactionHistory` WHERE `from` = ?");
 
             statement.setString(1, String.valueOf(session.get("id")));
-            System.out.println("paidFrom: " + String.valueOf(session.get("id")));
+            //System.out.println("paidFrom: " + String.valueOf(session.get("id")));
 
             ResultSet set = statement.executeQuery();
 
@@ -322,7 +337,7 @@ public class BankController {
 
 
 
-            return setBoolean(new ModelAndView("ViewAllTransactions.hbs",model), ctx);
+            return new ModelAndView("ViewAllTransactions.hbs",model);
 
         } catch (SQLException e) {
             logger.error("Error providing spending data", e);

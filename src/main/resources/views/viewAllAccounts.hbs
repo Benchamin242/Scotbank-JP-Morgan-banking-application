@@ -30,8 +30,16 @@
 
 
     <div>
+        {{#each accounts}}
+            <tr>
+                <p>Account number: {{this}}</p>
+                <p>Account id: {{this}}</p>
+                <p>Name: {{this}}</p>
+                <p>Current balance: {{this}}</p>
+                <p>Roundup enabled: <span id="roundupStatus">{{this}}</span></p>
+            </tr>
+        {{/each}}
 
-        <p>{{result}}</p>
 
     </div>
 
