@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Your Details</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+</head>
+
+
+{{>style.hbs}}
+{{>Header.hbs}}
+{{> Sidebar.hbs }}
+
+<body>
+
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+<!-- !PAGE CONTENT! -->
+<div class="w3-main" style="margin-left:340px;margin-right:40px">
+
+    <!-- Header -->
+    <div class="w3-container" style="margin-top:80px" id="showcase">
+        <h1 class="w3-jumbo"><b>Accounts List</b></h1>
+        <hr style="width:500px;border:5px solid red" class="w3-round">
+    </div>
+
+
+
+    <div>
+        {{#each accounts}}
+            <tr>
+                <p>Account number: {{this}}</p>
+                <p>Account id: {{this}}</p>
+                <p>Name: {{this}}</p>
+                <p>Current balance: {{this}}</p>
+                <p>Roundup enabled: <span id="roundupStatus">{{this}}</span></p>
+            </tr>
+        {{/each}}
+
+
+    </div>
+
+
+
+
+    <script>
+        // Script to open and close sidebar
+        function w3_open() {
+            document.getElementById("mySidebar").style.display = "block";
+            document.getElementById("myOverlay").style.display = "block";
+        }
+
+        function w3_close() {
+            document.getElementById("mySidebar").style.display = "none";
+            document.getElementById("myOverlay").style.display = "none";
+        }
+
+    </script>
+</div>
+</body>
+</html>
