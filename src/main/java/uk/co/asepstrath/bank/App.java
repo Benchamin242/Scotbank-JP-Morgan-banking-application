@@ -200,7 +200,7 @@ public class App extends Jooby {
                         prepared.setString(1, to.item(i).getTextContent());
                         prepared.setString(2, from.item(i).getTextContent());
                         prepared.setDouble(3, Double.parseDouble(amount.item(i).getTextContent()));
-                        prepared.setString(4, to.item(i).getTextContent());
+                        prepared.setString(4, type.item(i).getTextContent());
 
                         prepared.executeUpdate();
 
