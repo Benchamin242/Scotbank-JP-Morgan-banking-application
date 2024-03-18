@@ -85,8 +85,8 @@ class AccountTests {
     @Test
     void stringTest(){
 
-        Account a = new Account("testname","testID", new BigDecimal(0.00), false);
-        assertEquals("testID testname 0 false", a.toString());
+        Account a = new Account("testname","testID", new BigDecimal(0.00), false, "place", 0);
+        assertEquals("testID testname 0 false place 0", a.toString());
     }
 
     @Test

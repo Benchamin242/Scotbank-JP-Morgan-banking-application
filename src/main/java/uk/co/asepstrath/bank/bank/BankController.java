@@ -111,10 +111,11 @@ public class BankController {
     }
 
     @GET("/logout")
-    public void logout(Context ctx){
+    public String logout(Context ctx){
         Session CurrentSession = ctx.session();
         CurrentSession.destroy();
         ctx.sendRedirect("/bank/homepage");
+        return "logged out";
     }
 
     public String checkIfLoggedIn(Context ctx){
@@ -184,7 +185,6 @@ public class BankController {
         }
     }
 
-
     @GET("/viewAccount")
     public ModelAndView viewAccounts(Context ctx){
         Session session= ctx.session();
@@ -225,6 +225,8 @@ public class BankController {
             throw new StatusCodeException(StatusCode.SERVER_ERROR, "Database Error Occurred");
         }
     }
+
+
 
 
     /*
