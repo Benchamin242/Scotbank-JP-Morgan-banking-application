@@ -363,7 +363,49 @@ public class BankController {
         }
     }
 
+    @GET("/summary")
+    public ModelAndView spendingSummary(Session session, Context ctx) {
 
+        try (Connection connection = dataSource.getConnection()) {
+
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM `transactionHistory` WHERE `from` = ?");
+            PreparedStatement businessDetails = connection.prepareStatement("SELECT * FROM `businessDetails` WHERE `from` = ?");
+
+            statement.setString(1, String.valueOf(session.get("id")));
+            System.out.println("paidFrom: " + String.valueOf(session.get("id")));
+
+            ResultSet set = statement.executeQuery();
+            ResultSet businessSet = businessDetails.executeQuery();
+
+            Map<String, Object> model = new HashMap<>();
+
+            Map<String, Double> spendingSummaryByBusinessCat = new HashMap<>();
+            while (set.next()) {
+                //model.put("paidTo", set.getString("to"));
+                //model.put("amount", set.getDouble("amount"));
+                //System.out.println(model.toString());
+                String businessid = set.getString("to");
+
+                double amountWithdrawn = set.getDouble("amount");
+                while(businessSet.next()){
+                    if(businessSet.getString("id").equals(businessid)){
+                        String businessCategory = businessSet.getString("category");
+                        spendingSummaryByBusinessCat.put(businessCategory, spendingSummaryByBusinessCat.getOrDefault(businessCategory, 0.0) + amountWithdrawn);
+                    }
+                }
+
+            }
+
+            model.put("summary", spendingSummaryByBusinessCat);
+
+            System.out.println(model);
+            return setBoolean(new ModelAndView("summary.hbs", model), ctx);
+
+        } catch (SQLException e) {
+            logger.error("Error providing spending data", e);
+            throw new StatusCodeException(StatusCode.SERVER_ERROR, "Error providing spending data", e);
+        }
+    }
 
 
 }
