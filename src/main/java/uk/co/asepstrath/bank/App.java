@@ -1,12 +1,17 @@
 package uk.co.asepstrath.bank;
-
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;
 import io.jooby.Jooby;
 import io.jooby.handlebars.HandlebarsModule;
 import io.jooby.helper.UniRestExtension;
 import io.jooby.hikari.HikariModule;
 import kong.unirest.core.HttpResponse;
-import org.jasypt.iv.RandomIvGenerator;
-import org.jasypt.util.password.StrongPasswordEncryptor;
 import org.slf4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
@@ -26,7 +31,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import kong.unirest.core.Unirest;
-import io.jooby.jasypt.JasyptModule;
 
 import static java.lang.String.valueOf;
 
@@ -90,7 +94,7 @@ public class App extends Jooby {
     it should be used to ensure that the DB is properly setup
      */
 
-    public void onStart() {
+    public void onStart() throws SQLException {
         Logger log = getLog();
         log.info("Starting Up...");
 
@@ -111,7 +115,38 @@ public class App extends Jooby {
         } catch (SQLException e) {
             log.error("Database Creation Error",e);
         }
+        try (Connection connection = ds.getConnection()){
+        try (Statement stmt = connection.createStatement()) {
+            // Create transactionsTable
+            stmt.executeUpdate("CREATE TABLE `businessDetails` (`id` varchar(255), `name` varchar(255), `category` varchar(255), `sanctioned` boolean)");
 
+            // Read data from CSV file and insert into transactionsTable
+            String csvFile = "C:\\Users\\Marcus Connelly\\Documents\\ScotBankBusinessDb.csv";
+            String line;
+            String cvsSplitBy = ",";
+
+            try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
+                while ((line = br.readLine()) != null) {
+                    // Split the line into columns
+                    String[] data = line.split(cvsSplitBy);
+
+                    // Prepare and execute insert statement
+                    try (PreparedStatement pstmt = connection.prepareStatement("INSERT INTO businessDetails (id, name, category, sanctioned) VALUES (?, ?, ?, ?)")) {
+                        pstmt.setString(1, data[0]);
+                        pstmt.setString(2, data[1]);
+                        pstmt.setString(3, data[2]);
+                        pstmt.setBoolean(4, Boolean.parseBoolean(data[3]));
+                        pstmt.executeUpdate();
+                    } catch (SQLException e) {
+                        log.error("Error inserting data into transactionsTable: " + e.getMessage());
+                    }
+                }
+            } catch (IOException e) {
+                log.error("Error reading CSV file: " + e.getMessage());
+            }
+        } catch (SQLException e) {
+            log.error("Database error", e);
+        }}
         try (Connection connection = ds.getConnection()) {
 
             //this line connects us to the api, uses a get statement to place all the information from the api into an
@@ -150,10 +185,11 @@ public class App extends Jooby {
                 String currId = account.getId();
                 String currName = account.getName();
                 BigDecimal startingBal;
-                if (account.getBalance() == null) {
+                if(account.getStartingBalance() == null){
                     startingBal = new BigDecimal(0.00);
-                } else {
-                    startingBal = account.getBalance();
+                }
+                else{
+                    startingBal = account.getStartingBalance();
                 }
                 boolean roundE = account.getRe();
 

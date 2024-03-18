@@ -86,7 +86,7 @@ public class UnitTest {
 
         assertEquals(200, help.getStatus());
         Account[] t = help.getBody();
-        assertEquals("01b02232-eeff-4294-aad0-c3cdbbbf773c Miss Lavina Waelchi null false", t[0].toString());
+        assertEquals("01b02232-eeff-4294-aad0-c3cdbbbf773c Miss Lavina Waelchi 544.91 false", t[0].toString());
     }
 
     @Test
@@ -147,6 +147,8 @@ public class UnitTest {
 
 
     }
+
+
     @Test
     public void authenticationAPI(){
 
@@ -171,7 +173,6 @@ public class UnitTest {
         HttpResponse<JsonNode> help = Unirest.get("https://api.asep-strath.co.uk/api/businesses").asObject(JsonNode.class); // change from JsonNode to business class
         assertEquals(200, help.getStatus());
     }
-
 
 
 
