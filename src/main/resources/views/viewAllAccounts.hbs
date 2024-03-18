@@ -30,13 +30,17 @@
 
 
     <div>
-        {{#each accounts}}
+        {{#accounts}}
             <tr>
-                <p>Account number: {{@key}}</p>
-                <p>information: {{this}}</p>
+                <p>Name: {{Name}}</p>
+                <p>Account Number: {{accountNum}}</p>
+                <p>ID: {{id}}</p>
+                <p>Balance: {{Balance}}</p>
+                <p>Roundup Enabled: {{roundupEnabled}}</p><br>
+
 
             </tr>
-        {{/each}}
+        {{/accounts}}
 
 
     </div>

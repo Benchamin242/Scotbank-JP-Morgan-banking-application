@@ -251,14 +251,26 @@ public class BankController {
                 ResultSet set = pullDetails.executeQuery();
 
 
-                Map<Integer, String> accounts = new HashMap<>();
+                //Map<String, Object> accounts = new HashMap<>();
+                List<Map<String, Object>> accounts = new ArrayList<>();
 
+                int counter = 0;
                 while (set.next()){
-                    Account temp = new Account(set.getString("Name"), set.getString("id"), set.getBigDecimal("Balance"), set.getBoolean("roundupEnabled"));
-                    //accounts.put("accoutName", set.getString("accountNum"));
-                    accounts.put(set.getInt("accountNum"),temp.toString());
-                    //model.put("accounts",accounts);
+                    Map<String, Object> account = new HashMap<>();
+                    //Account temp = new Account(set.getString("Name"), set.getString("id"), set.getBigDecimal("Balance"), set.getBoolean("roundupEnabled"));
+                    account.put("Name", set.getString("Name"));
+                    account.put("accountNum", set.getInt("accountNum"));
+                    account.put("id", set.getString("id"));
+                    account.put("Balance", set.getDouble("Balance"));
+                    account.put("roundupEnabled", set.getString("roundupEnabled"));
+                    accounts.add(account);
+
+                    //accounts.put(set.getInt("accountNum"),temp.toString());
+
+                    counter++;
                 }
+                model.put("accounts",accounts);
+
                 //THIS IS UNFINISHED, i want to store all the details of the accounts in a big hashmap and display them in one big page, similar to how the transaction display works
                 //ive already forgotten how ill do that, good luck me of the future :)
                 //String result = new String();
