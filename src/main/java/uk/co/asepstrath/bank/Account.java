@@ -17,9 +17,6 @@ public class Account {
     private String postcode;
     private int cardDetails;
 
-    private boolean manager;
-
-    private static final Logger log = LoggerFactory.getLogger(Account.class);
 
     public Account(String fullName, String uniqueid,  BigDecimal startingBal, boolean re){
         id = uniqueid;

@@ -21,7 +21,6 @@ import javax.sql.DataSource;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.StringReader;
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -30,10 +29,9 @@ import java.util.ArrayList;
 
 import kong.unirest.core.Unirest;
 
-import static java.lang.String.valueOf;
 
 public class App extends Jooby {
-    ArrayList<Account> accounts = new ArrayList<Account>();
+    ArrayList<Account> accounts = new ArrayList<>();
     AuthController authController;
     BankController bankController;
 
@@ -42,7 +40,6 @@ public class App extends Jooby {
         /*
         This section is used for setting up the Jooby Framework modules
          */
-        //install(new JasyptModule());
         install(new UniRestExtension());
         install(new HandlebarsModule());
         install(new HikariModule("mem"));
@@ -75,7 +72,7 @@ public class App extends Jooby {
         post("/submitForm", req -> {
 
             String name = req.form(String.class);
-            Account account = new Account(name, "ppp", new BigDecimal(0.00), false);
+            Account account = new Account(name, "ppp", BigDecimal.valueOf(0.00), false);
             // ...
 
             return "Welcome " + account.getName();
@@ -95,6 +92,8 @@ public class App extends Jooby {
     public void onStart() throws SQLException  {
         Logger log = getLog();
         log.info("Starting Up...");
+
+
 
 
         // Fetch DB Source
@@ -180,11 +179,6 @@ public class App extends Jooby {
             //this splits up our accounts into individual objects of type Account, placing them all in an array called "please"
             Account[] please = help.getBody();
 
-            //this was just so i could test that it actually is seperating the accounts properly, it just prints out the details of each account
-            for (Account account : please) {
-                System.out.println(account.toString());
-            }
-
 
             //now we are moving all the details into our accounts table, using a preparedstatement
             //prepared statement basically just means we have a statement already ready that we will be calling multiple times
@@ -229,7 +223,7 @@ public class App extends Jooby {
             pstmt.close();
 
             stmt.executeUpdate("CREATE TABLE transactionHistory (`to` varchar(255), `from` varchar(255),`amount` double, `type` VARCHAR(255))");
-            ArrayList<Transactions> transactions = new ArrayList<Transactions>();
+            ArrayList<Transactions> transactions = new ArrayList<>();
 
             for (int x = 0; x < 153; x++) {
                 String help2 = Unirest.get("https://api.asep-strath.co.uk/api/transactions")
@@ -239,12 +233,13 @@ public class App extends Jooby {
                 try {
                     PreparedStatement prepared = connection.prepareStatement("INSERT INTO transactionHistory (`to`, `from`, amount, type) VALUES (?, ?, ?, ?)");
 
-                    //.asObject(Transactions[].class);
+
                     DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory
                             .newInstance();
                     DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
                     InputSource is = new InputSource(new StringReader(help2));
                     Document document = documentBuilder.parse(is);
+
 
                     NodeList type = document.getElementsByTagName("type");
                     NodeList amount = document.getElementsByTagName("amount");
@@ -276,7 +271,6 @@ public class App extends Jooby {
                 }
 
             }
-            int t = 0;
             for(Transactions transaction: transactions){
 
                 Account to;
@@ -335,7 +329,6 @@ public class App extends Jooby {
                     transactionStatement.setString(2, from.getId());
                     transactionStatement.executeUpdate();
                 }
-                t++;
             }
 
 
@@ -344,7 +337,6 @@ public class App extends Jooby {
             stmt.executeUpdate("INSERT INTO transactionsTable " + "VALUES (1,'Morrison', 25.00 )");
             stmt.executeUpdate("INSERT INTO transactionsTable " + "VALUES (1,'Tesco', 25.00 )");
             String testPassword = authController.getPasswordEncryptor().encryptPassword("test");
-            String test2 = "temp";
 
             stmt.executeUpdate("CREATE TABLE `accountsPassword` (`accountNum` int not null primary key, `password` varchar(255), foreign key (`accountNum`) references `accountsTable`(`accountNum`) )");
             stmt.executeUpdate("INSERT INTO accountsPassword " + "VALUES (1,'" + testPassword + "')");
@@ -354,9 +346,6 @@ public class App extends Jooby {
             stmt.executeUpdate("INSERT INTO accountsPassword " + "VALUES (5,'123apple')");
             stmt.executeUpdate("INSERT INTO accountsPassword " + "VALUES (6,'bank')");
 
-            /*stmt.executeUpdate("CREATE TABLE `transactionHistory` (`id` varchar(255), `paidTo` varchar(255), `amount` double)");
-            stmt.executeUpdate("INSERT INTO transactionHistory " + "VALUES ('01b02232-eeff-4294-aad0-c3cdbbbf773c', 'Rachel', 6.10)");
-            stmt.executeUpdate("INSERT INTO transactionHistory " + "VALUES ('01b02232-eeff-4294-aad0-c3cdbbbf773c', 'Ross', 10)");*/
 
         } catch(SQLException e){
             log.error("Database Creation Error" + e.getMessage());

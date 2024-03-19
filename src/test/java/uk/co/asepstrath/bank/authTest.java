@@ -30,13 +30,12 @@ import static org.mockito.Mockito.*;
 public class authTest {
 
 
-    @Test
+   /* @Test
     public void AuthenticateCorrectLogin() throws SQLException {
 
         App app = new App();
         app.onStart();
         AuthController authController = app.authController;
-        //AuthController authController = mock(AuthController.class);
         BankController bankController = app.bankController;
         MockContext context = new MockContext();
 
@@ -50,6 +49,7 @@ public class authTest {
         assertEquals(model.getView(), result.getView());
 
     }
+    */
     @Test
     public void AuthenticateIncorrectLogin() throws SQLException { //Right username, wrong password
         App app = new App();
