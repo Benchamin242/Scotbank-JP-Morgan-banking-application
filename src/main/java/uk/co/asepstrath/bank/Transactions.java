@@ -1,8 +1,12 @@
 package uk.co.asepstrath.bank;
 
+import javax.sql.DataSource;
 import java.math.BigDecimal;
+import java.sql.Connection;
 import java.sql.Time;
 import java.sql.Timestamp;
+
+
 
 public class Transactions {
 
@@ -14,8 +18,6 @@ public class Transactions {
 
 
 
-
-
     public Transactions(BigDecimal amount, String from, String to, String type){
         this.type = type;
         this.amount = amount;
@@ -23,36 +25,46 @@ public class Transactions {
         this.from = from;
 
     }
-    public void payment(){
-        if(type.equals("PAYMENT")){
+    public void processTransaction(Account to, Account from){
+        switch (type){
+            case ("PAYMENT"):
+                try { //if insufficient balance then exception is thrown and payment was un-successful and not money was withdrawn or deposited
+                    if(from != null && to != null) {
+                        from.withdraw(amount);
+                        to.deposit(amount);
+                    }
+                }catch(Exception ignored){
+                }
+
+                break;
+            case ("WITHDRAWAL"):
+                try {
+                    from.withdraw(amount);
+                }catch(Exception ignored){
+                }
+                break;
+            case ("DEPOSIT"):
+                to.deposit(amount);
+                break;
+            case ("COLLECT ROUNDUPS"):
+                to.deposit(amount);
+                break;
+            case ("TRANSFER"):
+                try { //if insufficient balance then exception is thrown and payment was un-successful and not money was withdrawn or deposited
+                    if(from != null) { // if from is null this suggests that the transfer is from another bank
+                        from.withdraw(amount);
+                    }
+                    to.deposit(amount);
+
+                }catch(Exception ignored){
+                }
+                break;
+            default:
+                break;
 
         }
-
-    }
-    public void withdrawal(){
-        /*if(type.equals("WITHDRAWAL") && from.getBalance().compareTo(amount) == 1 ){
-            from.withdraw(amount.doubleValue());
-        }*/
-    }
-    public void Deposit(){
-        /*if(type.equals("DEPOSIT")) {
-            to.deposit(new BigDecimal("AMOUNT"));
-        }*/
-
     }
 
-    public void collectionRoundups(){
-        if(type.equals("COLLECT ROUNDUPS")){
-
-        }
-    }
-
-    public void transfer(){
-        /*if(type.equals("TRANSFER")){
-            to.deposit(amount);
-            from.withdraw(amount.doubleValue());
-        }*/
-    }
 
     public String getType(){
         return type;

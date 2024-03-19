@@ -67,8 +67,10 @@ public class Account {
 
 
 
-    public void withdraw(double x) throws ArithmeticException{
-        BigDecimal amount = new BigDecimal(x);
+    public void withdraw(BigDecimal x) throws ArithmeticException{
+        //BigDecimal amount = new BigDecimal(x);
+        BigDecimal amount = x;
+
         if(amount.compareTo(startingBalance) > 0){ //uses BigDecimal compareTo method ->  amount > balance
             throw new ArithmeticException("\n"+"Insufficient funds");
         } else {

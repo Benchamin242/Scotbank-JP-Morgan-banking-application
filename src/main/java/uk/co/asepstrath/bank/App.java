@@ -3,10 +3,8 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+
 import io.jooby.Jooby;
 import io.jooby.handlebars.HandlebarsModule;
 import io.jooby.helper.UniRestExtension;
@@ -231,6 +229,7 @@ public class App extends Jooby {
             pstmt.close();
 
             stmt.executeUpdate("CREATE TABLE transactionHistory (`to` varchar(255), `from` varchar(255),`amount` double, `type` VARCHAR(255))");
+            ArrayList<Transactions> transactions = new ArrayList<Transactions>();
 
             for (int x = 0; x < 153; x++) {
                 String help2 = Unirest.get("https://api.asep-strath.co.uk/api/transactions")
@@ -254,6 +253,9 @@ public class App extends Jooby {
 
                     for (int i = 0; i < to.getLength(); i++) {
 
+                        Transactions temp = new Transactions( new BigDecimal(amount.item(i).getTextContent()),from.item(i).getTextContent(), to.item(i).getTextContent(), type.item(i).getTextContent() );
+                        transactions.add(temp);
+
                         //System.out.println("transaction history: " + to.item(i).getTextContent());
                         prepared.setString(1, to.item(i).getTextContent());
                         prepared.setString(2, from.item(i).getTextContent());
@@ -272,6 +274,68 @@ public class App extends Jooby {
                 } catch (Exception e) {
                     System.out.println("ERROR: " + e.getMessage());
                 }
+
+            }
+            int t = 0;
+            for(Transactions transaction: transactions){
+
+                Account to;
+                try {
+                    PreparedStatement transactionStatement = connection.prepareStatement("SELECT * FROM `accountsTable` WHERE `id` = ?");
+                    transactionStatement.setString(1, transaction.getTo());
+
+                    ResultSet set = transactionStatement.executeQuery();
+
+
+                    if (set.next()) {
+
+                        to = new Account(set.getString("Name")
+                                , set.getString("id")
+                                , new BigDecimal(set.getDouble("Balance"))
+                                , set.getBoolean("roundupEnabled"));
+                    } else {
+                        to = null;
+                    }
+                }catch (SQLException e){
+                    to = null;
+                }
+
+                Account from;
+                try {
+
+                    PreparedStatement transactionStatement = connection.prepareStatement("SELECT `Name`, `id`, `Balance`, `roundupEnabled` FROM `accountsTable` WHERE `id` = ?");
+
+                    transactionStatement.setString(1, transaction.getFrom());
+                    ResultSet set2 = transactionStatement.executeQuery();
+
+                    if (set2.next()) {
+                        from = new Account(set2.getString("Name")
+                                , set2.getString("id")
+                                , new BigDecimal(set2.getDouble("Balance"))
+                                , set2.getBoolean("roundupEnabled"));
+
+                    } else {
+                        from = null;
+                    }
+                }catch(SQLException e){
+                    from = null;
+                }
+
+                transaction.processTransaction(to, from);
+
+                if(to != null) {
+                    PreparedStatement transactionStatement = connection.prepareStatement("UPDATE `accountsTable` set `Balance` = ? WHERE `id` = ? ");
+                    transactionStatement.setDouble(1, to.getStartingBalance().doubleValue());
+                    transactionStatement.setString(2, to.getId());
+                    transactionStatement.executeUpdate();
+                }
+                if(from != null){
+                    PreparedStatement transactionStatement = connection.prepareStatement("UPDATE `accountsTable` set `Balance` = ? WHERE `id` = ? ");
+                    transactionStatement.setDouble(1, from.getStartingBalance().doubleValue());
+                    transactionStatement.setString(2, from.getId());
+                    transactionStatement.executeUpdate();
+                }
+                t++;
             }
 
 

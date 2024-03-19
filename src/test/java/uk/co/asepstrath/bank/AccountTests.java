@@ -41,7 +41,7 @@ class AccountTests {
     void withdrawFunds() {
         Account a = new Account("testname","testID", new BigDecimal(10.00), false);
         a.deposit(BigDecimal.valueOf(40));
-        a.withdraw(20);
+        a.withdraw(BigDecimal.valueOf(20));
 
         assertEquals(a.getStartingBalance(), new BigDecimal("30.00"));
     }
@@ -52,7 +52,7 @@ class AccountTests {
         a.deposit(BigDecimal.valueOf(30));
 
 
-        Assertions.assertThrows(ArithmeticException.class,() -> a.withdraw(100));
+        Assertions.assertThrows(ArithmeticException.class,() -> a.withdraw(BigDecimal.valueOf(100)));
     }
 
     @Test
@@ -64,9 +64,9 @@ class AccountTests {
         a.deposit(BigDecimal.valueOf(10.00));
         a.deposit(BigDecimal.valueOf(10.00));
         a.deposit(BigDecimal.valueOf(10.00));
-        a.withdraw(20.00);
-        a.withdraw(20.00);
-        a.withdraw(20.00);
+        a.withdraw(BigDecimal.valueOf(20.00));
+        a.withdraw(BigDecimal.valueOf(20.00));
+        a.withdraw(BigDecimal.valueOf(20.00));
 
         assertEquals(a.getStartingBalance(), new BigDecimal("10.00"));
 
