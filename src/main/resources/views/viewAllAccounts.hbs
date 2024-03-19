@@ -23,11 +23,14 @@
 
     <!-- Header -->
     <div class="w3-container" style="margin-top:80px" id="showcase">
-        <h1 class="w3-jumbo"><b>Accounts List</b></h1>
-        <hr style="width:500px;border:5px solid red" class="w3-round">
+
+
     </div>
     <div>
-        <h1>10 big spenders</h1>
+        <h1 class="w3-jumbo">
+            <b>10 Big Spenders</b></h1>
+        <hr style="width:500px;border:5px solid red" class="w3-round">
+
         {{#bigSpenders}}
             <tr>
                 <p>Name: {{Name}}</p>
@@ -46,8 +49,10 @@
 
 
     <div>
-        <h1>All accounts</h1>
-        <h4>accounts in descending order of balance</h4>
+        <h1 class="w3-jumbo">
+            <b>All Accounts</b></h1>
+        <hr style="width:500px;border:5px solid red" class="w3-round">
+
         {{#accounts}}
             <tr>
                 <p>Name: {{Name}}</p>
