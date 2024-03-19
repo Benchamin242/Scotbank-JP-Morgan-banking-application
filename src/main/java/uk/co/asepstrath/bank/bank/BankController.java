@@ -131,15 +131,32 @@ public class BankController {
             return null;
         }
     }
+    public boolean checkIfManager(Context ctx){
+
+        Session CurrentSession = ctx.session();
+
+            String id = String.valueOf(CurrentSession.get("id"));
+             if(id.equals("635e583f-0af2-47cb-9625-5b66ba30e188")){
+                 return true;
+             } else {
+                 return false;
+             }
+
+        }
+
 
     public ModelAndView setBoolean(ModelAndView model,Context ctx){
         if (checkIfLoggedIn(ctx) != null){
+            if(checkIfManager(ctx)){
+                model.put("ManagerLoggedIn", Boolean.TRUE);
+            }
             model.put("userLoggedIn", Boolean.TRUE);
         } else {
             model.put("userLoggedIn", Boolean.FALSE);
         }
         return model;
     }
+
 
     @GET("/Signup")
     public ModelAndView signup(){
@@ -231,7 +248,7 @@ public class BankController {
     }
 
    @GET ("/viewAllAccounts")
-    public ModelAndView viewAllAccounts(Session session) { //Session session
+    public ModelAndView viewAllAccounts(Session session,Context ctx) { //Session session
         try (Connection connection = dataSource.getConnection()){
 
             HashMap<String, Object> model = new HashMap<>();
@@ -323,7 +340,7 @@ public class BankController {
                  */
                 //model.put("accounts",accounts);
                 //model.put("result", result);
-                return new ModelAndView("viewAllAccounts.hbs", model);
+                return setBoolean(new ModelAndView("ViewAllAccounts.hbs", model), ctx);
             }
             else{
                 //this is just some testing im doing
@@ -338,7 +355,7 @@ public class BankController {
 
 
                 model.put("result", "ERROR: You do not have permission to view this page");
-                return new ModelAndView("viewAllAccounts.hbs", model);
+                return setBoolean(new ModelAndView("ViewAllAccounts.hbs", model), ctx);
             }
 
 
@@ -361,7 +378,7 @@ public class BankController {
 
 
     @GET("/viewAllTransactions")
-    public  ModelAndView viewAllTransactions(Session session){
+    public  ModelAndView viewAllTransactions(Session session, Context ctx){
 
         try(Connection connection = dataSource.getConnection()){
 
@@ -394,7 +411,8 @@ public class BankController {
 
 
 
-            return new ModelAndView("ViewAllTransactions.hbs",model);
+
+            return setBoolean(new ModelAndView("ViewAllTransactions.hbs", model), ctx);
 
         } catch (SQLException e) {
             logger.error("Error providing spending data", e);
