@@ -14,12 +14,14 @@ import org.slf4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 import uk.co.asepstrath.bank.bank.AuthController;
 import uk.co.asepstrath.bank.bank.BankController;
 
 import javax.sql.DataSource;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.StringReader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -248,18 +250,44 @@ public class App extends Jooby {
 
                     for (int i = 0; i < to.getLength(); i++) {
 
-                        Transactions temp = new Transactions( new BigDecimal(amount.item(i).getTextContent()),from.item(i).getTextContent(), to.item(i).getTextContent(), type.item(i).getTextContent() );
-                        transactions.add(temp);
+                        //Transactions temp = new Transactions( new BigDecimal(amount.item(i).getTextContent()),from.item(i).getTextContent(), to.item(i).getTextContent(), type.item(i).getTextContent() );
+                        //transactions.add(temp);
 
                         //System.out.println("transaction history: " + to.item(i).getTextContent());
-                        prepared.setString(1, to.item(i).getTextContent());
-                        prepared.setString(2, from.item(i).getTextContent());
-                        if(amount.item(i).getTextContent() == null){
+                        BigDecimal a;
+                        String b;
+                        String c;
+                        String d;
+                        if(to.item(i) == null) {
+                            prepared.setString(1, null);
+                            c = null;
+                        }else{
+                            prepared.setString(1, to.item(i).getTextContent());
+                            c = to.item(i).getTextContent();
+                        }
+                        if(from.item(i) == null){
+                            prepared.setString(2, null);
+                            b = null;
+                        }else {
+                            prepared.setString(2, from.item(i).getTextContent());
+                            b = from.item(i).getTextContent();
+                        }
+                        if(amount.item(i) == null){
                             prepared.setDouble(3, 0.0);
+                            a = new BigDecimal("0.00");
                         }else{
                             prepared.setDouble(3, Double.parseDouble(amount.item(i).getTextContent()));
+                            a = new BigDecimal(amount.item(i).getTextContent());
                         }
-                        prepared.setString(4, type.item(i).getTextContent());
+                        if(type.item(i) == null){
+                            prepared.setString(4, null);
+                            d = null;
+                        }else {
+                            prepared.setString(4, type.item(i).getTextContent());
+                            d = type.item(i).getTextContent();
+                        }
+                        Transactions temp = new Transactions( a, b, c, d);
+                        transactions.add(temp);
 
                         prepared.executeUpdate();
 
