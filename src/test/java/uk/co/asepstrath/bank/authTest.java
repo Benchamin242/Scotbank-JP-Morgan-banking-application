@@ -42,9 +42,9 @@ public class authTest {
         Session session = context.session();
         session.put("id","01b02232-eeff-4294-aad0-c3cdbbbf773c");
 
-        ModelAndView model = bankController.submit(session);
+        ModelAndView model = bankController.viewAllAccounts(session);
 
-        ModelAndView result = authController.AuthenticateLogin("Miss Lavina Waelchi", "test", context);
+        ModelAndView result = authController.AuthenticateLogin("Phebe Lehner", "couch123", context);
 
         assertEquals(model.getView(), result.getView());
 

@@ -27,10 +27,17 @@
         <hr style="width:500px;border:5px solid red" class="w3-round">
     </div>
     <div>
-        <h1>locations of top 10 big spenders</h1>
+        <h1>10 big spenders</h1>
         {{#bigSpenders}}
             <tr>
-                <p>postcode: {{this}}</p><br>
+                <p>Name: {{Name}}</p>
+                <p>Account Number: {{accountNum}}</p>
+                <p>ID: {{id}}</p>
+                <p>Balance: {{Balance}}</p>
+                <p>Roundup Enabled: {{roundupEnabled}}</p>
+                <p>postcode: {{postcode}}</p>
+                <p>total spent: {{totalPayments}}</p><br>
+
             </tr>
         {{/bigSpenders}}
 
