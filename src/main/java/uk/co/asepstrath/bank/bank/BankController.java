@@ -200,8 +200,8 @@ public class BankController {
             // Use a prepared statement to avoid SQL injection vulnerabilities
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM `accountsTable` WHERE `id` = ?");
             // Set the accountID parameter in the prepared statement
-            System.out.println(session.get("id"));
-            System.out.println(session.getId());
+            //System.out.println(session.get("id"));
+            //System.out.println(session.getId());
 
 
             statement.setString(1, String.valueOf(session.get("id")));
@@ -230,38 +230,27 @@ public class BankController {
         }
     }
 
+
+
    @GET ("/viewAllAccounts")
     public ModelAndView viewAllAccounts(Session session) { //Session session
         try (Connection connection = dataSource.getConnection()){
 
             HashMap<String, Object> model = new HashMap<>();
 
-            //grabs the id of whoever is logged on and checks that it is the same id as the manager (in this case our account with id 1)
+            //grabs the id of whoever is logged on and checks that it is the same id as the manager (we decided miss Lavine Waelchi would be our manager)
             String managerID = String.valueOf(session.get("id"));
-            System.out.println(managerID);
             if(managerID.equals("635e583f-0af2-47cb-9625-5b66ba30e188")){
 
-                //i want to grab the size of the database, then loop through the entire database pulling out their details
-                PreparedStatement sizeStatement = connection.prepareStatement("SELECT COUNT(*) FROM `accountsTable`");
-                ResultSet sizeSet = sizeStatement.executeQuery();
-                int size = 0;
-                if(sizeSet.next()){
-                    System.out.println("so far so good");
-                    size = sizeSet.getInt(1);
-                    System.out.println(String.valueOf(size));
-                }
-
+                //pulls the details from every account in accounts table and puts it in an "accounts" ArrayList
+                //sorts the arraylist when finished
                 PreparedStatement pullDetails = connection.prepareStatement("SELECT * FROM `accountsTable`");
                 ResultSet set = pullDetails.executeQuery();
 
-
-                //Map<String, Object> accounts = new HashMap<>();
                 List<Map<String, Object>> accounts = new ArrayList<>();
 
-                int counter = 0;
                 while (set.next()){
                     Map<String, Object> account = new HashMap<>();
-                    //Account temp = new Account(set.getString("Name"), set.getString("id"), set.getBigDecimal("Balance"), set.getBoolean("roundupEnabled"));
                     account.put("Name", set.getString("Name"));
                     account.put("accountNum", set.getInt("accountNum"));
                     account.put("id", set.getString("id"));
@@ -269,52 +258,25 @@ public class BankController {
                     account.put("roundupEnabled", set.getString("roundupEnabled"));
                     account.put("postcode",set.getString("postcode"));
                     accounts.add(account);
-
-                    //accounts.put(set.getInt("accountNum"),temp.toString());
-
-                    counter++;
                 }
-
                 Collections.sort(accounts, (account1,account2) -> Double.compare(new Double(account2.get("Balance").toString()), new Double(account1.get("Balance").toString())));
+
+                //creating our list of the top spenders by looping through an already sorted list
                 List<String> bigSpenders = new ArrayList<>();
                 for(int i = 0; i<10; i++) {
                     bigSpenders.add(accounts.get(i).get("postcode").toString());
                 }
+
+                //adds our sorted list and biggest spenders to our model, then returns it alongside our hbs file
                 model.put("bigSpenders", bigSpenders);
                 model.put("accounts",accounts);
 
-                //THIS IS UNFINISHED, i want to store all the details of the accounts in a big hashmap and display them in one big page, similar to how the transaction display works
-                //ive already forgotten how ill do that, good luck me of the future :)
-                //String result = new String();
-                /*
-                    pullDetails.setString(1, String.valueOf(i));
-                    ResultSet set = pullDetails.executeQuery();
-                    Account temp = new Account(set.getString("id"), set.getString("Name"), set.getBigDecimal("Balance"), set.getBoolean("roundupEnabled") );
-                    result.concat(temp.toString() + "\n");
-
-
-                 */
-                //model.put("accounts",accounts);
-                //model.put("result", result);
                 return new ModelAndView("viewAllAccounts.hbs", model);
             }
             else{
-                //this is just some testing im doing
-                PreparedStatement sizeStatement = connection.prepareStatement("SELECT COUNT(*) FROM `accountsTable`");
-                ResultSet sizeSet = sizeStatement.executeQuery();
-                int size = 0;
-                if(sizeSet.next()){
-                    System.out.println("so far so good");
-                    size = sizeSet.getInt(1);
-                    System.out.println(String.valueOf(size));
-                }
-
-
                 model.put("result", "ERROR: You do not have permission to view this page");
                 return new ModelAndView("viewAllAccounts.hbs", model);
             }
-
-
 
         } catch (SQLException e) {
             logger.error("Error providing spending data", e);
