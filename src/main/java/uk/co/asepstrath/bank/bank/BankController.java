@@ -90,8 +90,34 @@ public class BankController {
     }
 
     @GET("/Summary")
-    public ModelAndView Summary(Context ctx){
-        return setBoolean(new ModelAndView("Summary.hbs"),ctx);
+    public ModelAndView Summary(Session session){
+        try(Connection connection = dataSource.getConnection()){
+
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM `transactionHistory` WHERE type = 'PAYMENT' AND `from` = ?");
+
+            statement.setString(1, String.valueOf(session.get("id")));
+
+            ResultSet set = statement.executeQuery();
+
+            Map<String, Object> model = new HashMap<>();
+            Map<String, Object> spendingSummary = new HashMap<>();
+            ArrayList transactions = new ArrayList<Transactions>();
+
+            while(set.next()) {
+                Transactions tran = new Transactions(BigDecimal.valueOf(set.getDouble("amount")),set.getString("from"), set.getString("to"),set.getString("type"));
+
+                transactions.add(tran);
+
+            }
+
+            model.put("transactions", transactions);
+
+            return new ModelAndView("Summary.hbs", model);
+
+        } catch (SQLException e) {
+            logger.error("Error providing spending data", e);
+            throw new StatusCodeException(StatusCode.SERVER_ERROR, "Error providing spending data", e);
+        }
     }
 
     @GET("/ContactUs")
@@ -327,19 +353,6 @@ public class BankController {
                 resultBigSet.close();
                 model.put("bigSpenders", bigAccounts);
 
-                //THIS IS UNFINISHED, i want to store all the details of the accounts in a big hashmap and display them in one big page, similar to how the transaction display works
-                //ive already forgotten how ill do that, good luck me of the future :)
-                //String result = new String();
-                /*
-                    pullDetails.setString(1, String.valueOf(i));
-                    ResultSet set = pullDetails.executeQuery();
-                    Account temp = new Account(set.getString("id"), set.getString("Name"), set.getBigDecimal("Balance"), set.getBoolean("roundupEnabled") );
-                    result.concat(temp.toString() + "\n");
-
-
-                 */
-                //model.put("accounts",accounts);
-                //model.put("result", result);
                 return setBoolean(new ModelAndView("ViewAllAccounts.hbs", model), ctx);
             }
             else{
@@ -352,7 +365,6 @@ public class BankController {
                     size = sizeSet.getInt(1);
                     System.out.println(String.valueOf(size));
                 }
-
 
                 model.put("result", "ERROR: You do not have permission to view this page");
                 return setBoolean(new ModelAndView("ViewAllAccounts.hbs", model), ctx);
@@ -420,7 +432,7 @@ public class BankController {
         }
     }
 
-    @GET("/summary")
+    @GET("/summary1")
     public ModelAndView spendingSummary(Session session, Context ctx) {
 
         try (Connection connection = dataSource.getConnection()) {
