@@ -32,9 +32,10 @@ public class Account {
         this.postcode = postcode;
         this.cardDetails = cardDetails;
     }
-    public void deposit(BigDecimal x) { // takes in do  uble then turns it into a BigDecimal since it uses arbritary arithmetic
-        BigDecimal amount = x.setScale(2, RoundingMode.HALF_DOWN);
+    public void deposit(BigDecimal amount) { // takes in do  uble then turns it into a BigDecimal since it uses arbritary arithmetic
+        //BigDecimal amount = x.setScale(3, RoundingMode.HALF_DOWN);
         startingBalance = startingBalance.add(amount);
+        startingBalance = startingBalance.setScale(2,RoundingMode.HALF_DOWN);
     }
 
     public BigDecimal getStartingBalance() {
@@ -64,14 +65,16 @@ public class Account {
 
 
 
-    public void withdraw(BigDecimal x) throws ArithmeticException{
+    public void withdraw(BigDecimal amount) throws ArithmeticException{
         //BigDecimal amount = new BigDecimal(x);
-        BigDecimal amount = x;
+        //BigDecimal amount = x.setScale(3, RoundingMode.HALF_DOWN);
 
         if(amount.compareTo(startingBalance) > 0){ //uses BigDecimal compareTo method ->  amount > balance
             throw new ArithmeticException("\n"+"Insufficient funds");
         } else {
             startingBalance = startingBalance.subtract(amount); //you cannot use normal arithmetic with BigDecimal, so we use the subtract method
+            startingBalance = startingBalance.setScale(2,RoundingMode.HALF_DOWN);
+
         }
     }
 
