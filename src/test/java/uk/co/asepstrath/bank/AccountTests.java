@@ -12,13 +12,14 @@ class AccountTests {
 
     @Test
     void createAccount(){
-        Account a = new Account("testname","testID", new BigDecimal(10.00), false);
+        Account a = new Account("testname","testID", new BigDecimal(10.00), false, "G44 2KW", 6967);
         assertNotNull(a);
-        System.out.println(a.getStartingBalance());
         assertEquals("testname", a.getName());
         assertEquals("testID", a.getId());
         assertEquals(a.getStartingBalance(), new BigDecimal(10.00));
         assertFalse(a.getRe());
+        assertEquals("G44 2KW", a.getPostcode());
+        assertEquals(6967, a.getCardDetails());
     }
 
     @Test

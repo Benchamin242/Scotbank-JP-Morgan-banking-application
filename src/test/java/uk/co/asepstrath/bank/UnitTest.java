@@ -79,6 +79,15 @@ public class UnitTest {
 
     }
 
+  /*
+    public void viewAllAccountTest() {
+        BankController bankController = new BankController(null, null);
+        Session session = new MockSession();
+
+        ModelAndView modelAndView = bankController.viewAllAccounts(session);
+        assertEquals();
+    }
+*/
 
     @Test
     public void apiInteraction(){
@@ -135,15 +144,14 @@ public class UnitTest {
             Document document = documentBuilder.parse(is);
 
             NodeList type = document.getElementsByTagName("type");
-
             NodeList amount = document.getElementsByTagName("amount");
             NodeList to = document.getElementsByTagName("to");
             NodeList from = document.getElementsByTagName("from");
 
             assertEquals("PAYMENT",type.item(0).getTextContent());
-            assertEquals("62.00", amount.item(0).getTextContent());
-            assertEquals("NAN", to.item(0).getTextContent());
-            assertEquals("ce1b121f-7432-4638-848a-1edc87c39fab", from.item(0).getTextContent());
+            assertEquals("170.00", amount.item(0).getTextContent());
+            assertEquals("EE", to.item(0).getTextContent());
+            assertEquals("3afedfd7-dfe0-468d-b79a-1a8f9db3497c", from.item(0).getTextContent());
 
             for(int i = 0; i < type.getLength(); i++ ){
                 assertNotNull(type.item(i).getTextContent());
@@ -151,13 +159,8 @@ public class UnitTest {
                 assertNotNull(to.item(i).getTextContent());
                 assertNotNull(from.item(i).getTextContent());
             }
-            //int i = 0;
 
-            /*while(pwd.item(i).hasChildNodes()){
 
-                System.out.println(usr.item(i).getTextContent() + " " + pwd.item(i).getTextContent());
-                i++;
-            }*/
 
         }catch(Exception e){
             assertTrue(false); //test fails
