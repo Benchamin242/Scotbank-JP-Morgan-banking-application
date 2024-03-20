@@ -399,9 +399,10 @@ public class BankController {
 
         try(Connection connection = dataSource.getConnection()){
 
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM `transactionHistory` WHERE `from` = ?");
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM `transactionHistory` WHERE `from` = ? OR `to` =?");
 
             statement.setString(1, String.valueOf(session.get("id")));
+            statement.setString(2, String.valueOf(session.get("id")));
             //System.out.println("paidFrom: " + String.valueOf(session.get("id")));
 
             ResultSet set = statement.executeQuery();
