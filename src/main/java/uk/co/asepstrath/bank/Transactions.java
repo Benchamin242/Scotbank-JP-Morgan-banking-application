@@ -39,7 +39,7 @@ public class Transactions {
 
                 try { //if insufficient balance then exception is thrown and payment was un-successful and not money was withdrawn or deposited
                     if(from != null) {
-                        from.withdraw(amount);
+                        from.withdrawWithRoundup(amount);
                         if(to != null) { //change so that it does it for business
                             System.out.println("PAYMENT");
                             to.deposit(amount);

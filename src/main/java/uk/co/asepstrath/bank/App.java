@@ -371,14 +371,29 @@ public class App extends Jooby {
                     System.out.println(to.getId());
                 }
 
-
                 transaction.processTransaction(to, from);
+                boolean round = true;
+                try{
+                    stmt.executeUpdate("CREATE TABLE `roundups` (`id` varchar(255), roundupPot double)");
+
+                }catch(Exception e){
+                    round = false;
+                }
 
                 if(to != null) {
                     PreparedStatement transactionStatement = connection.prepareStatement("UPDATE `accountsTable` set `Balance` = ? WHERE `id` = ? ");
-                    transactionStatement.setDouble(1, to.getStartingBalance().doubleValue());
+
+                    transactionStatement.setDouble(1, to.getStartingBalance().add(to.getRoundupBalance()).doubleValue());
+
                     transactionStatement.setString(2, to.getId());
                     transactionStatement.executeUpdate();
+
+                    if(round){
+                        PreparedStatement roundStatement = connection.prepareStatement("INSERT INTO `roundups` (?,?)");
+                        transactionStatement.setString(1, to.getId());
+                        transactionStatement.setDouble(2, to.getRoundupBalance().doubleValue());
+
+                    }
                 }
                 if(from != null){
                     PreparedStatement transactionStatement = connection.prepareStatement("UPDATE `accountsTable` set `Balance` = ? WHERE `id` = ? ");
