@@ -32,7 +32,7 @@
         .card {
             position: relative; /* Added to position the design element */
             width: 600px;
-            height: 400px;
+            height: 450px;
             background-color: #ed1c24;
             border-radius: 20px;
             padding: 30px;
@@ -219,7 +219,7 @@
     <!-- Main Content -->
     <div class="w3-main" style="margin-left:340px;margin-right:40px;margin-bottom: 40px; margin-top: 0;">
         <div class="card">
-            <h2>Welcome, {{name}}!</h2>
+            <h2>Welcome, <br> {{name}}!</h2>
             <div class="details">
                 <p><i class="fas fa-dollar-sign"></i> Balance: ${{balance}}</p>
                 <p><i class="fas fa-id-card"></i> Account Number: {{accountNum}}</p>
@@ -230,6 +230,11 @@
             <div class="buttons-container">
                 <!-- Transfer Money Button -->
                 <button class="transfer-button" onclick="openPopup()">Transfer Money</button>
+                <div style="width: 10px;"></div>
+                <button onclick="toggleRoundup()" class="round-button">
+                    {{#roundupEnabled}}Disable Roundups{{/roundupEnabled}}{{^roundupEnabled}}Enable Roundups{{/roundupEnabled}}
+                </button>
+
             </div>
             <div class="card-design">
                 <span class="scotbank-text">Scotbank</span>
