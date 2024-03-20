@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Scotbank - Your Financial Partner</title>
-    <!-- Include your CSS files -->
+
     {{> Style.hbs}}
 </head>
 
@@ -17,8 +17,6 @@
 <!-- Overlay effect when opening sidebar on small screens -->
 <div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu"
      id="myOverlay"></div>
-
-<!-- Top Container -->
 
 
 <!-- Main Content -->
@@ -86,6 +84,7 @@
         document.getElementById("mySidebar").style.display = "none";
         document.getElementById("myOverlay").style.display = "none";
     }
+
 
     // Modal Image Gallery
     function onClick(element) {
