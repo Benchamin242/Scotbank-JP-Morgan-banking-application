@@ -93,11 +93,12 @@ public class BankController {
         return setBoolean(new ModelAndView("Transactions.hbs"),ctx);
     }
 
+
     @GET("/Summary")
     public ModelAndView Summary(Session session, Context ctx){
         try(Connection connection = dataSource.getConnection()){
 
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM `transactionHistory` WHERE type = 'PAYMENT' AND `from` = ?");
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM `transactionHistory` WHERE type = 'PAYMENT' AND `from` = ? ORDER BY `to`");
 
             statement.setString(1, String.valueOf(session.get("id")));
 
@@ -208,22 +209,35 @@ public class BankController {
             System.out.println(session.get("id"));
             System.out.println(session.getId());
 
-
             statement.setString(1, session.getId());
 
             Map<String, Object> model = new HashMap<>();
             ResultSet set = statement.executeQuery();
+
+            PreparedStatement roundStatement = connection.prepareStatement("SELECT * FROM `roundups` WHERE `id` = ?");
+            roundStatement.setString(1, session.getId());
+            ResultSet roundSet = roundStatement.executeQuery();
+
+            double roundSubtract = 0;
             while(set.next()){
                 model.put("accountNum", set.getInt("accountNum"));
                 model.put("id", set.getString("id"));
                 model.put("name", set.getString("Name"));
-                model.put("balance", set.getDouble("Balance"));
+                //model.put("balance", set.getDouble("Balance"));
+                roundSubtract = set.getDouble("Balance");
                 model.put("postcode", set.getDouble("postcode"));
                 System.out.println("postdcode: " + set.getDouble("postcode"));
                 model.put("roundupEnabled", set.getBoolean("roundupEnabled"));
 
             }
-
+            double roundSubtract2 = 0;
+            while(roundSet.next()){
+                model.put("roundupBalance", roundSet.getDouble("roundupPot"));
+                roundSubtract2 = roundSet.getDouble("roundupPot");
+            }
+            roundSubtract -= roundSubtract2;
+            model.put("balance", roundSubtract);
+            roundSet.close();
             set.close();
             return new ModelAndView("simpleDetails.hbs", model);
 
@@ -256,17 +270,32 @@ public class BankController {
 
             Map<String, Object> model = new HashMap<>();
             ResultSet set = statement.executeQuery();
+
+            PreparedStatement roundStatement = connection.prepareStatement("SELECT * FROM roundups WHERE `id` = ?");
+            roundStatement.setString(1, session.getId());
+            ResultSet roundSet = roundStatement.executeQuery();
+
+            double roundSubtract = 0;
             while(set.next()){
                 model.put("accountNum", set.getInt("accountNum"));
                 model.put("id", set.getString("id"));
                 model.put("name", set.getString("Name"));
-                model.put("balance", set.getDouble("Balance"));
+                //model.put("balance", set.getDouble("Balance"));
+                roundSubtract = set.getDouble("Balance");
                 model.put("postcode", set.getString("postcode"));
                 //System.out.println("postcode: " + set.getString("postcode"));
                 model.put("roundupEnabled", set.getBoolean("roundupEnabled"));
 
             }
+            double roundSubtract2 = 0;
+            while(roundSet.next()){
+                model.put("roundupBalance", roundSet.getDouble("roundupPot"));
+                roundSubtract2 = roundSet.getDouble("roundupPot");
+            }
 
+            roundSubtract -= roundSubtract2;
+            model.put("balance", roundSubtract);
+            roundSet.close();
             set.close();
             return setBoolean(new ModelAndView("simpleDetails.hbs", model),ctx);
 

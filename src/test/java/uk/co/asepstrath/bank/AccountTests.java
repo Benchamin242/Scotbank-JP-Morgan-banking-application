@@ -122,5 +122,14 @@ class AccountTests {
 
         assertEquals(expected, a.getStartingBalance());
     }
+    @Test
+    public void withdrawWithRoundup(){
+        Account a = new Account("bob", "myid", new BigDecimal("4"), false);
+        a.setRoundUp(true);
+        a.withdrawWithRoundup(new BigDecimal("2.1"));
+        assertEquals(new BigDecimal("1.00"), a.getStartingBalance());
+        assertEquals(new BigDecimal("0.90"), a.getRoundupBalance());
+        assertEquals(new BigDecimal("1.90"), a.getRoundupBalance().add(a.getStartingBalance()));
+    }
 
 }

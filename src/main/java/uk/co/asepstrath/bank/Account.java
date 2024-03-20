@@ -17,6 +17,8 @@ public class Account {
     private String postcode;
     private int cardDetails;
 
+    private BigDecimal roundUpBalance = new BigDecimal("0.00");
+
 
     public Account(String fullName, String uniqueid,  BigDecimal startingBal, boolean re){
         id = uniqueid;
@@ -42,6 +44,11 @@ public class Account {
 
         return startingBalance;
     }
+    public BigDecimal getRoundupBalance() {
+
+        return roundUpBalance;
+    }
+
     public String getName(){
         return name;
     }
@@ -64,7 +71,9 @@ public class Account {
 
 
 
-
+    public void setRoundUp(boolean x){
+        roundupEnabled = x;
+    }
     public void withdraw(BigDecimal amount) throws ArithmeticException{
         //BigDecimal amount = new BigDecimal(x);
         //BigDecimal amount = x.setScale(3, RoundingMode.HALF_DOWN);
@@ -75,6 +84,24 @@ public class Account {
             startingBalance = startingBalance.subtract(amount); //you cannot use normal arithmetic with BigDecimal, so we use the subtract method
             startingBalance = startingBalance.setScale(2,RoundingMode.HALF_DOWN);
 
+        }
+    }
+    public void withdrawWithRoundup(BigDecimal amount) throws ArithmeticException{
+
+        if(roundupEnabled) {
+            if (amount.compareTo(startingBalance) > 0) { //uses BigDecimal compareTo method ->  amount > balance
+                throw new ArithmeticException("\n" + "Insufficient funds");
+            } else {
+                BigDecimal temp = amount; // £1.10
+                amount = amount.setScale(0, RoundingMode.UP); //£2
+                temp = amount.subtract(temp); //£0.90
+                startingBalance = startingBalance.subtract(amount); //you cannot use normal arithmetic with BigDecimal, so we use the subtract method
+                startingBalance = startingBalance.setScale(2, RoundingMode.HALF_DOWN);
+                roundUpBalance = roundUpBalance.add(temp);
+                roundUpBalance = roundUpBalance.setScale(2, RoundingMode.HALF_DOWN);
+            }
+        }else{
+            this.withdraw(amount);
         }
     }
 
