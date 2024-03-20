@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transaction Report</title>
+    {{> Style.hbs}} <!-- Include your CSS file -->
+</head>
+<body>
+    {{> Header.hbs}} <!-- Include your header component -->
+    {{> Sidebar.hbs}} <!-- Include your sidebar component -->
+
+    <div class="w3-main" style="margin-left:340px;margin-right:40px;margin-bottom: 40px; margin-top: 0;">
+        <h1 class="w3-xxxlarge w3-text-red"><b>Transaction Report</b></h1>
+        <hr style="width:50px;border:5px solid red" class="w3-round">
+
+        <!-- Display sanctioned amount -->
+        <div>
+            <h2>Amount Spent in Sanctioned Businesses:</h2>
+            <p>{{ sanctionedAmount }}</p>
+        </div>
+
+        <!-- Display non-sanctioned amount -->
+        <div>
+            <h2>Amount Spent in Non-Sanctioned Businesses:</h2>
+            <p>{{ nonSanctionedAmount }}</p>
+        </div>
+    </div>
+
+    <!-- Include your footer if needed -->
+    {{> Footer.hbs}}
+
+    <!-- Include your JavaScript file -->
+    <script src="script.js"></script>
+</body>
+</html>
