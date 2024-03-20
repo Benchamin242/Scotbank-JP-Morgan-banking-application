@@ -30,6 +30,7 @@
     <style>
 
         .card {
+            position: relative; /* Added to position the design element */
             width: 600px;
             height: 400px;
             background-color: #ed1c24;
@@ -43,26 +44,49 @@
             margin: auto;
             text-align: center;
             margin-left: 50px;
+            background-image: url('/assets/background5.jpg'); /* Replace 'your-background-image.jpg' with the path to your background image */
+            background-size: cover; /* Ensure the background image covers the entire card */
+            background-position: center; /* Center the background image */
+            background-repeat: no-repeat; /* Prevent the background image from repeating */
+            opacity: 0.8; /* Adjust the opacity as needed */
         }
 
         .card h2 {
             margin-bottom: 20px;
-            font-size: 24px;
+            font-size: 28px;
             color: #ffffff;
             text-shadow: 1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000;
         }
 
         .details p {
             margin: 10px 0;
-            font-size: 18px;
+            font-size: 22px; /* Increased font size */
             color: #ffffff;
+            text-shadow: -1px -1px 0 #000,
+            1px -1px 0 #000,
+            -1px 1px 0 #000,
+            1px 1px 0 #000;
         }
+
 
         .details p i {
             margin-right: 5px;
         }
 
-        /* CSS for buttons */
+        .card-design {
+            position: absolute; /* Positioned the design element */
+            top: 20px; /* Adjusted top position */
+            right: 20px; /* Adjusted right position */
+        }
+
+        .scotbank-text {
+            font-size: 20px;
+            color: #ffffff;
+            text-transform: uppercase; /* Converted text to uppercase */
+            letter-spacing: 2px; /* Added letter spacing */
+            font-weight: bold; /* Added bold font weight */
+        }
+
 
 
 
@@ -194,10 +218,14 @@
         <div class="card">
             <h2>Welcome, {{name}}!</h2>
             <div class="details">
+                <p><i class="fas fa-dollar-sign"></i> Balance: ${{balance}}</p>
                 <p><i class="fas fa-id-card"></i> Account Number: {{accountNum}}</p>
                 <p><i class="fas fa-id-badge"></i> ID: {{id}}</p>
-                <p><i class="fas fa-dollar-sign"></i> Balance: ${{balance}}</p>
+
                 <p> Roundup enabled: <span id="roundupStatus">{{roundupEnabled}}</span></p>
+            </div>
+            <div class="card-design">
+                <span class="scotbank-text">Scotbank</span>
             </div>
         </div>
         <div class="buttons-container">
