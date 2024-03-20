@@ -90,7 +90,7 @@ public class BankController {
     }
 
     @GET("/Summary")
-    public ModelAndView Summary(Session session){
+    public ModelAndView Summary(Session session, Context ctx){
         try(Connection connection = dataSource.getConnection()){
 
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM `transactionHistory` WHERE type = 'PAYMENT' AND `from` = ?");
@@ -112,7 +112,8 @@ public class BankController {
 
             model.put("transactions", transactions);
 
-            return new ModelAndView("Summary.hbs", model);
+
+            return setBoolean(new ModelAndView("Summary.hbs",model),ctx);
 
         } catch (SQLException e) {
             logger.error("Error providing spending data", e);

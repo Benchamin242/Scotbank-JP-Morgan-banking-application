@@ -260,6 +260,18 @@ public class UnitTest {
         String output = bankController.logout(ctx);
     }
 
+    @Test
+    public void checkManager(){
+        Context ctx = new MockContext();
+        App app = new App();
+        BankController bankController = app.bankController;
+
+        boolean check = bankController.checkIfManager(ctx);
+
+        assertEquals(false, bankController.checkIfManager(ctx));
+    }
+
+
 
 
 
