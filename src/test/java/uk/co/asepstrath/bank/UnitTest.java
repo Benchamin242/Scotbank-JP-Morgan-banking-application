@@ -35,6 +35,7 @@ import java.util.Map;
 
 import io.jooby.test.MockRouter;
 import org.junit.jupiter.api.Test;
+import uk.co.asepstrath.bank.bank.AuthController;
 import uk.co.asepstrath.bank.bank.BankController;
 import io.jooby.ModelAndView;
 import org.junit.jupiter.api.Test;
@@ -218,6 +219,43 @@ public class UnitTest {
             assertFalse(true);
         }
 
+    }
+    @Test
+    public void transaction(){
+        Transactions transaction = new Transactions(new BigDecimal("5.00"), "bob", "dillon", "PAYMENT");
+
+        assertEquals(new BigDecimal("5.00") ,transaction.getAmount());
+        assertEquals("bob" ,transaction.getFrom());
+        assertEquals("dillon" ,transaction.getTo());
+        assertEquals("PAYMENT",transaction.getType());
+
+        Account to = new Account("dillon", "greatid",new BigDecimal("5.00"),false);
+        Account from = new Account("bob","greaterid",new BigDecimal("10.00"),false);
+
+        transaction.processTransaction(to,from);
+
+        assertEquals(new BigDecimal("10.00"), to.getStartingBalance());
+        assertEquals(new BigDecimal("5.00"), from.getStartingBalance());
+    }
+
+    @Test
+    public void viewAllTransactions() throws SQLException {
+        App app = new App();
+        app.onStart();
+        AuthController authController = app.authController;
+        BankController bankController = app.bankController;
+        MockContext context = new MockContext();
+        Session session = context.session();
+        session.put("id","635e583f-0af2-47cb-9625-5b66ba30e188");
+
+        ModelAndView model = bankController.viewAllTransactions(session, context);
+
+
+        assertFalse(model.getView().isBlank());
+        Map<String, Object> map = model.getModel();
+        @SuppressWarnings("unchecked")
+        ArrayList<Transactions> transaction = (ArrayList<Transactions>) map.get("transactions");
+        assertTrue(transaction != null); //tests whether there are transactions
     }
 
 
