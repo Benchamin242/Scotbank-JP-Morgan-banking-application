@@ -20,6 +20,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.StringReader;
 import java.math.BigDecimal;
+import java.sql.PreparedStatement;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -48,6 +49,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static uk.co.asepstrath.bank.IntegrationTest.client;
 
 
@@ -246,10 +249,10 @@ public class UnitTest {
         }
     }
 
-        assertEquals("logged out", output);
+
     }
 
- */
+*/
 
     @Test
     public void logout() {
@@ -258,6 +261,7 @@ public class UnitTest {
         Context ctx = new MockContext();
 
         String output = bankController.logout(ctx);
+        assertEquals("logged out", output);
     }
 
     @Test
@@ -268,10 +272,53 @@ public class UnitTest {
 
         boolean check = bankController.checkIfManager(ctx);
 
-        assertEquals(false, bankController.checkIfManager(ctx));
+        assertEquals(false, check);
     }
 
+    @Test
+    public void contactUs() {
+        Context ctx = new MockContext();
+        App app = new App();
+        BankController bankController = app.bankController;
 
+        ModelAndView modelAndView = bankController.Contact(ctx);
+
+        assertEquals("ContactUs.hbs", modelAndView.getView());
+    }
+
+/*
+    @Test
+    public void submit() throws SQLException {
+        App app = new App();
+        BankController bankController = app.bankController;
+
+        Context ctx = mock(Context.class);
+        Session session = mock(Session.class);
+        DataSource source = mock(DataSource.class);
+        PreparedStatement statement = mock(PreparedStatement.class);
+        ResultSet result = mock(ResultSet.class);
+        Connection connection = mock(Connection.class);
+
+        when(source.getConnection()).thenReturn(connection);
+        when(session.getId());
+
+        when(connection.prepareStatement("SELECT * FROM `accountsTable` WHERE `id` = ?")).thenReturn(statement);
+        when(statement.executeQuery()).thenReturn(result);
+
+        when(result.next()).thenReturn(true).thenReturn(false);
+        when(result.getInt("accountNum")).thenReturn(123);
+        when(result.getString("id")).thenReturn("someAccountId");
+        when(result.getString("Name")).thenReturn("AccountName");
+        when(result.getDouble("Balance")).thenReturn(1000.0);
+        when(result.getDouble("postcode")).thenReturn(123456.0);
+        when(result.getBoolean("roundupEnabled")).thenReturn(true);
+
+        ModelAndView modelAndView = bankController.submit(session);
+
+        assertEquals("Summary.hbs", modelAndView.getView());
+    }
+
+*/
 
 
 

@@ -93,6 +93,7 @@ public class BankController {
         return setBoolean(new ModelAndView("Transactions.hbs"),ctx);
     }
 
+
     @GET("/Summary")
     public ModelAndView Summary(Session session, Context ctx){
         try(Connection connection = dataSource.getConnection()){
