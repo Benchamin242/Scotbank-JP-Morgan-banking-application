@@ -27,7 +27,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import kong.unirest.core.Unirest;
 
@@ -224,16 +227,16 @@ public class App extends Jooby {
             }
             pstmt.close();
 
-            stmt.executeUpdate("CREATE TABLE transactionHistory (`to` varchar(255), `from` varchar(255),`amount` double, `type` VARCHAR(255))");
+            stmt.executeUpdate("CREATE TABLE transactionHistory (`date` varchar(255), `to` varchar(255), `from` varchar(255),`amount` double, `type` VARCHAR(255))");
             ArrayList<Transactions> transactions = new ArrayList<>();
 
-            for (int x = 0; x < 153; x++) {
+            for (int x = 0; x < 154; x++) {
                 String help2 = Unirest.get("https://api.asep-strath.co.uk/api/transactions")
                         .queryString("page", x)
                         .queryString("size", 100)
                         .asString().getBody();
                 try {
-                    PreparedStatement prepared = connection.prepareStatement("INSERT INTO transactionHistory (`to`, `from`, amount, type) VALUES (?, ?, ?, ?)");
+                    PreparedStatement prepared = connection.prepareStatement("INSERT INTO transactionHistory (`date`,`to`, `from`, amount, type) VALUES (?,?, ?, ?, ?)");
 
 
                     DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory
@@ -242,7 +245,7 @@ public class App extends Jooby {
                     InputSource is = new InputSource(new StringReader(help2));
                     Document document = documentBuilder.parse(is);
 
-
+                    NodeList date = document.getElementsByTagName("timestamp");
                     NodeList type = document.getElementsByTagName("type");
                     NodeList amount = document.getElementsByTagName("amount");
                     NodeList to = document.getElementsByTagName("to");
@@ -258,38 +261,57 @@ public class App extends Jooby {
                         String b;
                         String c;
                         String d;
-                        if(to.item(i) == null) {
-                            prepared.setString(1, null);
-                            c = null;
-                        }else{
-                            prepared.setString(1, to.item(i).getTextContent());
-                            c = to.item(i).getTextContent();
-                        }
-                        if(from.item(i) == null){
-                            prepared.setString(2, null);
-                            b = null;
-                        }else {
-                            prepared.setString(2, from.item(i).getTextContent());
-                            b = from.item(i).getTextContent();
-                        }
-                        if(amount.item(i) == null){
-                            prepared.setDouble(3, 0.0);
-                            a = new BigDecimal("0.00");
-                        }else{
-                            prepared.setDouble(3, Double.parseDouble(amount.item(i).getTextContent()));
-                            a = new BigDecimal(amount.item(i).getTextContent());
-                        }
-                        if(type.item(i) == null){
-                            prepared.setString(4, null);
-                            d = null;
-                        }else {
-                            prepared.setString(4, type.item(i).getTextContent());
-                            d = type.item(i).getTextContent();
-                        }
-                        Transactions temp = new Transactions( a, b, c, d);
-                        transactions.add(temp);
+                        Date e;
+                        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
-                        prepared.executeUpdate();
+                        if(date.item(i) == null){
+                            //prepared.setString(1, null);
+                            e = null;
+                        }else{
+                            e = df.parse(date.item(i).getTextContent());
+                        }
+                        Date after = df.parse("2023-04-06 00:00"); //dates after required user story date
+                        //System.out.println("Date: " + e.toString() + "Required after date: " + after.toString() );
+                        if(date.item(i) != null && e.after(after)) {
+                            prepared.setString(1, e.toString());
+                            //System.out.println("works");
+                            if (to.item(i) == null) {
+                                prepared.setString(2, null);
+                                c = null;
+                            } else {
+                                prepared.setString(2, to.item(i).getTextContent());
+                                c = to.item(i).getTextContent();
+                            }
+                            if (from.item(i) == null) {
+                                prepared.setString(3, null);
+                                b = null;
+                            } else {
+                                prepared.setString(3, from.item(i).getTextContent());
+                                b = from.item(i).getTextContent();
+                            }
+                            if (amount.item(i) == null) {
+                                prepared.setDouble(4, 0.0);
+                                a = new BigDecimal("0.00");
+                            } else {
+                                prepared.setDouble(4, Double.parseDouble(amount.item(i).getTextContent()));
+                                a = new BigDecimal(amount.item(i).getTextContent());
+                            }
+                            if (type.item(i) == null) {
+                                prepared.setString(5, null);
+                                d = null;
+                            } else {
+                                prepared.setString(5, type.item(i).getTextContent());
+                                d = type.item(i).getTextContent();
+                            }
+
+                            Transactions temp = new Transactions(e, a, b, c, d);
+                            //System.out.println(temp.toString());
+                            transactions.add(temp);
+
+                            prepared.executeUpdate();
+                        }else{
+
+                        }
 
                     }
 
@@ -316,9 +338,11 @@ public class App extends Jooby {
                                 , new BigDecimal(set.getDouble("Balance"))
                                 , set.getBoolean("roundupEnabled"));
                     } else {
+                        //System.out.println("no TO");
                         to = null;
                     }
                 }catch (SQLException e){
+                    System.out.println("no TO");
                     to = null;
                 }
 
@@ -340,8 +364,13 @@ public class App extends Jooby {
                         from = null;
                     }
                 }catch(SQLException e){
+                    System.out.println("no FROM");
                     from = null;
                 }
+                if(to != null && transaction.getType().equals("PAYMENT")) { //this should run when we have business database connected
+                    System.out.println(to.getId());
+                }
+
 
                 transaction.processTransaction(to, from);
 

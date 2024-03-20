@@ -19,6 +19,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Test;
 
 import java.io.StringReader;
+import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -142,18 +146,20 @@ public class UnitTest {
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
             InputSource is = new InputSource(new StringReader(help));
             Document document = documentBuilder.parse(is);
-
+            NodeList timestamp = document.getElementsByTagName("timestamp");
             NodeList type = document.getElementsByTagName("type");
             NodeList amount = document.getElementsByTagName("amount");
             NodeList to = document.getElementsByTagName("to");
             NodeList from = document.getElementsByTagName("from");
 
+            assertEquals("2023-04-10 08:43",timestamp.item(0).getTextContent());
             assertEquals("PAYMENT",type.item(0).getTextContent());
             assertEquals("170.00", amount.item(0).getTextContent());
             assertEquals("EE", to.item(0).getTextContent());
             assertEquals("3afedfd7-dfe0-468d-b79a-1a8f9db3497c", from.item(0).getTextContent());
 
             for(int i = 0; i < type.getLength(); i++ ){
+                assertNotNull(timestamp.item(i).getTextContent());
                 assertNotNull(type.item(i).getTextContent());
                 assertNotNull(amount.item(i).getTextContent());
                 assertNotNull(to.item(i).getTextContent());
@@ -194,6 +200,21 @@ public class UnitTest {
     public void businessAPI(){
         HttpResponse<JsonNode> help = Unirest.get("https://api.asep-strath.co.uk/api/businesses").asObject(JsonNode.class); // change from JsonNode to business class
         assertEquals(200, help.getStatus());
+    }
+    @Test
+    public void transactionTimestamp(){
+        Date e;
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        try {
+            e = df.parse("2023-10-4 08:20");
+            Transactions transaction = new Transactions(e,new BigDecimal("20.00") ,"joe", "bob", "PAYMENT");
+            assertEquals("Wed Oct 04 08:20:00 BST 2023", transaction.getTimestamp().toString());
+
+            assertTrue(e.after(df.parse("2023-03-06 00:00")));
+        }catch(ParseException d){
+            assertFalse(true);
+        }
+
     }
 
 
