@@ -219,6 +219,23 @@ public class UnitTest {
         }
 
     }
+    @Test
+    public void transaction(){
+        Transactions transaction = new Transactions(new BigDecimal("5.00"), "bob", "dillon", "PAYMENT");
+
+        assertEquals(new BigDecimal("5.00") ,transaction.getAmount());
+        assertEquals("bob" ,transaction.getFrom());
+        assertEquals("dillon" ,transaction.getTo());
+        assertEquals("PAYMENT",transaction.getType());
+
+        Account to = new Account("dillon", "greatid",new BigDecimal("5.00"),false);
+        Account from = new Account("bob","greaterid",new BigDecimal("10.00"),false);
+
+        transaction.processTransaction(to,from);
+
+        assertEquals(new BigDecimal("10.00"), to.getStartingBalance());
+        assertEquals(new BigDecimal("5.00"), from.getStartingBalance());
+    }
 
 
 /*

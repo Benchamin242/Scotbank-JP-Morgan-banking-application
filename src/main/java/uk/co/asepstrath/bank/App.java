@@ -388,7 +388,8 @@ public class App extends Jooby {
                     transactionStatement.setString(2, to.getId());
                     transactionStatement.executeUpdate();
 
-                    if(round){
+                    if(round && to.getRoundupBalance().compareTo(new BigDecimal("0.00")) == 1){
+                        System.out.println(to.getId() + " roundup amount: " + to.getRoundupBalance());
                         PreparedStatement roundStatement = connection.prepareStatement("INSERT INTO `roundups` (?,?)");
                         transactionStatement.setString(1, to.getId());
                         transactionStatement.setDouble(2, to.getRoundupBalance().doubleValue());
