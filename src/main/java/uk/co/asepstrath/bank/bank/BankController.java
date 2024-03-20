@@ -17,6 +17,10 @@ import javax.sql.DataSource;
 import javax.xml.transform.Result;
 import java.math.BigDecimal;
 import java.sql.*;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.*;
 import java.util.Map;
@@ -407,15 +411,17 @@ public class BankController {
             ArrayList transactions = new ArrayList<Transactions>();
 
             while(set.next()) {
-                Transactions tran = new Transactions(BigDecimal.valueOf(set.getDouble("amount")),set.getString("from"), set.getString("to"),set.getString("type"));
-                //model.put("paidTo", set.getString("to"));
-                //model.put("amount", set.getDouble("amount"));
-                //System.out.println(model.toString());
-                //String businessCategory = set.getString("to");
-                //double amountWithdrawn = set.getDouble("amount");
-                //String type = set.getString("type");
-                //spendingSummary.put(businessCategory, amountWithdrawn);
-                //spendingSummary.put("type",type);
+                Date date;
+                DateFormat df = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
+                try {
+                    date = df.parse(set.getString("date"));
+                }catch(ParseException e){
+                    date = null;
+                }
+
+                Transactions tran = new Transactions(date, BigDecimal.valueOf(set.getDouble("amount")),set.getString("from"), set.getString("to"),set.getString("type"));
+
+                System.out.println(tran.getTimestamp());
                 transactions.add(tran);
 
             }
@@ -433,49 +439,8 @@ public class BankController {
         }
     }
 
-    @GET("/summary1")
-    public ModelAndView spendingSummary(Session session, Context ctx) {
 
-        try (Connection connection = dataSource.getConnection()) {
 
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM `transactionHistory` WHERE `from` = ?");
-            PreparedStatement businessDetails = connection.prepareStatement("SELECT * FROM `businessDetails` WHERE `from` = ?");
-
-            statement.setString(1, String.valueOf(session.get("id")));
-            System.out.println("paidFrom: " + String.valueOf(session.get("id")));
-
-            ResultSet set = statement.executeQuery();
-            ResultSet businessSet = businessDetails.executeQuery();
-
-            Map<String, Object> model = new HashMap<>();
-
-            Map<String, Double> spendingSummaryByBusinessCat = new HashMap<>();
-            while (set.next()) {
-                //model.put("paidTo", set.getString("to"));
-                //model.put("amount", set.getDouble("amount"));
-                //System.out.println(model.toString());
-                String businessid = set.getString("to");
-
-                double amountWithdrawn = set.getDouble("amount");
-                while(businessSet.next()){
-                    if(businessSet.getString("id").equals(businessid)){
-                        String businessCategory = businessSet.getString("category");
-                        spendingSummaryByBusinessCat.put(businessCategory, spendingSummaryByBusinessCat.getOrDefault(businessCategory, 0.0) + amountWithdrawn);
-                    }
-                }
-
-            }
-
-            model.put("summary", spendingSummaryByBusinessCat);
-
-            System.out.println(model);
-            return setBoolean(new ModelAndView("summary.hbs", model), ctx);
-
-        } catch (SQLException e) {
-            logger.error("Error providing spending data", e);
-            throw new StatusCodeException(StatusCode.SERVER_ERROR, "Error providing spending data", e);
-        }
-    }
 
 
 }
